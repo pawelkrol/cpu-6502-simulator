@@ -162,6 +162,18 @@ abstract class Operation(memory: Memory, register: Register) {
     }
   }
 
+  private def opCMP(accu: ByteVal, term: ByteVal) {
+    val result = accu() - term()
+    register.testStatusFlag(ZF, (result & 0xff).toShort)
+    register.testStatusFlag(SF, result.toShort)
+    register.setStatusFlag(CF, result >= 0x00)
+  }
+
+  /** [$c9] CMP #$FF */
+  private def opImmediateCMP {
+    opCMP(register.AC, get_arg_IMM)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -231,6 +243,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opRelative(!register.getStatusFlag(CF))
       case OpCode_BCS_REL =>
         opRelative(register.getStatusFlag(CF))
+      case OpCode_CMP_IMM =>
+        opImmediateCMP
       case OpCode_BNE_REL =>
         opRelative(!register.getStatusFlag(ZF))
       case OpCode_BEQ_REL =>

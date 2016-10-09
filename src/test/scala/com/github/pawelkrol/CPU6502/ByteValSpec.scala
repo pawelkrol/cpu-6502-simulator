@@ -4,6 +4,26 @@ class ByteValSpec extends FunFunSpec {
 
   var byteVal: ByteVal = _
 
+  describe("byte value addition") {
+    describe("byte value $00") {
+      before { byteVal = 0x00 }
+
+      it { expect { byteVal + ByteVal(0x00) }.toEqual(ByteVal(0x00)) }
+      it { expect { byteVal + ByteVal(0x01) }.toEqual(ByteVal(0x01)) }
+      it { expect { byteVal + ByteVal(0x80) }.toEqual(ByteVal(0x80)) }
+    }
+  }
+
+  describe("byte value subtraction") {
+    describe("byte value $00") {
+      before { byteVal = 0x00 }
+
+      it { expect { byteVal - ByteVal(0x00) }.toEqual(ByteVal(0x00)) }
+      it { expect { byteVal - ByteVal(0x01) }.toEqual(ByteVal(0xff)) }
+      it { expect { byteVal - ByteVal(0x80) }.toEqual(ByteVal(0x80)) }
+    }
+  }
+
   describe("binary AND operator") {
     describe("byte value $00") {
       before { byteVal = 0x00 }

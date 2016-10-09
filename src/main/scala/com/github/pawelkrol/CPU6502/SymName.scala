@@ -54,6 +54,11 @@ trait SymName_BVS extends SymName {
   def symName = "BVS"
 }
 
+trait SymName_CMP extends SymName {
+
+  def symName = "CMP"
+}
+
 trait SymName_EOR extends SymName {
 
   def symName = "EOR"

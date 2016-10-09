@@ -53,7 +53,15 @@ object OpCode {
     case ByteVal(0x7d) => OpCode_ADC_ABSX
     case ByteVal(0x90) => OpCode_BCC_REL
     case ByteVal(0xb0) => OpCode_BCS_REL
+    case ByteVal(0xc1) => OpCode_CMP_INDX
+    case ByteVal(0xc5) => OpCode_CMP_ZP
+    case ByteVal(0xc9) => OpCode_CMP_IMM
+    case ByteVal(0xcd) => OpCode_CMP_ABS
     case ByteVal(0xd0) => OpCode_BNE_REL
+    case ByteVal(0xd1) => OpCode_CMP_INDY
+    case ByteVal(0xd5) => OpCode_CMP_ZPX
+    case ByteVal(0xd9) => OpCode_CMP_ABSY
+    case ByteVal(0xdd) => OpCode_CMP_ABSX
     case ByteVal(0xf0) => OpCode_BEQ_REL
     case _ => throw NotImplementedError()
   }
@@ -198,6 +206,22 @@ object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
 
 object OpCode_BCS_REL extends OpCode_REL with SymName_BCS
 
+object OpCode_CMP_INDX extends OpCode_INDX with SymName_CMP
+
+object OpCode_CMP_ZP extends OpCode_ZP with SymName_CMP
+
+object OpCode_CMP_IMM extends OpCode_IMM with SymName_CMP
+
+object OpCode_CMP_ABS extends OpCode_ABS with SymName_CMP
+
 object OpCode_BNE_REL extends OpCode_REL with SymName_BNE
+
+object OpCode_CMP_INDY extends OpCode_INDY with SymName_CMP
+
+object OpCode_CMP_ZPX extends OpCode_ZPX with SymName_CMP
+
+object OpCode_CMP_ABSY extends OpCode_ABSY with SymName_CMP
+
+object OpCode_CMP_ABSX extends OpCode_ABSX with SymName_CMP
 
 object OpCode_BEQ_REL extends OpCode_REL with SymName_BEQ

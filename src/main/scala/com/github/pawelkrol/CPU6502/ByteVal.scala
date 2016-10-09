@@ -8,7 +8,11 @@ class ByteVal(val value: Byte) {
 
   def +(other: Int): ByteVal = apply() + other
 
+  def +(other: ByteVal): ByteVal = apply() + other()
+
   def -(other: Int): ByteVal = apply() - other
+
+  def -(other: ByteVal): ByteVal = apply() - other()
 
   def &(other: ByteVal): ByteVal = value & other()
 
