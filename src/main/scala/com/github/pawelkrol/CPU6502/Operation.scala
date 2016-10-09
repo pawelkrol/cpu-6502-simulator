@@ -114,7 +114,16 @@ abstract class Operation(memory: Memory, register: Register) {
     val rhs = term & 0xff
 
     if (register.getStatusFlag(DF)) {
-      // TODO
+      val lo = (old & 0x0f) + (rhs & 0x0f) + carry
+      val loDec = if (lo >= 0x0a) ((lo + 0x06) & 0x0f) + 0x10 else lo
+      val sum = (old & 0xf0) + (rhs & 0xf0) + loDec
+      val res = (old & 0xf0).toByte + (rhs & 0xf0).toByte + loDec.toByte
+      register.testStatusFlag(ZF, (old + rhs + carry).toShort)
+      register.testStatusFlag(SF, sum.toShort)
+      val decSum = if (sum >= 0xa0) sum + 0x60 else sum
+      register.testStatusFlag(CF, decSum.toShort)
+      register.setStatusFlag(OF, (res < -128) || (res > 127))
+      register.AC = decSum
     }
     else {
       val sum = old + rhs + carry
