@@ -108,6 +108,29 @@ abstract class Operation(memory: Memory, register: Register) {
     register.testStatusFlag(SF, register.AC)
   }
 
+  private def opADC(term: ByteVal) {
+    val carry = if (register.getStatusFlag(CF)) 1 else 0
+    val old = register.AC()
+    val rhs = term & 0xff
+
+    if (register.getStatusFlag(DF)) {
+      // TODO
+    }
+    else {
+      val sum = old + rhs + carry
+      register.testStatusFlag(ZF, sum.toShort)
+      register.testStatusFlag(SF, sum.toShort)
+      register.testStatusFlag(CF, sum.toShort)
+      register.setStatusFlag(OF, (((old ^ rhs) & 0x80) != 0x80) && (((old ^ sum) & 0x80) == 0x80))
+      register.AC = sum
+    }
+  }
+
+  /** [$69] ADC #$FF */
+  private def opImmediateADC {
+    opADC(get_arg_IMM)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -163,6 +186,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opAbsoluteY(_ ^ _)
       case OpCode_EOR_ABSX =>
         opAbsoluteX(_ ^ _)
+      case OpCode_ADC_IMM =>
+        opImmediateADC
       case _ =>
         throw NotImplementedError()
     }

@@ -45,9 +45,21 @@ class FunOperationsSpec extends FunFunSpec {
 
   private def getStatusFlag(flag: Status.Flag) = register.getStatusFlag(flag)
 
+  def CF = getStatusFlag(Status.CF)
+
+  def CF_=(value: Boolean) { register.setStatusFlag(Status.CF, value) }
+
   def ZF = getStatusFlag(Status.ZF)
 
   def ZF_=(value: Boolean) { register.setStatusFlag(Status.ZF, value) }
+
+  def DF = getStatusFlag(Status.DF)
+
+  def DF_=(value: Boolean) { register.setStatusFlag(Status.DF, value) }
+
+  def OF = getStatusFlag(Status.OF)
+
+  def OF_=(value: Boolean) { register.setStatusFlag(Status.OF, value) }
 
   def SF = getStatusFlag(Status.SF)
 

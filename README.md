@@ -6,8 +6,8 @@ CPU 6502 Simulator (WORK-IN-PROGRESS)
 ### What is the motivation behind building another MOS 6502 CPU simulator?
 
 1. There has been no such utility written in [Scala](http://www.scala-lang.org/) ever before.
-2. Simply to practice building [Scala](http://www.scala-lang.org/) applications.
-3. As necessity is the mother of invention, and since I am aiming at developing a complete unit-testing framework targetting MOS 6502 CPU (specifically any code that is meant to run on the [Commodore 64](https://en.wikipedia.org/wiki/Commodore_64)) to help with testing of any complex subroutines, writing a simulator might be considered an interim step in the entire process (while designed to be usable as a standalone tool, this simulator is still not an ultimate goal of my work).
+2. Treat it as a practice in building [Scala](http://www.scala-lang.org/) applications.
+3. As a necessity is the mother of all invention, and since I am aiming at developing a complete unit-testing framework targetting MOS 6502 CPU (specifically any code that is meant to run on the [Commodore 64](https://en.wikipedia.org/wiki/Commodore_64)) to help with testing of any complex subroutines, writing a simulator might be considered an interim step in the entire process (while designed to be usable as a standalone tool, this simulator is still not an ultimate goal of my work). Another potential utility of this library is to implement a 6502 disassembler of binary programs.
 
 `cpu-6502-simulator` is not meant to be executed as a standalone application JAR. It comes up bundled with the minimal set of dependencies required to build, test and include it in your own projects.
 
