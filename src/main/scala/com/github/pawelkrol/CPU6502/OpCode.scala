@@ -19,6 +19,7 @@ object OpCode {
     case ByteVal(0x05) => OpCode_ORA_ZP
     case ByteVal(0x09) => OpCode_ORA_IMM
     case ByteVal(0x0d) => OpCode_ORA_ABS
+    case ByteVal(0x10) => OpCode_BPL_REL
     case ByteVal(0x11) => OpCode_ORA_INDY
     case ByteVal(0x15) => OpCode_ORA_ZPX
     case ByteVal(0x19) => OpCode_ORA_ABSY
@@ -27,6 +28,7 @@ object OpCode {
     case ByteVal(0x25) => OpCode_AND_ZP
     case ByteVal(0x29) => OpCode_AND_IMM
     case ByteVal(0x2d) => OpCode_AND_ABS
+    case ByteVal(0x30) => OpCode_BMI_REL
     case ByteVal(0x31) => OpCode_AND_INDY
     case ByteVal(0x35) => OpCode_AND_ZPX
     case ByteVal(0x39) => OpCode_AND_ABSY
@@ -35,6 +37,7 @@ object OpCode {
     case ByteVal(0x45) => OpCode_EOR_ZP
     case ByteVal(0x49) => OpCode_EOR_IMM
     case ByteVal(0x4d) => OpCode_EOR_ABS
+    case ByteVal(0x50) => OpCode_BVC_REL
     case ByteVal(0x51) => OpCode_EOR_INDY
     case ByteVal(0x55) => OpCode_EOR_ZPX
     case ByteVal(0x59) => OpCode_EOR_ABSY
@@ -43,10 +46,15 @@ object OpCode {
     case ByteVal(0x65) => OpCode_ADC_ZP
     case ByteVal(0x69) => OpCode_ADC_IMM
     case ByteVal(0x6d) => OpCode_ADC_ABS
+    case ByteVal(0x70) => OpCode_BVS_REL
     case ByteVal(0x71) => OpCode_ADC_INDY
     case ByteVal(0x75) => OpCode_ADC_ZPX
     case ByteVal(0x79) => OpCode_ADC_ABSY
     case ByteVal(0x7d) => OpCode_ADC_ABSX
+    case ByteVal(0x90) => OpCode_BCC_REL
+    case ByteVal(0xb0) => OpCode_BCS_REL
+    case ByteVal(0xd0) => OpCode_BNE_REL
+    case ByteVal(0xf0) => OpCode_BEQ_REL
     case _ => throw NotImplementedError()
   }
 }
@@ -107,6 +115,13 @@ sealed trait OpCode_INDY extends OpCode {
   def memSize = 0x02
 }
 
+sealed trait OpCode_REL extends OpCode {
+
+  val cycles = 0x02
+
+  def memSize = 0x02
+}
+
 object OpCode_ORA_INDX extends OpCode_INDX with SymName_ORA
 
 object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
@@ -114,6 +129,8 @@ object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
 object OpCode_ORA_IMM extends OpCode_IMM with SymName_ORA
 
 object OpCode_ORA_ABS extends OpCode_ABS with SymName_ORA
+
+object OpCode_BPL_REL extends OpCode_REL with SymName_BPL
 
 object OpCode_ORA_INDY extends OpCode_INDY with SymName_ORA
 
@@ -131,6 +148,8 @@ object OpCode_AND_IMM extends OpCode_IMM with SymName_AND
 
 object OpCode_AND_ABS extends OpCode_ABS with SymName_AND
 
+object OpCode_BMI_REL extends OpCode_REL with SymName_BMI
+
 object OpCode_AND_INDY extends OpCode_INDY with SymName_AND
 
 object OpCode_AND_ZPX extends OpCode_ZPX with SymName_AND
@@ -146,6 +165,8 @@ object OpCode_EOR_ZP extends OpCode_ZP with SymName_EOR
 object OpCode_EOR_IMM extends OpCode_IMM with SymName_EOR
 
 object OpCode_EOR_ABS extends OpCode_ABS with SymName_EOR
+
+object OpCode_BVC_REL extends OpCode_REL with SymName_BVC
 
 object OpCode_EOR_INDY extends OpCode_INDY with SymName_EOR
 
@@ -163,6 +184,8 @@ object OpCode_ADC_IMM extends OpCode_IMM with SymName_ADC
 
 object OpCode_ADC_ABS extends OpCode_ABS with SymName_ADC
 
+object OpCode_BVS_REL extends OpCode_REL with SymName_BVS
+
 object OpCode_ADC_INDY extends OpCode_INDY with SymName_ADC
 
 object OpCode_ADC_ZPX extends OpCode_ZPX with SymName_ADC
@@ -170,3 +193,11 @@ object OpCode_ADC_ZPX extends OpCode_ZPX with SymName_ADC
 object OpCode_ADC_ABSY extends OpCode_ABSY with SymName_ADC
 
 object OpCode_ADC_ABSX extends OpCode_ABSX with SymName_ADC
+
+object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
+
+object OpCode_BCS_REL extends OpCode_REL with SymName_BCS
+
+object OpCode_BNE_REL extends OpCode_REL with SymName_BNE
+
+object OpCode_BEQ_REL extends OpCode_REL with SymName_BEQ

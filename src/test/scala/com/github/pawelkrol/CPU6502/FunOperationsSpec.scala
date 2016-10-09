@@ -5,7 +5,8 @@ class FunOperationsSpec extends FunFunSpec {
   private var memory: Memory = _
   private var register: Register = _
   private var core: Core = _
-  private var opCode: OpCode = _
+
+  var opCode: OpCode = _
 
   def assignOpArg(values: ByteVal*) = opCode match {
     case op: OpCode_IMM => memory.write(0xc001, values(0))
@@ -16,6 +17,7 @@ class FunOperationsSpec extends FunFunSpec {
     case op: OpCode_ABSY => memory.write(0xc001, values(0)).write(0xc002, values(1)).write(Util.byteVals2Addr(values.take(2)) + values(2)(), values(3))
     case op: OpCode_INDX => memory.write(0xc001, values(0)).write(values(0) + values(1)(), values(2)).write(values(0) + values(1)() + 1, values(3)).write(Util.byteVals2Addr(values.drop(2).take(2)), values(4))
     case op: OpCode_INDY => memory.write(0xc001, values(0)).write(values(0), values(2)).write(values(0) + 1, values(3)).write(Util.byteVals2Addr(values.drop(2).take(2)) + values(1), values(4))
+    case op: OpCode_REL => memory.write(0xc001, values(0))
     case _ => throw new RuntimeException("invalid opcode: " + opCode)
   }
 

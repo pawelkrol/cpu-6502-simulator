@@ -17,9 +17,6 @@ class Register(var AC: ByteVal, var XR: ByteVal, var YR: ByteVal, SR: ByteVal, S
   _SR = SR
   private var _SP = SP
 
-  /** Program counter halves */
-  private def pcHalves = (PC & 0xff, (PC >> 8) & 0xff)
-
   /** Stack operations */
   private def push(memory: Memory, value: ByteVal) {
     memory.write((0x0100 + _SP).toShort, value)
@@ -30,6 +27,9 @@ class Register(var AC: ByteVal, var XR: ByteVal, var YR: ByteVal, SR: ByteVal, S
     _SP += 1
     memory.read((0x0100 + _SP).toShort)
   }
+
+  /** Program counter halves */
+  private def pcHalves = Util.word2Nibbles(PC)
 
   def advancePC(offset: Int) { PC = (PC + offset).toShort }
 }

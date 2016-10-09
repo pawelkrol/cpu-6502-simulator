@@ -34,6 +34,8 @@ abstract class Operation(memory: Memory, register: Register) {
 
   private def get_arg_INDY = memory.read(get_addr_INDY + register.YR())
 
+  private def get_arg_REL = memory.read(register.PC + 1)
+
   /** [$09] ORA #$FF */
   /** [$29] AND #$FF */
   /** [$49] EOR #$FF */
@@ -140,6 +142,26 @@ abstract class Operation(memory: Memory, register: Register) {
     opADC(get_arg_IMM)
   }
 
+  /** [$10] BPL *-1 */
+  /** [$30] BMI *-1 */
+  /** [$50] BVC *-1 */
+  /** [$70] BVS *-1 */
+  /** [$90] BCC *-1 */
+  /** [$b0] BCS *-1 */
+  /** [$d0] BNE *-1 */
+  /** [$f0] BEQ *-1 */
+  private def opRelative(expr: Boolean) {
+    if (expr) {
+      cycleCount += 1
+      val offset = get_arg_REL.value
+      val oldPCH = Util.word2Nibbles(register.PC)._2
+      register.advancePC(offset)
+      val newPCH = Util.word2Nibbles((register.PC + 2).toShort)._2
+      if (oldPCH != newPCH)
+        cycleCount += 1
+    }
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -155,6 +177,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediate(_ | _)
       case OpCode_ORA_ABS =>
         opAbsolute(_ | _)
+      case OpCode_BPL_REL =>
+        opRelative(!register.getStatusFlag(SF))
       case OpCode_ORA_INDY =>
         opIndirectY(_ | _)
       case OpCode_ORA_ZPX =>
@@ -171,6 +195,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediate(_ & _)
       case OpCode_AND_ABS =>
         opAbsolute(_ & _)
+      case OpCode_BMI_REL =>
+        opRelative(register.getStatusFlag(SF))
       case OpCode_AND_INDY =>
         opIndirectY(_ & _)
       case OpCode_AND_ZPX =>
@@ -187,6 +213,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediate(_ ^ _)
       case OpCode_EOR_ABS =>
         opAbsolute(_ ^ _)
+      case OpCode_BVC_REL =>
+        opRelative(!register.getStatusFlag(OF))
       case OpCode_EOR_INDY =>
         opIndirectY(_ ^ _)
       case OpCode_EOR_ZPX =>
@@ -197,6 +225,16 @@ abstract class Operation(memory: Memory, register: Register) {
         opAbsoluteX(_ ^ _)
       case OpCode_ADC_IMM =>
         opImmediateADC
+      case OpCode_BVS_REL =>
+        opRelative(register.getStatusFlag(OF))
+      case OpCode_BCC_REL =>
+        opRelative(!register.getStatusFlag(CF))
+      case OpCode_BCS_REL =>
+        opRelative(register.getStatusFlag(CF))
+      case OpCode_BNE_REL =>
+        opRelative(!register.getStatusFlag(ZF))
+      case OpCode_BEQ_REL =>
+        opRelative(register.getStatusFlag(ZF))
       case _ =>
         throw NotImplementedError()
     }

@@ -2,7 +2,7 @@ package com.github.pawelkrol.CPU6502
 
 import scala.language.implicitConversions
 
-class ByteVal(value: Byte) {
+class ByteVal(val value: Byte) {
 
   def apply() = Util.byte2Int(value)
 
