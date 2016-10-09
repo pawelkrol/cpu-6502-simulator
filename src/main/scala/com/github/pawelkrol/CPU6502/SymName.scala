@@ -68,3 +68,8 @@ trait SymName_ORA extends SymName {
 
   def symName = "ORA"
 }
+
+trait SymName_ROL extends SymName {
+
+  def symName = "ROL"
+}

@@ -17,3 +17,4 @@ project/plugins/project/
 .worksheet
 
 cpu-6502-simulator.log
+temp/

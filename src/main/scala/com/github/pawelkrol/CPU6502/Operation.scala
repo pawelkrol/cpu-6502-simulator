@@ -10,6 +10,8 @@ abstract class Operation(memory: Memory, register: Register) {
 
   private def get_addr_ABS = get_val_from_addr((register.PC + 1).toShort)
 
+  private def get_addr_ABSX = get_addr_ABS + register.XR()
+
   private def get_addr_ZP = memory.read(register.PC + 1)
 
   private def get_addr_ZPX = get_addr_ZP + register.XR()
@@ -26,7 +28,7 @@ abstract class Operation(memory: Memory, register: Register) {
 
   private def get_arg_ABS = memory.read(get_addr_ABS)
 
-  private def get_arg_ABSX = memory.read(get_addr_ABS + register.XR())
+  private def get_arg_ABSX = memory.read(get_addr_ABSX)
 
   private def get_arg_ABSY = memory.read(get_addr_ABS + register.YR())
 
@@ -111,7 +113,7 @@ abstract class Operation(memory: Memory, register: Register) {
   }
 
   private def opADC(term: ByteVal) {
-    val carry = if (register.getStatusFlag(CF)) 1 else 0
+    val carry = if (register.getStatusFlag(CF)) 0x01 else 0x00
     val old = register.AC()
     val rhs = term & 0xff
 
@@ -174,6 +176,40 @@ abstract class Operation(memory: Memory, register: Register) {
     opCMP(register.AC, get_arg_IMM)
   }
 
+  private def opROL(value: ByteVal): ByteVal = {
+    val carry = if (register.getStatusFlag(CF)) 0x01 else 0x00
+    val valueRolled = (value() << 1) | carry
+    register.testStatusFlag(ZF, valueRolled.toShort)
+    register.testStatusFlag(SF, valueRolled.toShort)
+    register.testStatusFlag(CF, valueRolled.toShort)
+    valueRolled
+  }
+
+  /** [$2a] ROL A */
+  private def opAccumulatorROL {
+    register.AC = opROL(register.AC)
+  }
+
+  /** [$26] ROL $FF */
+  private def opZeroPageROL {
+    memory.write(get_addr_ZP, opROL(get_arg_ZP))
+  }
+
+  /** [$36] ROL $FF,X */
+  private def opZeroPageXROL {
+    memory.write(get_addr_ZPX, opROL(get_arg_ZPX))
+  }
+
+  /** [$2e] ROL $FFFF */
+  private def opAbsoluteROL {
+    memory.write(get_addr_ABS, opROL(get_arg_ABS))
+  }
+
+  /** [$3e] ROL $FFFF,X */
+  private def opAbsoluteXROL {
+    memory.write(get_addr_ABSX, opROL(get_arg_ABSX))
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -203,20 +239,30 @@ abstract class Operation(memory: Memory, register: Register) {
         opIndirectX(_ & _)
       case OpCode_AND_ZP =>
         opZeroPage(_ & _)
+      case OpCode_ROL_ZP =>
+        opZeroPageROL
       case OpCode_AND_IMM =>
         opImmediate(_ & _)
+      case OpCode_ROL_AC =>
+        opAccumulatorROL
       case OpCode_AND_ABS =>
         opAbsolute(_ & _)
+      case OpCode_ROL_ABS =>
+        opAbsoluteROL
       case OpCode_BMI_REL =>
         opRelative(register.getStatusFlag(SF))
       case OpCode_AND_INDY =>
         opIndirectY(_ & _)
+      case OpCode_ROL_ZPX =>
+        opZeroPageXROL
       case OpCode_AND_ZPX =>
         opZeroPageX(_ & _)
       case OpCode_AND_ABSY =>
         opAbsoluteY(_ & _)
       case OpCode_AND_ABSX =>
         opAbsoluteX(_ & _)
+      case OpCode_ROL_ABSX =>
+        opAbsoluteXROL
       case OpCode_EOR_INDX =>
         opIndirectX(_ ^ _)
       case OpCode_EOR_ZP =>

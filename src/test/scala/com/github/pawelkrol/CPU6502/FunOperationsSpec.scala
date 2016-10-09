@@ -18,6 +18,7 @@ class FunOperationsSpec extends FunFunSpec {
     case op: OpCode_INDX => memory.write(0xc001, values(0)).write(values(0) + values(1)(), values(2)).write(values(0) + values(1)() + 1, values(3)).write(Util.byteVals2Addr(values.drop(2).take(2)), values(4))
     case op: OpCode_INDY => memory.write(0xc001, values(0)).write(values(0), values(2)).write(values(0) + 1, values(3)).write(Util.byteVals2Addr(values.drop(2).take(2)) + values(1), values(4))
     case op: OpCode_REL => memory.write(0xc001, values(0))
+    case op: OpCode_AC =>
     case _ => throw new RuntimeException("invalid opcode: " + opCode)
   }
 

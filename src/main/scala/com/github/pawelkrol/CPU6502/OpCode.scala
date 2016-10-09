@@ -26,13 +26,18 @@ object OpCode {
     case ByteVal(0x1d) => OpCode_ORA_ABSX
     case ByteVal(0x21) => OpCode_AND_INDX
     case ByteVal(0x25) => OpCode_AND_ZP
+    case ByteVal(0x26) => OpCode_ROL_ZP
     case ByteVal(0x29) => OpCode_AND_IMM
+    case ByteVal(0x2a) => OpCode_ROL_AC
     case ByteVal(0x2d) => OpCode_AND_ABS
+    case ByteVal(0x2e) => OpCode_ROL_ABS
     case ByteVal(0x30) => OpCode_BMI_REL
     case ByteVal(0x31) => OpCode_AND_INDY
     case ByteVal(0x35) => OpCode_AND_ZPX
+    case ByteVal(0x36) => OpCode_ROL_ZPX
     case ByteVal(0x39) => OpCode_AND_ABSY
     case ByteVal(0x3d) => OpCode_AND_ABSX
+    case ByteVal(0x3e) => OpCode_ROL_ABSX
     case ByteVal(0x41) => OpCode_EOR_INDX
     case ByteVal(0x45) => OpCode_EOR_ZP
     case ByteVal(0x49) => OpCode_EOR_IMM
@@ -130,6 +135,13 @@ sealed trait OpCode_REL extends OpCode {
   def memSize = 0x02
 }
 
+sealed trait OpCode_AC extends OpCode {
+
+  val cycles = 0x02
+
+  def memSize = 0x01
+}
+
 object OpCode_ORA_INDX extends OpCode_INDX with SymName_ORA
 
 object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
@@ -152,9 +164,21 @@ object OpCode_AND_INDX extends OpCode_INDX with SymName_AND
 
 object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
 
+object OpCode_ROL_ZP extends OpCode_ZP with SymName_ROL {
+
+  override val cycles = 0x05
+}
+
 object OpCode_AND_IMM extends OpCode_IMM with SymName_AND
 
+object OpCode_ROL_AC extends OpCode_AC with SymName_ROL
+
 object OpCode_AND_ABS extends OpCode_ABS with SymName_AND
+
+object OpCode_ROL_ABS extends OpCode_ABS with SymName_ROL {
+
+  override val cycles = 0x06
+}
 
 object OpCode_BMI_REL extends OpCode_REL with SymName_BMI
 
@@ -162,9 +186,19 @@ object OpCode_AND_INDY extends OpCode_INDY with SymName_AND
 
 object OpCode_AND_ZPX extends OpCode_ZPX with SymName_AND
 
+object OpCode_ROL_ZPX extends OpCode_ZPX with SymName_ROL {
+
+  override val cycles = 0x06
+}
+
 object OpCode_AND_ABSY extends OpCode_ABSY with SymName_AND
 
 object OpCode_AND_ABSX extends OpCode_ABSX with SymName_AND
+
+object OpCode_ROL_ABSX extends OpCode_ABSX with SymName_ROL {
+
+  override val cycles = 0x07
+}
 
 object OpCode_EOR_INDX extends OpCode_INDX with SymName_EOR
 
