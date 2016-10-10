@@ -4,7 +4,7 @@ import org.scalatest.FunSpec
 
 import scala.collection.mutable.Stack
 
-class FunFunSpec extends FunSpec {
+trait FunFunSpec extends FunSpec {
 
   private var beforeEach: () => Any = _
 
@@ -50,10 +50,14 @@ class FunFunSpec extends FunSpec {
   val internalIt: FunFunSpec.this.ItWord = it
 
   def it(message: String)(test: => Any) {
+    val beforeIt = applyContext
+    internalIt(message)({ beforeIt(); test })
+  }
+
+  private def applyContext = {
     val stack = beforeStack.reverse.clone
     val beforeCallback = beforeEach
-    val beforeIt = () => { if (beforeCallback != null) beforeCallback(); beforeAll(stack) }
-    internalIt(message)({ beforeIt(); test })
+    () => { if (beforeCallback != null) beforeCallback(); beforeAll(stack) }
   }
 
   def it(test: => Any) {
@@ -82,5 +86,16 @@ class FunFunSpec extends FunSpec {
     beforeStack.push(() => init)
     describe(description) { tests }
     beforeStack.pop
+  }
+
+  private var examples = scala.collection.mutable.HashMap[String, (List[Any]) => Unit]()
+
+  def includeExamples(name: String, args: => List[Any]) {
+    applyContext()
+    examples(name)(args)
+  }
+
+  def sharedExamples(name: String, func: (List[Any]) => Unit) {
+    examples.put(name, func)
   }
 }

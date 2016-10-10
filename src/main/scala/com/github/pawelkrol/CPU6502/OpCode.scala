@@ -1,7 +1,7 @@
 package com.github.pawelkrol.CPU6502
 
 /** Operation code */
-sealed trait OpCode {
+trait OpCode {
 
   def cycles: Int
 
@@ -72,70 +72,70 @@ object OpCode {
   }
 }
 
-sealed trait OpCode_IMM extends OpCode {
+trait OpCode_IMM extends OpCode {
 
   val cycles = 0x02
 
   def memSize = 0x02
 }
 
-sealed trait OpCode_ZP extends OpCode {
+trait OpCode_ZP extends OpCode {
 
   val cycles = 0x03
 
   def memSize = 0x02
 }
 
-sealed trait OpCode_ZPX extends OpCode {
+trait OpCode_ZPX extends OpCode {
 
   val cycles = 0x04
 
   def memSize = 0x02
 }
 
-sealed trait OpCode_ABS extends OpCode {
+trait OpCode_ABS extends OpCode {
 
   val cycles = 0x04
 
   def memSize = 0x03
 }
 
-sealed trait OpCode_ABSX extends OpCode {
+trait OpCode_ABSX extends OpCode {
 
   val cycles = 0x04
 
   def memSize = 0x03
 }
 
-sealed trait OpCode_ABSY extends OpCode {
+trait OpCode_ABSY extends OpCode {
 
   val cycles = 0x04
 
   def memSize = 0x03
 }
 
-sealed trait OpCode_INDX extends OpCode {
+trait OpCode_INDX extends OpCode {
 
   val cycles = 0x06
 
   def memSize = 0x02
 }
 
-sealed trait OpCode_INDY extends OpCode {
+trait OpCode_INDY extends OpCode {
 
   val cycles = 0x05
 
   def memSize = 0x02
 }
 
-sealed trait OpCode_REL extends OpCode {
+trait OpCode_REL extends OpCode {
 
   val cycles = 0x02
 
   def memSize = 0x02
 }
 
-sealed trait OpCode_AC extends OpCode {
+trait OpCode_AC extends OpCode {
 
   val cycles = 0x02
 

@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class FunOperationsSpec extends FunFunSpec {
+trait FunOperationsSpec extends FunFunSpec {
 
   private var memory: Memory = _
   private var register: Register = _
