@@ -210,6 +210,41 @@ abstract class Operation(memory: Memory, register: Register) {
     memory.write(get_addr_ABSX, opROL(get_arg_ABSX))
   }
 
+  private def opROR(value: ByteVal): ByteVal = {
+    val carry = if (register.getStatusFlag(CF)) 0x0100 else 0x0000
+    val valueToRoll = value() | carry
+    register.setStatusFlag(CF, (valueToRoll & 0x0001) > 0)
+    val valueRolled = valueToRoll >> 1
+    register.testStatusFlag(ZF, valueRolled.toShort)
+    register.testStatusFlag(SF, valueRolled.toShort)
+    valueRolled
+  }
+
+  /** [$66] ROR $FF */
+  private def opZeroPageROR {
+    memory.write(get_addr_ZP, opROR(get_arg_ZP))
+  }
+
+  /** [$6a] ROR A */
+  private def opAccumulatorROR {
+    register.AC = opROR(register.AC)
+  }
+
+  /** [$6e] ROR $FFFF */
+  private def opAbsoluteROR {
+    memory.write(get_addr_ABS, opROR(get_arg_ABS))
+  }
+
+  /** [$76] ROR $FF,X */
+  private def opZeroPageXROR {
+    memory.write(get_addr_ZPX, opROR(get_arg_ZPX))
+  }
+
+  /** [$7e] ROR $FFFF,X */
+  private def opAbsoluteXROR {
+    memory.write(get_addr_ABSX, opROR(get_arg_ABSX))
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -281,10 +316,20 @@ abstract class Operation(memory: Memory, register: Register) {
         opAbsoluteY(_ ^ _)
       case OpCode_EOR_ABSX =>
         opAbsoluteX(_ ^ _)
+      case OpCode_ROR_ZP =>
+        opZeroPageROR
       case OpCode_ADC_IMM =>
         opImmediateADC
+      case OpCode_ROR_AC =>
+        opAccumulatorROR
+      case OpCode_ROR_ABS =>
+        opAbsoluteROR
       case OpCode_BVS_REL =>
         opRelative(register.getStatusFlag(OF))
+      case OpCode_ROR_ZPX =>
+        opZeroPageXROR
+      case OpCode_ROR_ABSX =>
+        opAbsoluteXROR
       case OpCode_BCC_REL =>
         opRelative(!register.getStatusFlag(CF))
       case OpCode_BCS_REL =>

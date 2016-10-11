@@ -49,13 +49,18 @@ object OpCode {
     case ByteVal(0x5d) => OpCode_EOR_ABSX
     case ByteVal(0x61) => OpCode_ADC_INDX
     case ByteVal(0x65) => OpCode_ADC_ZP
+    case ByteVal(0x66) => OpCode_ROR_ZP
     case ByteVal(0x69) => OpCode_ADC_IMM
+    case ByteVal(0x6a) => OpCode_ROR_AC
     case ByteVal(0x6d) => OpCode_ADC_ABS
+    case ByteVal(0x6e) => OpCode_ROR_ABS
     case ByteVal(0x70) => OpCode_BVS_REL
     case ByteVal(0x71) => OpCode_ADC_INDY
     case ByteVal(0x75) => OpCode_ADC_ZPX
+    case ByteVal(0x76) => OpCode_ROR_ZPX
     case ByteVal(0x79) => OpCode_ADC_ABSY
     case ByteVal(0x7d) => OpCode_ADC_ABSX
+    case ByteVal(0x7e) => OpCode_ROR_ABSX
     case ByteVal(0x90) => OpCode_BCC_REL
     case ByteVal(0xb0) => OpCode_BCS_REL
     case ByteVal(0xc1) => OpCode_CMP_INDX
@@ -142,6 +147,26 @@ trait OpCode_AC extends OpCode {
   def memSize = 0x01
 }
 
+trait OpCodeRotate_ZP extends OpCode_ZP {
+
+  override val cycles = 0x05
+}
+
+trait OpCodeRotate_ABS extends OpCode_ABS {
+
+  override val cycles = 0x06
+}
+
+trait OpCodeRotate_ZPX extends OpCode_ZPX {
+
+  override val cycles = 0x06
+}
+
+trait OpCodeRotate_ABSX extends OpCode_ABSX {
+
+  override val cycles = 0x07
+}
+
 object OpCode_ORA_INDX extends OpCode_INDX with SymName_ORA
 
 object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
@@ -164,10 +189,7 @@ object OpCode_AND_INDX extends OpCode_INDX with SymName_AND
 
 object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
 
-object OpCode_ROL_ZP extends OpCode_ZP with SymName_ROL {
-
-  override val cycles = 0x05
-}
+object OpCode_ROL_ZP extends OpCodeRotate_ZP with SymName_ROL
 
 object OpCode_AND_IMM extends OpCode_IMM with SymName_AND
 
@@ -175,10 +197,7 @@ object OpCode_ROL_AC extends OpCode_AC with SymName_ROL
 
 object OpCode_AND_ABS extends OpCode_ABS with SymName_AND
 
-object OpCode_ROL_ABS extends OpCode_ABS with SymName_ROL {
-
-  override val cycles = 0x06
-}
+object OpCode_ROL_ABS extends OpCodeRotate_ABS with SymName_ROL
 
 object OpCode_BMI_REL extends OpCode_REL with SymName_BMI
 
@@ -186,19 +205,13 @@ object OpCode_AND_INDY extends OpCode_INDY with SymName_AND
 
 object OpCode_AND_ZPX extends OpCode_ZPX with SymName_AND
 
-object OpCode_ROL_ZPX extends OpCode_ZPX with SymName_ROL {
-
-  override val cycles = 0x06
-}
+object OpCode_ROL_ZPX extends OpCodeRotate_ZPX with SymName_ROL
 
 object OpCode_AND_ABSY extends OpCode_ABSY with SymName_AND
 
 object OpCode_AND_ABSX extends OpCode_ABSX with SymName_AND
 
-object OpCode_ROL_ABSX extends OpCode_ABSX with SymName_ROL {
-
-  override val cycles = 0x07
-}
+object OpCode_ROL_ABSX extends OpCodeRotate_ABSX with SymName_ROL
 
 object OpCode_EOR_INDX extends OpCode_INDX with SymName_EOR
 
@@ -222,9 +235,15 @@ object OpCode_ADC_INDX extends OpCode_INDX with SymName_ADC
 
 object OpCode_ADC_ZP extends OpCode_ZP with SymName_ADC
 
+object OpCode_ROR_ZP extends OpCodeRotate_ZP with SymName_ROR
+
 object OpCode_ADC_IMM extends OpCode_IMM with SymName_ADC
 
+object OpCode_ROR_AC extends OpCode_AC with SymName_ROR
+
 object OpCode_ADC_ABS extends OpCode_ABS with SymName_ADC
+
+object OpCode_ROR_ABS extends OpCodeRotate_ABS with SymName_ROR
 
 object OpCode_BVS_REL extends OpCode_REL with SymName_BVS
 
@@ -232,9 +251,13 @@ object OpCode_ADC_INDY extends OpCode_INDY with SymName_ADC
 
 object OpCode_ADC_ZPX extends OpCode_ZPX with SymName_ADC
 
+object OpCode_ROR_ZPX extends OpCodeRotate_ZPX with SymName_ROR
+
 object OpCode_ADC_ABSY extends OpCode_ABSY with SymName_ADC
 
 object OpCode_ADC_ABSX extends OpCode_ABSX with SymName_ADC
+
+object OpCode_ROR_ABSX extends OpCodeRotate_ABSX with SymName_ROR
 
 object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
 
