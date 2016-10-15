@@ -144,6 +144,11 @@ abstract class Operation(memory: Memory, register: Register) {
     opADC(get_arg_IMM)
   }
 
+  /** [$65] ADC $FF */
+  private def opZeroPageADC {
+    opADC(get_arg_ZP)
+  }
+
   /** [$10] BPL *-1 */
   /** [$30] BMI *-1 */
   /** [$50] BVC *-1 */
@@ -316,6 +321,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opAbsoluteY(_ ^ _)
       case OpCode_EOR_ABSX =>
         opAbsoluteX(_ ^ _)
+      case OpCode_ADC_ZP =>
+        opZeroPageADC
       case OpCode_ROR_ZP =>
         opZeroPageROR
       case OpCode_ADC_IMM =>

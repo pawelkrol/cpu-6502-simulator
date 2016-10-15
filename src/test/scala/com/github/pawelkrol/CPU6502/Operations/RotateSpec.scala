@@ -3,7 +3,7 @@ package Operations
 
 trait RotateSpec extends FunOperationsSpec {
 
-  def setupSharedExamples: Unit
+  protected def setupSharedExamples: Unit
 
   setupSharedExamples
 
@@ -19,17 +19,17 @@ trait RotateSpec extends FunOperationsSpec {
 
   protected def setupAbsXOpArg(address: Short, xr: ByteVal, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ xr :+ value): _*) }
 
-  def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  private def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
     context("with carry flag") { CF = true } {
-      executeSharedExamplesWithCarry(target, true, initTestCase)
+      executeSharedExamplesWithFlags(target, initTestCase)
     }
 
     context("without carry flag") { CF = false } {
-      executeSharedExamplesWithCarry(target, false, initTestCase)
+      executeSharedExamplesWithFlags(target, initTestCase)
     }
   }
 
-  def executeSharedExamplesWithCarry(target: String, carry: Boolean, initTestCase: (Int) => Unit) {
+  private def executeSharedExamplesWithFlags(target: String, initTestCase: (Int) => Unit) {
     context(target + " = $00") { initTestCase(0x00) } { includeSharedExamples() }
     context(target + " = $01") { initTestCase(0x01) } { includeSharedExamples() }
     context(target + " = $02") { initTestCase(0x02) } { includeSharedExamples() }

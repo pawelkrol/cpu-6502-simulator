@@ -3,7 +3,7 @@ package Operations
 
 class RotateLeftSpec extends RotateSpec {
 
-  def setupSharedExamples {
+  protected def setupSharedExamples {
     sharedExamples("ROL", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
       val fetchValue: () => Int = args(1).asInstanceOf[() => Int]

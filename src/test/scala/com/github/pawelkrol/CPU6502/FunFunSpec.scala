@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-import org.scalatest.FunSpec
+import org.scalatest.{ FunSpec, Tag }
 
 import scala.collection.mutable.Stack
 
@@ -97,5 +97,18 @@ trait FunFunSpec extends FunSpec {
 
   def sharedExamples(name: String, func: (List[Any]) => Unit) {
     examples.put(name, func)
+  }
+
+  protected def xdescribe(description: String)(fun: => Unit): Unit = {
+    ignore(description) {}
+  }
+
+  protected def xit(specText: String, testTags: Tag*)(testFun: => Any): Unit = {
+    ignore(specText) {}
+  }
+
+  protected def xit(testFun: => Any) {
+    testCount += 1
+    xit("no message (test #" + testCount + ")")(testFun)
   }
 }
