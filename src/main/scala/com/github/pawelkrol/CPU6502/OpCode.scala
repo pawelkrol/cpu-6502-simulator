@@ -72,7 +72,15 @@ object OpCode {
     case ByteVal(0xd5) => OpCode_CMP_ZPX
     case ByteVal(0xd9) => OpCode_CMP_ABSY
     case ByteVal(0xdd) => OpCode_CMP_ABSX
+    case ByteVal(0xe1) => OpCode_SBC_INDX
+    case ByteVal(0xe5) => OpCode_SBC_ZP
+    case ByteVal(0xe9) => OpCode_SBC_IMM
+    case ByteVal(0xed) => OpCode_SBC_ABS
     case ByteVal(0xf0) => OpCode_BEQ_REL
+    case ByteVal(0xf1) => OpCode_SBC_INDY
+    case ByteVal(0xf5) => OpCode_SBC_ZPX
+    case ByteVal(0xf9) => OpCode_SBC_ABSY
+    case ByteVal(0xfd) => OpCode_SBC_ABSX
     case _ => throw NotImplementedError()
   }
 }
@@ -281,4 +289,20 @@ object OpCode_CMP_ABSY extends OpCode_ABSY with SymName_CMP
 
 object OpCode_CMP_ABSX extends OpCode_ABSX with SymName_CMP
 
+object OpCode_SBC_INDX extends OpCode_INDX with SymName_SBC
+
+object OpCode_SBC_ZP extends OpCode_ZP with SymName_SBC
+
+object OpCode_SBC_IMM extends OpCode_IMM with SymName_SBC
+
+object OpCode_SBC_ABS extends OpCode_ABS with SymName_SBC
+
 object OpCode_BEQ_REL extends OpCode_REL with SymName_BEQ
+
+object OpCode_SBC_INDY extends OpCode_INDY with SymName_SBC
+
+object OpCode_SBC_ZPX extends OpCode_ZPX with SymName_SBC
+
+object OpCode_SBC_ABSY extends OpCode_ABSY with SymName_SBC
+
+object OpCode_SBC_ABSX extends OpCode_ABSX with SymName_SBC

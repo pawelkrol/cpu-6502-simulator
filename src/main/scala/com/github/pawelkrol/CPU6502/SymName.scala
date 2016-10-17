@@ -78,3 +78,8 @@ trait SymName_ROR extends SymName {
 
   def symName = "ROR"
 }
+
+trait SymName_SBC extends SymName {
+
+  def symName = "SBC"
+}

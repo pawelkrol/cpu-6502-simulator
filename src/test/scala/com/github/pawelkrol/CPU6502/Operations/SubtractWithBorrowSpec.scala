@@ -1,10 +1,10 @@
 package com.github.pawelkrol.CPU6502
 package Operations
 
-class AddWithCarrySpec extends ArithmeticSpec {
+class SubtractWithBorrowSpec extends ArithmeticSpec {
 
   protected def setupSharedExamples {
-    sharedExamples("ADC", (args) => {
+    sharedExamples("SBC", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
       val decimal: Boolean = args(1).asInstanceOf[Boolean]
       val accumulator: Int = args(2).asInstanceOf[Int]
@@ -12,7 +12,7 @@ class AddWithCarrySpec extends ArithmeticSpec {
 
       val argumentValue = fetchValue()
 
-      val message = "(Argument #1 [accumulator] = $%02x, Argument #2 = $%02x, CF = %s, DF = %s) => assert ".format(accumulator, argumentValue, carry, decimal)
+      val message = "(Minuend [accumulator] = $%02x, Subtrahend = $%02x, CF = %s, DF = %s) => assert ".format(accumulator, argumentValue, carry, decimal)
 
       decimal match {
         case false => {
@@ -23,39 +23,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfe) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x80 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
-                    case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                    }
+                    case 0xff => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
                 }
@@ -63,37 +63,37 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
-                    case 0x80 => {
+                    case 0x7f => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
                     case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
@@ -107,37 +107,37 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
-                    case 0x80 => {
+                    case 0x7f => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
                     case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
@@ -147,36 +147,36 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x03) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
-                    }
-                    case 0x80 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x82) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
                     case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
@@ -191,36 +191,36 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7e) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7d) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfe) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
-                    }
-                    case 0x80 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfe) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
                     case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7e) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
@@ -231,39 +231,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7e) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
-                    }
-                    case 0x80 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
-                    case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0xff => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -275,39 +275,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7e) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
-                    }
-                    case 0x80 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
-                    case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0xff => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -315,36 +315,36 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x82) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
-                    }
-                    case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
-                    case 0x80 => {
+                    case 0x7f => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
-                    case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                    }
+                    case 0xff => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x81) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
@@ -359,36 +359,36 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfe) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7e) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfd) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
-                    case 0x80 => {
+                    case 0x7f => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
-                    case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfe) }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7e) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                    }
+                    case 0xff => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
@@ -399,39 +399,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // without decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xfe) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x7f => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x80 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x80) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
-                    case 0xff => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0xff) }
+                    case 0x80 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x7f) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                    }
+                    case 0xff => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
                 }
@@ -447,39 +447,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x01 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x98) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x09 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x90) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x10 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x89) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
                 }
@@ -487,39 +487,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                    }
+                    case 0x01 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x09 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x91) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x10 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x90) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -531,39 +531,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                    }
+                    case 0x01 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x09 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x91) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x10 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x90) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
                       it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -571,39 +571,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x03) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x92) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x12) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x10 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x91) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x02) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
                 }
@@ -615,39 +615,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x08) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x07) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x18) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x19) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x08) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x10 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x98) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
                 }
@@ -655,39 +655,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x08) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x19) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x20) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -699,39 +699,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x08) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x19) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x20) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                    }
+                    case 0x99 => {
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
-                    }
-                    case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -739,39 +739,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x12) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x20) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x21) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                     case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x11) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
                 }
@@ -783,39 +783,39 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, without carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x98) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x97) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x08) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x89) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x88) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x98) }
-                      it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
+                      it(message + "CF") { expect { operation }.toChange { CF }.to(false) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
-                      it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
+                      it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                   }
                 }
@@ -823,38 +823,38 @@ class AddWithCarrySpec extends ArithmeticSpec {
                   // with decimal flag, with carry flag
                   argumentValue match {
                     case 0x00 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x01 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x01) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x98) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x09 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x09) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x90) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x10 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x10) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x89) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
                       it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
                       it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(true) }
                     }
                     case 0x99 => {
-                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x99) }
+                      it(message + "AC") { expect { operation }.toChange { AC }.to(0x00) }
                       it(message + "CF") { expect { operation }.toChange { CF }.to(true) }
-                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(false) }
-                      it(message + "OF") { expect { operation }.toChange { OF }.to(true) }
+                      it(message + "ZF") { expect { operation }.toChange { ZF }.to(true) }
+                      it(message + "OF") { expect { operation }.toChange { OF }.to(false) }
                       it(message + "SF") { expect { operation }.toChange { SF }.to(false) }
                     }
                   }
@@ -868,13 +868,13 @@ class AddWithCarrySpec extends ArithmeticSpec {
   }
 
   describe("add memory to accumulator with carry") {
-    applySharedExamples("ADC", OpCode_ADC_IMM)
-    applySharedExamples("ADC", OpCode_ADC_ZP)
-    applySharedExamples("ADC", OpCode_ADC_ZPX)
-    applySharedExamples("ADC", OpCode_ADC_ABS)
-    applySharedExamples("ADC", OpCode_ADC_ABSX)
-    applySharedExamples("ADC", OpCode_ADC_ABSY)
-    applySharedExamples("ADC", OpCode_ADC_INDX)
-    applySharedExamples("ADC", OpCode_ADC_INDY)
+    applySharedExamples("SBC", OpCode_SBC_IMM)
+    applySharedExamples("SBC", OpCode_SBC_ZP)
+    applySharedExamples("SBC", OpCode_SBC_ZPX)
+    applySharedExamples("SBC", OpCode_SBC_ABS)
+    applySharedExamples("SBC", OpCode_SBC_ABSX)
+    applySharedExamples("SBC", OpCode_SBC_ABSY)
+    applySharedExamples("SBC", OpCode_SBC_INDX)
+    applySharedExamples("SBC", OpCode_SBC_INDY)
   }
 }

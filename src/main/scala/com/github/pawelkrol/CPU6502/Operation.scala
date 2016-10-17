@@ -250,6 +250,47 @@ abstract class Operation(memory: Memory, register: Register) {
     memory.write(get_addr_ABSX, opROR(get_arg_ABSX))
   }
 
+  private def opSBC(term: ByteVal) {
+    if (register.getStatusFlag(DF)) {
+      val carry = if (register.getStatusFlag(CF)) 0x00 else 0x01
+      val old = register.AC()
+      val src = term()
+      val tmp = old - src - carry
+      val tmp_a = (old & 0x0f) - (src & 0x0f) - carry
+      val tmp_b = if ((tmp_a & 0x10) == 0x10)
+        ((tmp_a - 0x06) & 0x0f) | ((old & 0xf0) - (src & 0xf0) - 0x10)
+      else
+        (tmp_a & 0x0f) | ((old & 0xf0) - (src & 0xf0))
+      val tmp_c = if ((tmp_b & 0x100) == 0x100) tmp_b - 0x60 else tmp_b
+      register.testStatusFlag(SF, tmp_c.toShort)
+      register.setStatusFlag(CF, (tmp & 0x1ff) < 0x100)
+      register.setStatusFlag(ZF, (tmp & 0xff) == 0x00)
+      register.setStatusFlag(OF, (((old ^ tmp) & 0x80) == 0x80) && (((old ^ src) & 0x80) == 0x80))
+      register.AC = tmp_c
+    }
+    else {
+      val carry = if (register.getStatusFlag(CF)) 0x01 else 0x00
+      val rhs = term & 0xff
+      val old = register.AC()
+      val diff = old - rhs - (carry ^ 0x01)
+      register.testStatusFlag(ZF, diff.toShort)
+      register.testStatusFlag(SF, diff.toShort)
+      register.setStatusFlag(CF, diff <= 0xff && diff >= 0x00)
+      register.setStatusFlag(OF, ((old ^ rhs).toByte & (old ^ diff).toByte & 0x80) == 0x80)
+      register.AC = diff
+    }
+  }
+
+  /** [$e9] SBC #$FF */
+  private def opImmediateSBC {
+    opSBC(get_arg_IMM)
+  }
+
+  /** [$e5] SBC $FF */
+  private def opZeroPageSBC {
+    opSBC(get_arg_ZP)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -345,6 +386,10 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediateCMP
       case OpCode_BNE_REL =>
         opRelative(!register.getStatusFlag(ZF))
+      case OpCode_SBC_ZP =>
+        opZeroPageSBC
+      case OpCode_SBC_IMM =>
+        opImmediateSBC
       case OpCode_BEQ_REL =>
         opRelative(register.getStatusFlag(ZF))
       case _ =>
