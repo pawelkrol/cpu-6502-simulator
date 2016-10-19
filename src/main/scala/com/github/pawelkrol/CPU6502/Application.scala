@@ -5,6 +5,8 @@ import scopt.OptionParser
 
 object Application extends StrictLogging {
 
+  val core = Core()
+
   private val parser = new OptionParser[Arguments]("cpu-6502-simulator") {
     head("cpu-6502-simulator", "0.01-SNAPSHOT")
     help("help") text("prints out this usage text")

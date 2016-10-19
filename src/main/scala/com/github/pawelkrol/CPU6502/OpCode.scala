@@ -81,7 +81,7 @@ object OpCode {
     case ByteVal(0xf5) => OpCode_SBC_ZPX
     case ByteVal(0xf9) => OpCode_SBC_ABSY
     case ByteVal(0xfd) => OpCode_SBC_ABSX
-    case _ => throw NotImplementedError()
+    case _ => throw IllegalOpCodeError(value)
   }
 }
 
