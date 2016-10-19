@@ -24,7 +24,7 @@ trait FunOperationsSpec extends FunFunSpec {
 
   before {
     memory = Memory()
-    register = Register(0x00, 0x00, 0x00, 0x00, 0xff, 0xc000)
+    register = Register(0x00, 0x00, 0x00, 0x20, 0xf9, 0xc000)
     core = Core(memory, register)
   }
 
@@ -46,6 +46,10 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def YR_=(value: ByteVal) { register.YR = value }
 
+  def SP = register.SP
+
+  def SP_=(value: ByteVal) { register.SP = value }
+
   private def getStatusFlag(flag: Status.Flag) = register.getStatusFlag(flag)
 
   def CF = getStatusFlag(Status.CF)
@@ -56,9 +60,17 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def ZF_=(value: Boolean) { register.setStatusFlag(Status.ZF, value) }
 
+  def IF = getStatusFlag(Status.IF)
+
+  def IF_=(value: Boolean) { register.setStatusFlag(Status.IF, value) }
+
   def DF = getStatusFlag(Status.DF)
 
   def DF_=(value: Boolean) { register.setStatusFlag(Status.DF, value) }
+
+  def BF = getStatusFlag(Status.BF)
+
+  def BF_=(value: Boolean) { register.setStatusFlag(Status.BF, value) }
 
   def OF = getStatusFlag(Status.OF)
 
@@ -74,6 +86,10 @@ trait FunOperationsSpec extends FunFunSpec {
       new ChangeValidator(code, register.PC).to(value)
     }
 
+    def toSetPC(address: Short) = {
+      new ChangeValidator(code, register.PC).to(address)
+    }
+
     def toUseCycles(offset: Short) = {
       val value = (core.cycleCount + offset).toShort
       new ChangeValidator(code, core.cycleCount).to(value)
@@ -85,6 +101,8 @@ trait FunOperationsSpec extends FunFunSpec {
   def memoryRead(address: Int): ByteVal = memoryRead(address.toShort)
 
   def memoryRead(address: Short): ByteVal = memory.read(address)
+
+  def memoryWrite(address: Int, value: ByteVal) { memoryWrite(address.toShort, value) }
 
   def memoryWrite(address: Short, value: ByteVal) { memory.write(address, value) }
 }

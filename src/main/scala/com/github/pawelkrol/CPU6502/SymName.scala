@@ -4,6 +4,11 @@ package com.github.pawelkrol.CPU6502
 sealed trait SymName {
 }
 
+trait SymName_BRK extends SymName {
+
+  def symName = "BRK"
+}
+
 trait SymName_ADC extends SymName {
 
   def symName = "ADC"

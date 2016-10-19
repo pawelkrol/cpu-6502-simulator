@@ -15,6 +15,7 @@ trait OpCode {
 object OpCode {
 
   def apply(value: ByteVal) = value match {
+    case ByteVal(0x00) => OpCode_BRK_IMM
     case ByteVal(0x01) => OpCode_ORA_INDX
     case ByteVal(0x05) => OpCode_ORA_ZP
     case ByteVal(0x09) => OpCode_ORA_IMM
@@ -171,6 +172,11 @@ trait OpCodeRotate_ZPX extends OpCode_ZPX {
 }
 
 trait OpCodeRotate_ABSX extends OpCode_ABSX {
+
+  override val cycles = 0x07
+}
+
+object OpCode_BRK_IMM extends OpCode_IMM with SymName_BRK {
 
   override val cycles = 0x07
 }

@@ -291,6 +291,18 @@ abstract class Operation(memory: Memory, register: Register) {
     opSBC(get_arg_ZP)
   }
 
+  /** [$00] BRK */
+  private def opBRK {
+    register.setStatusFlag(BF, true)
+    val (pcl, pch) = Util.word2Nibbles((register.PC + 2).toShort)
+    register.push(memory, pch)
+    register.push(memory, pcl)
+    register.push(memory, register.status)
+    register.setStatusFlag(IF, true)
+    register.setPC(get_val_from_addr(0xfffe.toShort))
+    register.advancePC(-OpCode_BRK_IMM.memSize) // additionally compensate for an advancement in "eval"
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -298,6 +310,8 @@ abstract class Operation(memory: Memory, register: Register) {
 
   def eval(opCode: OpCode) {
     opCode match {
+      case OpCode_BRK_IMM =>
+        opBRK
       case OpCode_ORA_INDX =>
         opIndirectX(_ | _)
       case OpCode_ORA_ZP =>
