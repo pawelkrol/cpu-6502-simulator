@@ -19,6 +19,11 @@ trait SymName_AND extends SymName {
   def symName = "AND"
 }
 
+trait SymName_ASL extends SymName {
+
+  def symName = "ASL"
+}
+
 trait SymName_BCC extends SymName {
 
   def symName = "BCC"

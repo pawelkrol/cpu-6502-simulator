@@ -18,13 +18,18 @@ object OpCode {
     case ByteVal(0x00) => OpCode_BRK_IMM
     case ByteVal(0x01) => OpCode_ORA_INDX
     case ByteVal(0x05) => OpCode_ORA_ZP
+    case ByteVal(0x06) => OpCode_ASL_ZP
     case ByteVal(0x09) => OpCode_ORA_IMM
+    case ByteVal(0x0a) => OpCode_ASL_AC
     case ByteVal(0x0d) => OpCode_ORA_ABS
+    case ByteVal(0x0e) => OpCode_ASL_ABS
     case ByteVal(0x10) => OpCode_BPL_REL
     case ByteVal(0x11) => OpCode_ORA_INDY
     case ByteVal(0x15) => OpCode_ORA_ZPX
+    case ByteVal(0x16) => OpCode_ASL_ZPX
     case ByteVal(0x19) => OpCode_ORA_ABSY
     case ByteVal(0x1d) => OpCode_ORA_ABSX
+    case ByteVal(0x1e) => OpCode_ASL_ABSX
     case ByteVal(0x21) => OpCode_AND_INDX
     case ByteVal(0x25) => OpCode_AND_ZP
     case ByteVal(0x26) => OpCode_ROL_ZP
@@ -185,9 +190,15 @@ object OpCode_ORA_INDX extends OpCode_INDX with SymName_ORA
 
 object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
 
+object OpCode_ASL_ZP extends OpCodeRotate_ZP with SymName_ASL
+
 object OpCode_ORA_IMM extends OpCode_IMM with SymName_ORA
 
+object OpCode_ASL_AC extends OpCode_AC with SymName_ASL
+
 object OpCode_ORA_ABS extends OpCode_ABS with SymName_ORA
+
+object OpCode_ASL_ABS extends OpCodeRotate_ABS with SymName_ASL
 
 object OpCode_BPL_REL extends OpCode_REL with SymName_BPL
 
@@ -195,9 +206,13 @@ object OpCode_ORA_INDY extends OpCode_INDY with SymName_ORA
 
 object OpCode_ORA_ZPX extends OpCode_ZPX with SymName_ORA
 
+object OpCode_ASL_ZPX extends OpCodeRotate_ZPX with SymName_ASL
+
 object OpCode_ORA_ABSY extends OpCode_ABSY with SymName_ORA
 
 object OpCode_ORA_ABSX extends OpCode_ABSX with SymName_ORA
+
+object OpCode_ASL_ABSX extends OpCodeRotate_ABSX with SymName_ASL
 
 object OpCode_AND_INDX extends OpCode_INDX with SymName_AND
 
