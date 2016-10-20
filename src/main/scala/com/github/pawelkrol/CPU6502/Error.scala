@@ -6,7 +6,7 @@ class NotImplementedError(message: String) extends Error(message)
 
 object NotImplementedError {
 
-  def apply() = new NotImplementedError("not implemented")
+  def apply() = new NotImplementedError("Not implemented")
 }
 
 class IllegalOpCodeError(message: String) extends Error(message)

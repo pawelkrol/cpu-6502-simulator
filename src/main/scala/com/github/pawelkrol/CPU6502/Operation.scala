@@ -242,6 +242,14 @@ abstract class Operation(memory: Memory, register: Register) {
     valueRolled
   }
 
+  private def opLSR(value: ByteVal): ByteVal = {
+    register.setStatusFlag(CF, (value() & 0x01) == 0x01)
+    val valueRolled = value() >> 1
+    register.testStatusFlag(ZF, valueRolled.toShort)
+    register.testStatusFlag(SF, valueRolled.toShort)
+    valueRolled
+  }
+
   private def opROL(value: ByteVal): ByteVal = {
     val carry = if (register.getStatusFlag(CF)) 0x01 else 0x00
     val valueRolled = (value() << 1) | carry
@@ -308,111 +316,121 @@ abstract class Operation(memory: Memory, register: Register) {
 
   def eval(opCode: OpCode) {
     opCode match {
-      case OpCode_BRK_IMM =>
+      case OpCode_BRK_IMM =>  // $00
         opBRK
-      case OpCode_ORA_INDX =>
+      case OpCode_ORA_INDX => // $01
         opIndirectX(_ | _)
-      case OpCode_ORA_ZP =>
+      case OpCode_ORA_ZP =>   // $05
         opZeroPage(_ | _)
-      case OpCode_ASL_ZP =>
+      case OpCode_ASL_ZP =>   // $06
         opZeroPage(opASL(_))
-      case OpCode_ORA_IMM =>
+      case OpCode_ORA_IMM =>  // $09
         opImmediate(_ | _)
-      case OpCode_ASL_AC =>
+      case OpCode_ASL_AC =>   // $0a
         opAccumulator(opASL(_))
-      case OpCode_ORA_ABS =>
+      case OpCode_ORA_ABS =>  // $0d
         opAbsolute(_ | _)
-      case OpCode_ASL_ABS =>
+      case OpCode_ASL_ABS =>  // $0e
         opAbsolute(opASL(_))
-      case OpCode_BPL_REL =>
+      case OpCode_BPL_REL =>  // $10
         opRelative(!register.getStatusFlag(SF))
-      case OpCode_ORA_INDY =>
+      case OpCode_ORA_INDY => // $11
         opIndirectY(_ | _)
-      case OpCode_ORA_ZPX =>
+      case OpCode_ORA_ZPX =>  // $15
         opZeroPageX(_ | _)
-      case OpCode_ASL_ZPX =>
+      case OpCode_ASL_ZPX =>  // $16
         opZeroPageX(opASL(_))
-      case OpCode_ORA_ABSY =>
+      case OpCode_ORA_ABSY => // $19
         opAbsoluteY(_ | _)
-      case OpCode_ORA_ABSX =>
+      case OpCode_ORA_ABSX => // $1d
         opAbsoluteX(_ | _)
-      case OpCode_ASL_ABSX =>
+      case OpCode_ASL_ABSX => // $1e
         opAbsoluteX(opASL(_))
-      case OpCode_AND_INDX =>
+      case OpCode_AND_INDX => // $21
         opIndirectX(_ & _)
-      case OpCode_AND_ZP =>
+      case OpCode_AND_ZP =>   // $25
         opZeroPage(_ & _)
-      case OpCode_ROL_ZP =>
+      case OpCode_ROL_ZP =>   // $26
         opZeroPage(opROL(_))
-      case OpCode_AND_IMM =>
+      case OpCode_AND_IMM =>  // $29
         opImmediate(_ & _)
-      case OpCode_ROL_AC =>
+      case OpCode_ROL_AC =>   // $2a
         opAccumulator(opROL(_))
-      case OpCode_AND_ABS =>
+      case OpCode_AND_ABS =>  // $2d
         opAbsolute(_ & _)
-      case OpCode_ROL_ABS =>
+      case OpCode_ROL_ABS =>  // $2e
         opAbsolute(opROL(_))
-      case OpCode_BMI_REL =>
+      case OpCode_BMI_REL =>  // $30
         opRelative(register.getStatusFlag(SF))
-      case OpCode_AND_INDY =>
+      case OpCode_AND_INDY => // $31
         opIndirectY(_ & _)
-      case OpCode_ROL_ZPX =>
-        opZeroPageX(opROL(_))
-      case OpCode_AND_ZPX =>
+      case OpCode_AND_ZPX =>  // $35
         opZeroPageX(_ & _)
-      case OpCode_AND_ABSY =>
+      case OpCode_ROL_ZPX =>  // $36
+        opZeroPageX(opROL(_))
+      case OpCode_AND_ABSY => // $39
         opAbsoluteY(_ & _)
-      case OpCode_AND_ABSX =>
+      case OpCode_AND_ABSX => // $3d
         opAbsoluteX(_ & _)
-      case OpCode_ROL_ABSX =>
+      case OpCode_ROL_ABSX => // $3e
         opAbsoluteX(opROL(_))
-      case OpCode_EOR_INDX =>
+      case OpCode_EOR_INDX => // $41
         opIndirectX(_ ^ _)
-      case OpCode_EOR_ZP =>
+      case OpCode_EOR_ZP =>   // $45
         opZeroPage(_ ^ _)
-      case OpCode_EOR_IMM =>
+      case OpCode_LSR_ZP =>   // $46
+        opZeroPage(opLSR(_))
+      case OpCode_EOR_IMM =>  // $49
         opImmediate(_ ^ _)
-      case OpCode_EOR_ABS =>
+      case OpCode_LSR_AC =>   // $4a
+        opAccumulator(opLSR(_))
+      case OpCode_EOR_ABS =>  // $4d
         opAbsolute(_ ^ _)
-      case OpCode_BVC_REL =>
+      case OpCode_LSR_ABS =>  // $4e
+        opAbsolute(opLSR(_))
+      case OpCode_BVC_REL =>  // $50
         opRelative(!register.getStatusFlag(OF))
-      case OpCode_EOR_INDY =>
+      case OpCode_EOR_INDY => // $51
         opIndirectY(_ ^ _)
-      case OpCode_EOR_ZPX =>
+      case OpCode_EOR_ZPX =>  // $55
         opZeroPageX(_ ^ _)
-      case OpCode_EOR_ABSY =>
+      case OpCode_LSR_ZPX =>  // $56
+        opZeroPageX(opLSR(_))
+      case OpCode_EOR_ABSY => // $59
         opAbsoluteY(_ ^ _)
-      case OpCode_EOR_ABSX =>
+      case OpCode_EOR_ABSX => // $5d
         opAbsoluteX(_ ^ _)
-      case OpCode_ADC_ZP =>
+      case OpCode_LSR_ABSX => // $5e
+        opAbsoluteX(opLSR(_))
+      case OpCode_ADC_ZP =>   // $65
         opZeroPageADC
-      case OpCode_ROR_ZP =>
+      case OpCode_ROR_ZP =>   // $66
         opZeroPage(opROR(_))
-      case OpCode_ADC_IMM =>
+      case OpCode_ADC_IMM =>  // $69
         opImmediateADC
-      case OpCode_ROR_AC =>
+      case OpCode_ROR_AC =>   // $6a
         opAccumulator(opROR(_))
-      case OpCode_ROR_ABS =>
+      case OpCode_ROR_ABS =>  // $6e
         opAbsolute(opROR(_))
-      case OpCode_BVS_REL =>
+      case OpCode_BVS_REL =>  // $70
         opRelative(register.getStatusFlag(OF))
-      case OpCode_ROR_ZPX =>
+      case OpCode_ROR_ZPX =>  // $76
         opZeroPageX(opROR(_))
-      case OpCode_ROR_ABSX =>
+      case OpCode_ROR_ABSX => // $7e
         opAbsoluteX(opROR(_))
-      case OpCode_BCC_REL =>
+      case OpCode_BCC_REL =>  // $90
         opRelative(!register.getStatusFlag(CF))
-      case OpCode_BCS_REL =>
+      case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
-      case OpCode_CMP_IMM =>
+      case OpCode_CMP_IMM =>  // $c9
         opImmediateCMP
-      case OpCode_BNE_REL =>
+      case OpCode_BNE_REL =>  // $d0
         opRelative(!register.getStatusFlag(ZF))
-      case OpCode_SBC_ZP =>
+      case OpCode_SBC_ZP =>   // $e5
         opZeroPageSBC
-      case OpCode_SBC_IMM =>
+      case OpCode_SBC_IMM =>  // $e9
         opImmediateSBC
-      case OpCode_BEQ_REL =>
+      case OpCode_BEQ_REL =>  // $f0
         opRelative(register.getStatusFlag(ZF))
       case _ =>
         throw NotImplementedError()

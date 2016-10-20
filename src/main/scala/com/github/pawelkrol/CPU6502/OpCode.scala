@@ -46,13 +46,18 @@ object OpCode {
     case ByteVal(0x3e) => OpCode_ROL_ABSX
     case ByteVal(0x41) => OpCode_EOR_INDX
     case ByteVal(0x45) => OpCode_EOR_ZP
+    case ByteVal(0x46) => OpCode_LSR_ZP
     case ByteVal(0x49) => OpCode_EOR_IMM
+    case ByteVal(0x4a) => OpCode_LSR_AC
     case ByteVal(0x4d) => OpCode_EOR_ABS
+    case ByteVal(0x4e) => OpCode_LSR_ABS
     case ByteVal(0x50) => OpCode_BVC_REL
     case ByteVal(0x51) => OpCode_EOR_INDY
     case ByteVal(0x55) => OpCode_EOR_ZPX
+    case ByteVal(0x56) => OpCode_LSR_ZPX
     case ByteVal(0x59) => OpCode_EOR_ABSY
     case ByteVal(0x5d) => OpCode_EOR_ABSX
+    case ByteVal(0x5e) => OpCode_LSR_ABSX
     case ByteVal(0x61) => OpCode_ADC_INDX
     case ByteVal(0x65) => OpCode_ADC_ZP
     case ByteVal(0x66) => OpCode_ROR_ZP
@@ -246,9 +251,15 @@ object OpCode_EOR_INDX extends OpCode_INDX with SymName_EOR
 
 object OpCode_EOR_ZP extends OpCode_ZP with SymName_EOR
 
+object OpCode_LSR_ZP extends OpCodeRotate_ZP with SymName_LSR
+
 object OpCode_EOR_IMM extends OpCode_IMM with SymName_EOR
 
+object OpCode_LSR_AC extends OpCode_AC with SymName_LSR
+
 object OpCode_EOR_ABS extends OpCode_ABS with SymName_EOR
+
+object OpCode_LSR_ABS extends OpCodeRotate_ABS with SymName_LSR
 
 object OpCode_BVC_REL extends OpCode_REL with SymName_BVC
 
@@ -256,9 +267,13 @@ object OpCode_EOR_INDY extends OpCode_INDY with SymName_EOR
 
 object OpCode_EOR_ZPX extends OpCode_ZPX with SymName_EOR
 
+object OpCode_LSR_ZPX extends OpCodeRotate_ZPX with SymName_LSR
+
 object OpCode_EOR_ABSY extends OpCode_ABSY with SymName_EOR
 
 object OpCode_EOR_ABSX extends OpCode_ABSX with SymName_EOR
+
+object OpCode_LSR_ABSX extends OpCodeRotate_ABSX with SymName_LSR
 
 object OpCode_ADC_INDX extends OpCode_INDX with SymName_ADC
 
