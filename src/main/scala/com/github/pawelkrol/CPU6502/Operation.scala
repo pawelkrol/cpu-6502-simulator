@@ -319,6 +319,19 @@ abstract class Operation(memory: Memory, register: Register) {
     register.status = register.pop(memory) & ~BF.srBits
   }
 
+  /** [$48] PHA */
+  private def opPHA {
+    register.push(memory, register.AC)
+  }
+
+  /** [$68] PLA */
+  private def opPLA {
+    val valuePopped = register.pop(memory)
+    register.AC = valuePopped
+    register.testStatusFlag(ZF, valuePopped.toShort)
+    register.testStatusFlag(SF, valuePopped.toShort)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -394,6 +407,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPage(_ ^ _)
       case OpCode_LSR_ZP =>   // $46
         opZeroPage(opLSR(_))
+      case OpCode_PHA =>      // $48
+        opPHA
       case OpCode_EOR_IMM =>  // $49
         opImmediate(_ ^ _)
       case OpCode_LSR_AC =>   // $4a
@@ -420,6 +435,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPageADC
       case OpCode_ROR_ZP =>   // $66
         opZeroPage(opROR(_))
+      case OpCode_PLA =>      // $68
+        opPLA
       case OpCode_ADC_IMM =>  // $69
         opImmediateADC
       case OpCode_ROR_AC =>   // $6a

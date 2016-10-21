@@ -49,6 +49,7 @@ object OpCode {
     case ByteVal(0x41) => OpCode_EOR_INDX
     case ByteVal(0x45) => OpCode_EOR_ZP
     case ByteVal(0x46) => OpCode_LSR_ZP
+    case ByteVal(0x48) => OpCode_PHA
     case ByteVal(0x49) => OpCode_EOR_IMM
     case ByteVal(0x4a) => OpCode_LSR_AC
     case ByteVal(0x4d) => OpCode_EOR_ABS
@@ -63,6 +64,7 @@ object OpCode {
     case ByteVal(0x61) => OpCode_ADC_INDX
     case ByteVal(0x65) => OpCode_ADC_ZP
     case ByteVal(0x66) => OpCode_ROR_ZP
+    case ByteVal(0x68) => OpCode_PLA
     case ByteVal(0x69) => OpCode_ADC_IMM
     case ByteVal(0x6a) => OpCode_ROR_AC
     case ByteVal(0x6d) => OpCode_ADC_ABS
@@ -101,6 +103,16 @@ object OpCode {
 trait OpCode_SP extends OpCode {
 
   def memSize = 0x01
+}
+
+trait OpCodePop_SP extends OpCode_SP {
+
+  val cycles = 0x04
+}
+
+trait OpCodePush_SP extends OpCode_SP {
+
+  val cycles = 0x03
 }
 
 trait OpCode_IMM extends OpCode {
@@ -204,10 +216,7 @@ object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
 
 object OpCode_ASL_ZP extends OpCodeRotate_ZP with SymName_ASL
 
-object OpCode_PHP extends OpCode_SP with SymName_PHP {
-
-  val cycles = 0x03
-}
+object OpCode_PHP extends OpCodePush_SP with SymName_PHP
 
 object OpCode_ORA_IMM extends OpCode_IMM with SymName_ORA
 
@@ -237,10 +246,7 @@ object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
 
 object OpCode_ROL_ZP extends OpCodeRotate_ZP with SymName_ROL
 
-object OpCode_PLP extends OpCode_SP with SymName_PLP {
-
-  val cycles = 0x04
-}
+object OpCode_PLP extends OpCodePop_SP with SymName_PLP
 
 object OpCode_AND_IMM extends OpCode_IMM with SymName_AND
 
@@ -270,6 +276,8 @@ object OpCode_EOR_ZP extends OpCode_ZP with SymName_EOR
 
 object OpCode_LSR_ZP extends OpCodeRotate_ZP with SymName_LSR
 
+object OpCode_PHA extends OpCodePush_SP with SymName_PHA
+
 object OpCode_EOR_IMM extends OpCode_IMM with SymName_EOR
 
 object OpCode_LSR_AC extends OpCode_AC with SymName_LSR
@@ -297,6 +305,8 @@ object OpCode_ADC_INDX extends OpCode_INDX with SymName_ADC
 object OpCode_ADC_ZP extends OpCode_ZP with SymName_ADC
 
 object OpCode_ROR_ZP extends OpCodeRotate_ZP with SymName_ROR
+
+object OpCode_PLA extends OpCodePop_SP with SymName_PLA
 
 object OpCode_ADC_IMM extends OpCode_IMM with SymName_ADC
 
