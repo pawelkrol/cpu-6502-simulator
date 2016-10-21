@@ -6,7 +6,7 @@ package com.github.pawelkrol.CPU6502
  */
 class Memory {
 
-  private var _MEMORY = Array.fill[ByteVal](0x10000)(0x00)
+  private var _MEMORY = Array.fill[ByteVal](0x10000)(0xff)
 
   def offset(address: Short) = Util.short2Int(address)
 

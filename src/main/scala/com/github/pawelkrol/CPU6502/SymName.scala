@@ -84,6 +84,26 @@ trait SymName_ORA extends SymName {
   def symName = "ORA"
 }
 
+trait SymName_PHA extends SymName {
+
+  def symName = "PHA"
+}
+
+trait SymName_PHP extends SymName {
+
+  def symName = "PHP"
+}
+
+trait SymName_PLA extends SymName {
+
+  def symName = "PLA"
+}
+
+trait SymName_PLP extends SymName {
+
+  def symName = "PLP"
+}
+
 trait SymName_ROL extends SymName {
 
   def symName = "ROL"

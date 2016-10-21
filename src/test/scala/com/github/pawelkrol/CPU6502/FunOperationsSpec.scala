@@ -46,6 +46,8 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def YR_=(value: ByteVal) { register.YR = value }
 
+  def SR = register.status
+
   def SP = register.SP
 
   def SP_=(value: ByteVal) { register.SP = value }

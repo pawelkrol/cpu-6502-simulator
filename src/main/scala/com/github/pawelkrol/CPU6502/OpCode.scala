@@ -19,6 +19,7 @@ object OpCode {
     case ByteVal(0x01) => OpCode_ORA_INDX
     case ByteVal(0x05) => OpCode_ORA_ZP
     case ByteVal(0x06) => OpCode_ASL_ZP
+    case ByteVal(0x08) => OpCode_PHP
     case ByteVal(0x09) => OpCode_ORA_IMM
     case ByteVal(0x0a) => OpCode_ASL_AC
     case ByteVal(0x0d) => OpCode_ORA_ABS
@@ -33,6 +34,7 @@ object OpCode {
     case ByteVal(0x21) => OpCode_AND_INDX
     case ByteVal(0x25) => OpCode_AND_ZP
     case ByteVal(0x26) => OpCode_ROL_ZP
+    case ByteVal(0x08) => OpCode_PLP
     case ByteVal(0x29) => OpCode_AND_IMM
     case ByteVal(0x2a) => OpCode_ROL_AC
     case ByteVal(0x2d) => OpCode_AND_ABS
@@ -94,6 +96,11 @@ object OpCode {
     case ByteVal(0xfd) => OpCode_SBC_ABSX
     case _ => throw IllegalOpCodeError(value)
   }
+}
+
+trait OpCode_SP extends OpCode {
+
+  def memSize = 0x01
 }
 
 trait OpCode_IMM extends OpCode {
@@ -197,6 +204,11 @@ object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
 
 object OpCode_ASL_ZP extends OpCodeRotate_ZP with SymName_ASL
 
+object OpCode_PHP extends OpCode_SP with SymName_PHP {
+
+  val cycles = 0x03
+}
+
 object OpCode_ORA_IMM extends OpCode_IMM with SymName_ORA
 
 object OpCode_ASL_AC extends OpCode_AC with SymName_ASL
@@ -224,6 +236,11 @@ object OpCode_AND_INDX extends OpCode_INDX with SymName_AND
 object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
 
 object OpCode_ROL_ZP extends OpCodeRotate_ZP with SymName_ROL
+
+object OpCode_PLP extends OpCode_SP with SymName_PLP {
+
+  val cycles = 0x04
+}
 
 object OpCode_AND_IMM extends OpCode_IMM with SymName_AND
 

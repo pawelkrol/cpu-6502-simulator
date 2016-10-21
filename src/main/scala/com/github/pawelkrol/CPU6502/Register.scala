@@ -18,13 +18,15 @@ class Register(var AC: ByteVal, var XR: ByteVal, var YR: ByteVal, SR: ByteVal, v
 
   def status = _SR
 
+  def status_=(value: ByteVal) { _SR = value }
+
   /** Stack operations */
   def push(memory: Memory, value: ByteVal) {
     memory.write((0x0100 + SP).toShort, value)
     SP -= 1
   }
 
-  private def pop(memory: Memory) = {
+  def pop(memory: Memory) = {
     SP += 1
     memory.read((0x0100 + SP).toShort)
   }

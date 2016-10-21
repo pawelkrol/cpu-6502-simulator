@@ -309,6 +309,16 @@ abstract class Operation(memory: Memory, register: Register) {
     memory.write(get_addr_ABSX, op(get_arg_ABSX))
   }
 
+  /** [$08] PHP */
+  private def opPHP {
+    register.push(memory, register.status & ~BF.srBits)
+  }
+
+  /** [$28] PLP */
+  private def opPLP {
+    register.status = register.pop(memory) & ~BF.srBits
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -324,6 +334,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPage(_ | _)
       case OpCode_ASL_ZP =>   // $06
         opZeroPage(opASL(_))
+      case OpCode_PHP =>      // $08
+        opPHP
       case OpCode_ORA_IMM =>  // $09
         opImmediate(_ | _)
       case OpCode_ASL_AC =>   // $0a
@@ -352,6 +364,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPage(_ & _)
       case OpCode_ROL_ZP =>   // $26
         opZeroPage(opROL(_))
+      case OpCode_PLP =>      // $28
+        opPLP
       case OpCode_AND_IMM =>  // $29
         opImmediate(_ & _)
       case OpCode_ROL_AC =>   // $2a
