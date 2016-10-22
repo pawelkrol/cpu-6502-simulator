@@ -28,6 +28,7 @@ object OpCode {
     case ByteVal(0x11) => OpCode_ORA_INDY
     case ByteVal(0x15) => OpCode_ORA_ZPX
     case ByteVal(0x16) => OpCode_ASL_ZPX
+    case ByteVal(0x18) => OpCode_CLC
     case ByteVal(0x19) => OpCode_ORA_ABSY
     case ByteVal(0x1d) => OpCode_ORA_ABSX
     case ByteVal(0x1e) => OpCode_ASL_ABSX
@@ -58,6 +59,7 @@ object OpCode {
     case ByteVal(0x51) => OpCode_EOR_INDY
     case ByteVal(0x55) => OpCode_EOR_ZPX
     case ByteVal(0x56) => OpCode_LSR_ZPX
+    case ByteVal(0x58) => OpCode_CLI
     case ByteVal(0x59) => OpCode_EOR_ABSY
     case ByteVal(0x5d) => OpCode_EOR_ABSX
     case ByteVal(0x5e) => OpCode_LSR_ABSX
@@ -78,6 +80,7 @@ object OpCode {
     case ByteVal(0x7e) => OpCode_ROR_ABSX
     case ByteVal(0x90) => OpCode_BCC_REL
     case ByteVal(0xb0) => OpCode_BCS_REL
+    case ByteVal(0xb8) => OpCode_CLV
     case ByteVal(0xc1) => OpCode_CMP_INDX
     case ByteVal(0xc5) => OpCode_CMP_ZP
     case ByteVal(0xc9) => OpCode_CMP_IMM
@@ -85,6 +88,7 @@ object OpCode {
     case ByteVal(0xd0) => OpCode_BNE_REL
     case ByteVal(0xd1) => OpCode_CMP_INDY
     case ByteVal(0xd5) => OpCode_CMP_ZPX
+    case ByteVal(0xd8) => OpCode_CLD
     case ByteVal(0xd9) => OpCode_CMP_ABSY
     case ByteVal(0xdd) => OpCode_CMP_ABSX
     case ByteVal(0xe1) => OpCode_SBC_INDX
@@ -113,6 +117,13 @@ trait OpCodePop_SP extends OpCode_SP {
 trait OpCodePush_SP extends OpCode_SP {
 
   val cycles = 0x03
+}
+
+trait OpCode_IMP extends OpCode {
+
+  val cycles = 0x02
+
+  def memSize = 0x01
 }
 
 trait OpCode_IMM extends OpCode {
@@ -234,6 +245,8 @@ object OpCode_ORA_ZPX extends OpCode_ZPX with SymName_ORA
 
 object OpCode_ASL_ZPX extends OpCodeRotate_ZPX with SymName_ASL
 
+object OpCode_CLC extends OpCode_IMP with SymName_CLC
+
 object OpCode_ORA_ABSY extends OpCode_ABSY with SymName_ORA
 
 object OpCode_ORA_ABSX extends OpCode_ABSX with SymName_ORA
@@ -294,6 +307,8 @@ object OpCode_EOR_ZPX extends OpCode_ZPX with SymName_EOR
 
 object OpCode_LSR_ZPX extends OpCodeRotate_ZPX with SymName_LSR
 
+object OpCode_CLI extends OpCode_IMP with SymName_CLI
+
 object OpCode_EOR_ABSY extends OpCode_ABSY with SymName_EOR
 
 object OpCode_EOR_ABSX extends OpCode_ABSX with SymName_EOR
@@ -334,6 +349,8 @@ object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
 
 object OpCode_BCS_REL extends OpCode_REL with SymName_BCS
 
+object OpCode_CLV extends OpCode_IMP with SymName_CLV
+
 object OpCode_CMP_INDX extends OpCode_INDX with SymName_CMP
 
 object OpCode_CMP_ZP extends OpCode_ZP with SymName_CMP
@@ -347,6 +364,8 @@ object OpCode_BNE_REL extends OpCode_REL with SymName_BNE
 object OpCode_CMP_INDY extends OpCode_INDY with SymName_CMP
 
 object OpCode_CMP_ZPX extends OpCode_ZPX with SymName_CMP
+
+object OpCode_CLD extends OpCode_IMP with SymName_CLD
 
 object OpCode_CMP_ABSY extends OpCode_ABSY with SymName_CMP
 

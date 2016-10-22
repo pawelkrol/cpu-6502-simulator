@@ -332,6 +332,14 @@ abstract class Operation(memory: Memory, register: Register) {
     register.testStatusFlag(SF, valuePopped.toShort)
   }
 
+  /** [$18] CLC */
+  /** [$58] CLI */
+  /** [$b8] CLV */
+  /** [$d8] CLD */
+  private def opClearFlag(flag: Flag) {
+    register.setStatusFlag(flag, false)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -365,6 +373,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPageX(_ | _)
       case OpCode_ASL_ZPX =>  // $16
         opZeroPageX(opASL(_))
+      case OpCode_CLC =>      // $18
+        opClearFlag(CF)
       case OpCode_ORA_ABSY => // $19
         opAbsoluteY(_ | _)
       case OpCode_ORA_ABSX => // $1d
@@ -425,6 +435,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPageX(_ ^ _)
       case OpCode_LSR_ZPX =>  // $56
         opZeroPageX(opLSR(_))
+      case OpCode_CLI =>      // $58
+        opClearFlag(IF)
       case OpCode_EOR_ABSY => // $59
         opAbsoluteY(_ ^ _)
       case OpCode_EOR_ABSX => // $5d
@@ -453,10 +465,14 @@ abstract class Operation(memory: Memory, register: Register) {
         opRelative(!register.getStatusFlag(CF))
       case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
+      case OpCode_CLV =>      // $b8
+        opClearFlag(OF)
       case OpCode_CMP_IMM =>  // $c9
         opImmediateCMP
       case OpCode_BNE_REL =>  // $d0
         opRelative(!register.getStatusFlag(ZF))
+      case OpCode_CLD =>      // $d8
+        opClearFlag(DF)
       case OpCode_SBC_ZP =>   // $e5
         opZeroPageSBC
       case OpCode_SBC_IMM =>  // $e9

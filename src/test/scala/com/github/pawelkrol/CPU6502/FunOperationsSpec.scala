@@ -34,6 +34,14 @@ trait FunOperationsSpec extends FunFunSpec {
     context(op.toString) { opCode = op } { test }
   }
 
+  def testOpCode(op: OpCode, memSize: Short, cycles: Short)(test: => Any) {
+    testOpCode(op) {
+      it("advances PC by " + memSize + " byte(s)") { expect { operation }.toAdvancePC(memSize) }
+      it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles) }
+      test
+    }
+  }
+
   def AC = register.AC
 
   def AC_=(value: ByteVal) { register.AC = value }
