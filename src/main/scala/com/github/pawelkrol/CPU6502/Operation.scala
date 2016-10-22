@@ -1,8 +1,10 @@
 package com.github.pawelkrol.CPU6502
 
+import com.typesafe.scalalogging.StrictLogging
+
 import Status._
 
-abstract class Operation(memory: Memory, register: Register) {
+abstract class Operation(memory: Memory, register: Register) extends StrictLogging {
 
   var cycleCount = 0
 
@@ -222,16 +224,45 @@ abstract class Operation(memory: Memory, register: Register) {
     opSBC(get_arg_ZP)
   }
 
-  /** [$00] BRK */
-  private def opBRK {
-    register.setStatusFlag(BF, true)
+  private def pushProgramCounterToStack {
     val (pcl, pch) = Util.word2Nibbles((register.PC + 2).toShort)
     register.push(memory, pch)
     register.push(memory, pcl)
+  }
+
+  /** [$00] BRK */
+  private def opBRK {
+    register.setStatusFlag(BF, true)
+    pushProgramCounterToStack
     register.push(memory, register.status)
     register.setStatusFlag(IF, true)
     register.setPC(get_val_from_addr(0xfffe.toShort))
     register.advancePC(-OpCode_BRK_IMM.memSize) // additionally compensate for an advancement in "eval"
+  }
+
+  /** [$20] JSR $FFFF */
+  private def opJSR {
+    val address = get_addr_ABS
+    pushProgramCounterToStack
+    register.setPC(address)
+    register.advancePC(-OpCode_JSR_ABS.memSize) // additionally compensate for an advancement in "eval"
+  }
+
+  /** [$4c] JMP $FFFF */
+  private def opAbsoluteJMP {
+    register.setPC(get_addr_ABS)
+    register.advancePC(-OpCode_JMP_ABS.memSize) // additionally compensate for an advancement in "eval"
+  }
+
+  /** [$6c] JMP ($FFFF) */
+  private def opIndirectJMP {
+    val pc = register.PC
+    val lo = get_addr_ABS
+    val hi = (lo & 0xff00) | ((lo + 1) & 0x00ff)
+    register.setPC(get_arg_ABS() | (memory.read(hi)() << 8))
+    if (hi.toShort != (lo + 1).toShort)
+      logger.info("6502 indirect jump bug triggered at $%04x, indirect address = $%04x".format(pc, lo))
+    register.advancePC(-OpCode_JMP_IND.memSize) // additionally compensate for an advancement in "eval"
   }
 
   private def opASL(value: ByteVal): ByteVal = {
@@ -388,6 +419,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opAbsoluteX(_ | _)
       case OpCode_ASL_ABSX => // $1e
         opAbsoluteX(opASL(_))
+      case OpCode_JSR_ABS =>  // $20
+        opJSR
       case OpCode_AND_INDX => // $21
         opIndirectX(_ & _)
       case OpCode_AND_ZP =>   // $25
@@ -432,6 +465,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediate(_ ^ _)
       case OpCode_LSR_AC =>   // $4a
         opAccumulator(opLSR(_))
+      case OpCode_JMP_ABS =>  // $4c
+        opAbsoluteJMP
       case OpCode_EOR_ABS =>  // $4d
         opAbsolute(_ ^ _)
       case OpCode_LSR_ABS =>  // $4e
@@ -462,6 +497,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediateADC
       case OpCode_ROR_AC =>   // $6a
         opAccumulator(opROR(_))
+      case OpCode_JMP_IND =>  // $6c
+        opIndirectJMP
       case OpCode_ROR_ABS =>  // $6e
         opAbsolute(opROR(_))
       case OpCode_BVS_REL =>  // $70

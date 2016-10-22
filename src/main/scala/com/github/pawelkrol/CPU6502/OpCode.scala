@@ -32,6 +32,7 @@ object OpCode {
     case ByteVal(0x19) => OpCode_ORA_ABSY
     case ByteVal(0x1d) => OpCode_ORA_ABSX
     case ByteVal(0x1e) => OpCode_ASL_ABSX
+    case ByteVal(0x20) => OpCode_JSR_ABS
     case ByteVal(0x21) => OpCode_AND_INDX
     case ByteVal(0x25) => OpCode_AND_ZP
     case ByteVal(0x26) => OpCode_ROL_ZP
@@ -54,6 +55,7 @@ object OpCode {
     case ByteVal(0x48) => OpCode_PHA
     case ByteVal(0x49) => OpCode_EOR_IMM
     case ByteVal(0x4a) => OpCode_LSR_AC
+    case ByteVal(0x4c) => OpCode_JMP_ABS
     case ByteVal(0x4d) => OpCode_EOR_ABS
     case ByteVal(0x4e) => OpCode_LSR_ABS
     case ByteVal(0x50) => OpCode_BVC_REL
@@ -70,6 +72,7 @@ object OpCode {
     case ByteVal(0x68) => OpCode_PLA
     case ByteVal(0x69) => OpCode_ADC_IMM
     case ByteVal(0x6a) => OpCode_ROR_AC
+    case ByteVal(0x6c) => OpCode_JMP_IND
     case ByteVal(0x6d) => OpCode_ADC_ABS
     case ByteVal(0x6e) => OpCode_ROR_ABS
     case ByteVal(0x70) => OpCode_BVS_REL
@@ -156,6 +159,25 @@ trait OpCode_ABS extends OpCode {
 
   def memSize = 0x03
 }
+
+trait OpCodeCall_ABS extends OpCode_ABS {
+
+  override val cycles = 0x06
+}
+
+trait OpCodeJump_ABS extends OpCode_ABS {
+
+  override val cycles = 0x03
+}
+
+trait OpCode_IND extends OpCode {
+
+  val cycles = 0x05
+
+  def memSize = 0x03
+}
+
+trait OpCodeJump_IND extends OpCode_IND
 
 trait OpCode_ABSX extends OpCode {
 
@@ -256,6 +278,8 @@ object OpCode_ORA_ABSX extends OpCode_ABSX with SymName_ORA
 
 object OpCode_ASL_ABSX extends OpCodeRotate_ABSX with SymName_ASL
 
+object OpCode_JSR_ABS extends OpCodeCall_ABS with SymName_JSR
+
 object OpCode_AND_INDX extends OpCode_INDX with SymName_AND
 
 object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
@@ -300,6 +324,8 @@ object OpCode_EOR_IMM extends OpCode_IMM with SymName_EOR
 
 object OpCode_LSR_AC extends OpCode_AC with SymName_LSR
 
+object OpCode_JMP_ABS extends OpCodeJump_ABS with SymName_JMP
+
 object OpCode_EOR_ABS extends OpCode_ABS with SymName_EOR
 
 object OpCode_LSR_ABS extends OpCodeRotate_ABS with SymName_LSR
@@ -331,6 +357,8 @@ object OpCode_PLA extends OpCodePop_SP with SymName_PLA
 object OpCode_ADC_IMM extends OpCode_IMM with SymName_ADC
 
 object OpCode_ROR_AC extends OpCode_AC with SymName_ROR
+
+object OpCode_JMP_IND extends OpCodeJump_IND with SymName_JMP
 
 object OpCode_ADC_ABS extends OpCode_ABS with SymName_ADC
 
