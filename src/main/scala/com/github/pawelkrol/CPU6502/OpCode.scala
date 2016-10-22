@@ -44,6 +44,7 @@ object OpCode {
     case ByteVal(0x31) => OpCode_AND_INDY
     case ByteVal(0x35) => OpCode_AND_ZPX
     case ByteVal(0x36) => OpCode_ROL_ZPX
+    case ByteVal(0x38) => OpCode_SEC
     case ByteVal(0x39) => OpCode_AND_ABSY
     case ByteVal(0x3d) => OpCode_AND_ABSX
     case ByteVal(0x3e) => OpCode_ROL_ABSX
@@ -75,6 +76,7 @@ object OpCode {
     case ByteVal(0x71) => OpCode_ADC_INDY
     case ByteVal(0x75) => OpCode_ADC_ZPX
     case ByteVal(0x76) => OpCode_ROR_ZPX
+    case ByteVal(0x78) => OpCode_SEI
     case ByteVal(0x79) => OpCode_ADC_ABSY
     case ByteVal(0x7d) => OpCode_ADC_ABSX
     case ByteVal(0x7e) => OpCode_ROR_ABSX
@@ -98,6 +100,7 @@ object OpCode {
     case ByteVal(0xf0) => OpCode_BEQ_REL
     case ByteVal(0xf1) => OpCode_SBC_INDY
     case ByteVal(0xf5) => OpCode_SBC_ZPX
+    case ByteVal(0xf8) => OpCode_SED
     case ByteVal(0xf9) => OpCode_SBC_ABSY
     case ByteVal(0xfd) => OpCode_SBC_ABSX
     case _ => throw IllegalOpCodeError(value)
@@ -277,6 +280,8 @@ object OpCode_AND_ZPX extends OpCode_ZPX with SymName_AND
 
 object OpCode_ROL_ZPX extends OpCodeRotate_ZPX with SymName_ROL
 
+object OpCode_SEC extends OpCode_IMP with SymName_SEC
+
 object OpCode_AND_ABSY extends OpCode_ABSY with SymName_AND
 
 object OpCode_AND_ABSX extends OpCode_ABSX with SymName_AND
@@ -339,6 +344,8 @@ object OpCode_ADC_ZPX extends OpCode_ZPX with SymName_ADC
 
 object OpCode_ROR_ZPX extends OpCodeRotate_ZPX with SymName_ROR
 
+object OpCode_SEI extends OpCode_IMP with SymName_SEI
+
 object OpCode_ADC_ABSY extends OpCode_ABSY with SymName_ADC
 
 object OpCode_ADC_ABSX extends OpCode_ABSX with SymName_ADC
@@ -384,6 +391,8 @@ object OpCode_BEQ_REL extends OpCode_REL with SymName_BEQ
 object OpCode_SBC_INDY extends OpCode_INDY with SymName_SBC
 
 object OpCode_SBC_ZPX extends OpCode_ZPX with SymName_SBC
+
+object OpCode_SED extends OpCode_IMP with SymName_SED
 
 object OpCode_SBC_ABSY extends OpCode_ABSY with SymName_SBC
 

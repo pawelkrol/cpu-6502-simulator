@@ -138,3 +138,18 @@ trait SymName_SBC extends SymName {
 
   def symName = "SBC"
 }
+
+trait SymName_SEC extends SymName {
+
+  def symName = "SEC"
+}
+
+trait SymName_SED extends SymName {
+
+  def symName = "SED"
+}
+
+trait SymName_SEI extends SymName {
+
+  def symName = "SEI"
+}

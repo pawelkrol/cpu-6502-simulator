@@ -340,6 +340,13 @@ abstract class Operation(memory: Memory, register: Register) {
     register.setStatusFlag(flag, false)
   }
 
+  /** [$38] SEC */
+  /** [$78] SEI */
+  /** [$f8] SED */
+  private def opSetFlag(flag: Flag) {
+    register.setStatusFlag(flag, true)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -405,6 +412,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opZeroPageX(_ & _)
       case OpCode_ROL_ZPX =>  // $36
         opZeroPageX(opROL(_))
+      case OpCode_SEC =>      // $38
+        opSetFlag(CF)
       case OpCode_AND_ABSY => // $39
         opAbsoluteY(_ & _)
       case OpCode_AND_ABSX => // $3d
@@ -459,6 +468,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opRelative(register.getStatusFlag(OF))
       case OpCode_ROR_ZPX =>  // $76
         opZeroPageX(opROR(_))
+      case OpCode_SEI =>      // $78
+        opSetFlag(IF)
       case OpCode_ROR_ABSX => // $7e
         opAbsoluteX(opROR(_))
       case OpCode_BCC_REL =>  // $90
@@ -479,6 +490,8 @@ abstract class Operation(memory: Memory, register: Register) {
         opImmediateSBC
       case OpCode_BEQ_REL =>  // $f0
         opRelative(register.getStatusFlag(ZF))
+      case OpCode_SED =>      // $f8
+        opSetFlag(DF)
       case _ =>
         throw NotImplementedError()
     }

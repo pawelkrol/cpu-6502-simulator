@@ -35,10 +35,13 @@ class ImpliedSpec extends FunOperationsSpec {
     testOpCode(opCode, memSize = 1, cycles = 2) {
       val flagName = opCode match {
         case OpCode_CLC =>
+        case OpCode_SEC =>
           executeSharedExamples("carry", () => CF, (value) => CF = value, flagValue)
         case OpCode_CLD =>
+        case OpCode_SED =>
           executeSharedExamples("decimal", () => DF, (value) => DF = value, flagValue)
         case OpCode_CLI =>
+        case OpCode_SEI =>
           executeSharedExamples("interrupt", () => IF, (value) => IF = value, flagValue)
         case OpCode_CLV =>
           executeSharedExamples("overflow", () => OF, (value) => OF = value, flagValue)
@@ -51,5 +54,8 @@ class ImpliedSpec extends FunOperationsSpec {
     includeSharedExamples(OpCode_CLD, false)
     includeSharedExamples(OpCode_CLI, false)
     includeSharedExamples(OpCode_CLV, false)
+    includeSharedExamples(OpCode_SEC, true)
+    includeSharedExamples(OpCode_SED, true)
+    includeSharedExamples(OpCode_SEI, true)
   }
 }
