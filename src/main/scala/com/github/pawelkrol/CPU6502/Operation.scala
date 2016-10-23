@@ -378,6 +378,14 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.setStatusFlag(flag, true)
   }
 
+  /** [$24] BIT $FF */
+  /** [$2c] BIT $FFFF */
+  private def opBIT(bits: ByteVal) {
+    register.setStatusFlag(SF, (bits & 0x80) == 0x80)
+    register.setStatusFlag(OF, (bits & 0x40) == 0x40)
+    register.setStatusFlag(ZF, (bits & register.AC) == 0x00)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -423,6 +431,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opJSR
       case OpCode_AND_INDX => // $21
         opIndirectX(_ & _)
+      case OpCode_BIT_ZP =>   // $24
+        opBIT(get_arg_ZP)
       case OpCode_AND_ZP =>   // $25
         opZeroPage(_ & _)
       case OpCode_ROL_ZP =>   // $26
@@ -433,6 +443,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opImmediate(_ & _)
       case OpCode_ROL_AC =>   // $2a
         opAccumulator(opROL(_))
+      case OpCode_BIT_ABS =>  // $2c
+        opBIT(get_arg_ABS)
       case OpCode_AND_ABS =>  // $2d
         opAbsolute(_ & _)
       case OpCode_ROL_ABS =>  // $2e

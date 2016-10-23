@@ -34,11 +34,13 @@ object OpCode {
     case ByteVal(0x1e) => OpCode_ASL_ABSX
     case ByteVal(0x20) => OpCode_JSR_ABS
     case ByteVal(0x21) => OpCode_AND_INDX
+    case ByteVal(0x24) => OpCode_BIT_ZP
     case ByteVal(0x25) => OpCode_AND_ZP
     case ByteVal(0x26) => OpCode_ROL_ZP
     case ByteVal(0x08) => OpCode_PLP
     case ByteVal(0x29) => OpCode_AND_IMM
     case ByteVal(0x2a) => OpCode_ROL_AC
+    case ByteVal(0x2c) => OpCode_BIT_ABS
     case ByteVal(0x2d) => OpCode_AND_ABS
     case ByteVal(0x2e) => OpCode_ROL_ABS
     case ByteVal(0x30) => OpCode_BMI_REL
@@ -282,6 +284,8 @@ object OpCode_JSR_ABS extends OpCodeCall_ABS with SymName_JSR
 
 object OpCode_AND_INDX extends OpCode_INDX with SymName_AND
 
+object OpCode_BIT_ZP extends OpCode_ZP with SymName_BIT
+
 object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
 
 object OpCode_ROL_ZP extends OpCodeRotate_ZP with SymName_ROL
@@ -291,6 +295,8 @@ object OpCode_PLP extends OpCodePop_SP with SymName_PLP
 object OpCode_AND_IMM extends OpCode_IMM with SymName_AND
 
 object OpCode_ROL_AC extends OpCode_AC with SymName_ROL
+
+object OpCode_BIT_ABS extends OpCode_ABS with SymName_BIT
 
 object OpCode_AND_ABS extends OpCode_ABS with SymName_AND
 

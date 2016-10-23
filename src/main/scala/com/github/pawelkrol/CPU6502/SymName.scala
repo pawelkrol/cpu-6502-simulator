@@ -39,6 +39,11 @@ trait SymName_BEQ extends SymName {
   def symName = "BEQ"
 }
 
+trait SymName_BIT extends SymName {
+
+  def symName = "BIT"
+}
+
 trait SymName_BMI extends SymName {
 
   def symName = "BMI"

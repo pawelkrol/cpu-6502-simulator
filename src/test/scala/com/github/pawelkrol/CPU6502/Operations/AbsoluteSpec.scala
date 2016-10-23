@@ -115,5 +115,53 @@ class AbsoluteSpec extends FunOperationsSpec {
         }
       }
     }
+
+    testOpCode(OpCode_BIT_ABS) {
+      it { expect { operation }.toAdvancePC(0x03) }
+
+      context("AC = $80") { AC = 0x80; ZF = false; OF = false; SF = true } {
+        context("BIT $C800") { addr = 0xc800.toShort } {
+          context("$C800 = $00") { setupOpArg(addr, 0x00) } {
+            it("meets preconditions") { assert(memoryRead(0xc800) == 0x00) }
+            it { expect { operation }.notToChange { AC } }
+            it { expect { operation }.toChange { ZF }.from(false).to(true) }
+            it { expect { operation }.notToChange { OF } }
+            it { expect { operation }.toChange { SF }.from(true).to(false) }
+          }
+
+          context("$C800 = $01") { setupOpArg(addr, 0x01) } {
+            it("meets preconditions") { assert(memoryRead(0xc800) == 0x01) }
+            it { expect { operation }.notToChange { AC } }
+            it { expect { operation }.toChange { ZF }.from(false).to(true) }
+            it { expect { operation }.notToChange { OF } }
+            it { expect { operation }.toChange { SF }.from(true).to(false) }
+          }
+
+          context("$C800 = $40") { setupOpArg(addr, 0x40) } {
+            it("meets preconditions") { assert(memoryRead(0xc800) == 0x40) }
+            it { expect { operation }.notToChange { AC } }
+            it { expect { operation }.toChange { ZF }.from(false).to(true) }
+            it { expect { operation }.toChange { OF }.from(false).to(true) }
+            it { expect { operation }.toChange { SF }.from(true).to(false) }
+          }
+
+          context("$C800 = $80") { setupOpArg(addr, 0x80) } {
+            it("meets preconditions") { assert(memoryRead(0xc800) == 0x80) }
+            it { expect { operation }.notToChange { AC } }
+            it { expect { operation }.notToChange { ZF } }
+            it { expect { operation }.notToChange { OF } }
+            it { expect { operation }.notToChange { SF } }
+          }
+
+          context("$C800 = $ff") { setupOpArg(addr, 0xff) } {
+            it("meets preconditions") { assert(memoryRead(0xc800) == 0xff) }
+            it { expect { operation }.notToChange { AC } }
+            it { expect { operation }.notToChange { ZF } }
+            it { expect { operation }.toChange { OF }.from(false).to(true) }
+            it { expect { operation }.notToChange { SF } }
+          }
+        }
+      }
+    }
   }
 }
