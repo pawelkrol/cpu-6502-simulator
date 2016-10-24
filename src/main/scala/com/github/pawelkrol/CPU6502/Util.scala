@@ -33,4 +33,6 @@ object Util {
   def byteVals2Addr(byteVals: Seq[ByteVal]): Short = (byteVals(0)() + (byteVals(1)() << 8)).toShort
 
   def word2Nibbles(addr: Short) = (addr & 0xff, (addr >> 8) & 0xff)
+
+  def nibbles2Word(nibbles: Tuple2[ByteVal, ByteVal]) = byteVals2Addr(Seq[ByteVal](nibbles._1, nibbles._2))
 }

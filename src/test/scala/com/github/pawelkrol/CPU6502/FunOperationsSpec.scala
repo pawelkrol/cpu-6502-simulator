@@ -104,6 +104,10 @@ trait FunOperationsSpec extends FunFunSpec {
       new ChangeValidator(code, register.PC).to(address)
     }
 
+    def toSetSR(value: ByteVal) = {
+      new ChangeValidator(code, register.status).to(value)
+    }
+
     def toUseCycles(offset: Short) = {
       val value = (core.cycleCount + offset).toShort
       new ChangeValidator(code, core.cycleCount).to(value)

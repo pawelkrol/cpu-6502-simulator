@@ -37,7 +37,7 @@ object OpCode {
     case ByteVal(0x24) => OpCode_BIT_ZP
     case ByteVal(0x25) => OpCode_AND_ZP
     case ByteVal(0x26) => OpCode_ROL_ZP
-    case ByteVal(0x08) => OpCode_PLP
+    case ByteVal(0x28) => OpCode_PLP
     case ByteVal(0x29) => OpCode_AND_IMM
     case ByteVal(0x2a) => OpCode_ROL_AC
     case ByteVal(0x2c) => OpCode_BIT_ABS
@@ -51,6 +51,7 @@ object OpCode {
     case ByteVal(0x39) => OpCode_AND_ABSY
     case ByteVal(0x3d) => OpCode_AND_ABSX
     case ByteVal(0x3e) => OpCode_ROL_ABSX
+    case ByteVal(0x40) => OpCode_RTI
     case ByteVal(0x41) => OpCode_EOR_INDX
     case ByteVal(0x45) => OpCode_EOR_ZP
     case ByteVal(0x46) => OpCode_LSR_ZP
@@ -68,6 +69,7 @@ object OpCode {
     case ByteVal(0x59) => OpCode_EOR_ABSY
     case ByteVal(0x5d) => OpCode_EOR_ABSX
     case ByteVal(0x5e) => OpCode_LSR_ABSX
+    case ByteVal(0x60) => OpCode_RTS
     case ByteVal(0x61) => OpCode_ADC_INDX
     case ByteVal(0x65) => OpCode_ADC_ZP
     case ByteVal(0x66) => OpCode_ROR_ZP
@@ -132,6 +134,11 @@ trait OpCode_IMP extends OpCode {
   val cycles = 0x02
 
   def memSize = 0x01
+}
+
+trait OpCodeReturn_IMP extends OpCode_IMP {
+
+  override val cycles = 0x06
 }
 
 trait OpCode_IMM extends OpCode {
@@ -318,6 +325,8 @@ object OpCode_AND_ABSX extends OpCode_ABSX with SymName_AND
 
 object OpCode_ROL_ABSX extends OpCodeRotate_ABSX with SymName_ROL
 
+object OpCode_RTI extends OpCodeReturn_IMP with SymName_RTI
+
 object OpCode_EOR_INDX extends OpCode_INDX with SymName_EOR
 
 object OpCode_EOR_ZP extends OpCode_ZP with SymName_EOR
@@ -351,6 +360,8 @@ object OpCode_EOR_ABSY extends OpCode_ABSY with SymName_EOR
 object OpCode_EOR_ABSX extends OpCode_ABSX with SymName_EOR
 
 object OpCode_LSR_ABSX extends OpCodeRotate_ABSX with SymName_LSR
+
+object OpCode_RTS extends OpCodeReturn_IMP with SymName_RTS
 
 object OpCode_ADC_INDX extends OpCode_INDX with SymName_ADC
 

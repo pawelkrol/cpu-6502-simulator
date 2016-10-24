@@ -386,6 +386,25 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.setStatusFlag(ZF, (bits & register.AC) == 0x00)
   }
 
+  private def pullProgramCounterFromStack {
+    val pcl = register.pop(memory)
+    val pch = register.pop(memory)
+    register.PC = Util.nibbles2Word(pcl, pch)
+  }
+
+  /** [$40] RTI */
+  private def opRTI {
+    register.status = register.pop(memory)
+    pullProgramCounterFromStack
+    register.advancePC(-OpCode_RTI.memSize) // additionally compensate for an advancement in "eval"
+  }
+
+  /** [$60] RTS */
+  private def opRTS {
+    pullProgramCounterFromStack
+    register.advancePC(-OpCode_RTS.memSize) // additionally compensate for an advancement in "eval"
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -465,6 +484,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteX(_ & _)
       case OpCode_ROL_ABSX => // $3e
         opAbsoluteX(opROL(_))
+      case OpCode_RTI =>      // $40
+        opRTI
       case OpCode_EOR_INDX => // $41
         opIndirectX(_ ^ _)
       case OpCode_EOR_ZP =>   // $45
@@ -499,6 +520,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteX(_ ^ _)
       case OpCode_LSR_ABSX => // $5e
         opAbsoluteX(opLSR(_))
+      case OpCode_RTS =>      // $60
+        opRTS
       case OpCode_ADC_ZP =>   // $65
         opZeroPageADC
       case OpCode_ROR_ZP =>   // $66

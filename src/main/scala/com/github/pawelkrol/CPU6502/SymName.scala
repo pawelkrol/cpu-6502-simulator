@@ -149,6 +149,16 @@ trait SymName_ROR extends SymName {
   def symName = "ROR"
 }
 
+trait SymName_RTI extends SymName {
+
+  def symName = "RTI"
+}
+
+trait SymName_RTS extends SymName {
+
+  def symName = "RTS"
+}
+
 trait SymName_SBC extends SymName {
 
   def symName = "SBC"
