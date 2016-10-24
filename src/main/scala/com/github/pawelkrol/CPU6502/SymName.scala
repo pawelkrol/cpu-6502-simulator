@@ -178,3 +178,8 @@ trait SymName_SEI extends SymName {
 
   def symName = "SEI"
 }
+
+trait SymName_STA extends SymName {
+
+  def symName = "STA"
+}

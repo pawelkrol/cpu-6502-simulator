@@ -14,13 +14,15 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
 
   private def get_addr_ABSX = get_addr_ABS + register.XR()
 
+  private def get_addr_ABSY = get_addr_ABS + register.YR()
+
   private def get_addr_ZP = memory.read(register.PC + 1)
 
   private def get_addr_ZPX = get_addr_ZP + register.XR()
 
   private def get_addr_INDX = get_val_from_addr(get_addr_ZPX)
 
-  private def get_addr_INDY = get_val_from_addr(get_addr_ZP)
+  private def get_addr_INDY = (get_val_from_addr(get_addr_ZP) + register.YR()).toShort
 
   private def get_arg_IMM = memory.read(register.PC + 1)
 
@@ -36,7 +38,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
 
   private def get_arg_INDX = memory.read(get_addr_INDX)
 
-  private def get_arg_INDY = memory.read(get_addr_INDY + register.YR())
+  private def get_arg_INDY = memory.read(get_addr_INDY)
 
   private def get_arg_REL = memory.read(register.PC + 1)
 
@@ -405,6 +407,11 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.advancePC(-OpCode_RTS.memSize) // additionally compensate for an advancement in "eval"
   }
 
+  /** [$81] STA ($FF,X) */
+  private def opSTA(address: => Short) {
+    memory.write(address, register.AC)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -544,8 +551,22 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSetFlag(IF)
       case OpCode_ROR_ABSX => // $7e
         opAbsoluteX(opROR(_))
+      case OpCode_STA_INDX => // $81
+        opSTA(get_addr_INDX)
+      case OpCode_STA_ZP =>   // $85
+        opSTA(get_addr_ZP)
+      case OpCode_STA_ABS =>  // $8d
+        opSTA(get_addr_ABS)
       case OpCode_BCC_REL =>  // $90
         opRelative(!register.getStatusFlag(CF))
+      case OpCode_STA_INDY => // $91
+        opSTA(get_addr_INDY)
+      case OpCode_STA_ZPX =>  // $95
+        opSTA(get_addr_ZPX)
+      case OpCode_STA_ABSY => // $99
+        opSTA(get_addr_ABSY.toShort)
+      case OpCode_STA_ABSX => // $9d
+        opSTA(get_addr_ABSX.toShort)
       case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
       case OpCode_CLV =>      // $b8

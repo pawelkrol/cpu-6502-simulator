@@ -16,7 +16,7 @@ class IndirectYSpec extends FunOperationsSpec {
       it { expect { operation }.toAdvancePC(0x02) }
 
       context("AC = $00; YR = $02; $0002 = $00, $0003 = $c8") { AC = 0x00; YR = 0x02; ZF = true; SF = false } {
-        context("ORA ($02,Y)") { zp = 0x02; yr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
+        context("ORA ($02),Y") { zp = 0x02; yr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
           context("$C802 = $00") { setupOpArg(zp, yr, zpAddr, 0x00) } {
             it("meets preconditions") { assert(memoryRead(0xc802) == 0x00) }
             it { expect { operation }.notToChange { AC } }
@@ -52,7 +52,7 @@ class IndirectYSpec extends FunOperationsSpec {
       it { expect { operation }.toAdvancePC(0x02) }
 
       context("AC = $FF; YR = $02; $0002 = $00, $0003 = $c8") { AC = 0xff; YR = 0x02; ZF = false; SF = true } {
-        context("AND ($02,Y)") { zp = 0x02; yr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
+        context("AND ($02),Y") { zp = 0x02; yr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
           context("$C802 = $00") { setupOpArg(zp, yr, zpAddr, 0x00) } {
             it("meets preconditions") { assert(memoryRead(0xc802) == 0x00) }
             it { expect { operation }.toChange { AC }.from(0xff).to(0x00) }
@@ -89,7 +89,7 @@ class IndirectYSpec extends FunOperationsSpec {
       it { expect { operation }.toAdvancePC(0x02) }
 
       context("AC = $80; YR = $02; $0002 = $00, $0003 = $c8") { AC = 0x80; YR = 0x02; ZF = false; SF = true } {
-        context("EOR ($02,Y)") { zp = 0x02; yr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
+        context("EOR ($02),Y") { zp = 0x02; yr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
           context("$C802 = $00") { setupOpArg(zp, yr, zpAddr, 0x00) } {
             it("meets preconditions") { assert(memoryRead(0xc802) == 0x00) }
             it { expect { operation }.notToChange { AC } }

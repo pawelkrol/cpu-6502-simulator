@@ -3,6 +3,14 @@ package Operations
 
 class RotateRightSpec extends RotateSpec {
 
+  protected val cycleCount = Map[OpCode, Int](
+    OpCode_ROR_AC -> 2,
+    OpCode_ROR_ZP -> 5,
+    OpCode_ROR_ZPX -> 6,
+    OpCode_ROR_ABS -> 6,
+    OpCode_ROR_ABSX -> 7
+  )
+
   protected def setupSharedExamples {
     sharedExamples("ROR", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
@@ -84,10 +92,6 @@ class RotateRightSpec extends RotateSpec {
   }
 
   describe("rotate one bit right") {
-    applySharedExamples("ROR", OpCode_ROR_AC)
-    applySharedExamples("ROR", OpCode_ROR_ZP)
-    applySharedExamples("ROR", OpCode_ROR_ZPX)
-    applySharedExamples("ROR", OpCode_ROR_ABS)
-    applySharedExamples("ROR", OpCode_ROR_ABSX)
+    cycleCount.keys.foreach((opCode) => applySharedExamples("ROR", opCode))
   }
 }

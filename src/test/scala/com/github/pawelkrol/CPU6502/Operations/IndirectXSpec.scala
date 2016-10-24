@@ -15,7 +15,7 @@ class IndirectXSpec extends FunOperationsSpec {
     testOpCode(OpCode_ORA_INDX) {
       it { expect { operation }.toAdvancePC(0x02) }
 
-      context("AC = $00; XR = $02; $0004 = $00, $0005 = $c8") { AC = 0x00; XR = 0x02; ZF = true; SF = false } {
+      context("AC = $00; XR = $02; $0004 = $00, $0005 = $C8") { AC = 0x00; XR = 0x02; ZF = true; SF = false } {
         context("ORA ($02,X)") { zp = 0x02; xr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
           context("$C800 = $00") { setupOpArg(zp, xr, zpAddr, 0x00) } {
             it("meets preconditions") { assert(memoryRead(0xc800) == 0x00) }
@@ -51,7 +51,7 @@ class IndirectXSpec extends FunOperationsSpec {
     testOpCode(OpCode_AND_INDX) {
       it { expect { operation }.toAdvancePC(0x02) }
 
-      context("AC = $FF; XR = $02; $0004 = $00, $0005 = $c8") { AC = 0xff; XR = 0x02; ZF = false; SF = true } {
+      context("AC = $FF; XR = $02; $0004 = $00, $0005 = $C8") { AC = 0xff; XR = 0x02; ZF = false; SF = true } {
         context("AND ($02,X)") { zp = 0x02; xr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
           context("$C800 = $00") { setupOpArg(zp, xr, zpAddr, 0x00) } {
             it("meets preconditions") { assert(memoryRead(0xc800) == 0x00) }
@@ -88,7 +88,7 @@ class IndirectXSpec extends FunOperationsSpec {
     testOpCode(OpCode_EOR_INDX) {
       it { expect { operation }.toAdvancePC(0x02) }
 
-      context("AC = $80; XR = $02; $0004 = $00, $0005 = $c8") { AC = 0x80; XR = 0x02; ZF = false; SF = true } {
+      context("AC = $80; XR = $02; $0004 = $00, $0005 = $C8") { AC = 0x80; XR = 0x02; ZF = false; SF = true } {
         context("EOR ($02,X)") { zp = 0x02; xr = 0x02; zpAddr = Seq(0x00, 0xc8) } {
           context("$C800 = $00") { setupOpArg(zp, xr, zpAddr, 0x00) } {
             it("meets preconditions") { assert(memoryRead(0xc800) == 0x00) }

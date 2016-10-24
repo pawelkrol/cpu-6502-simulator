@@ -87,7 +87,14 @@ object OpCode {
     case ByteVal(0x79) => OpCode_ADC_ABSY
     case ByteVal(0x7d) => OpCode_ADC_ABSX
     case ByteVal(0x7e) => OpCode_ROR_ABSX
+    case ByteVal(0x81) => OpCode_STA_INDX
+    case ByteVal(0x85) => OpCode_STA_ZP
+    case ByteVal(0x8d) => OpCode_STA_ABS
     case ByteVal(0x90) => OpCode_BCC_REL
+    case ByteVal(0x91) => OpCode_STA_INDY
+    case ByteVal(0x95) => OpCode_STA_ZPX
+    case ByteVal(0x99) => OpCode_STA_ABSY
+    case ByteVal(0x9d) => OpCode_STA_ABSX
     case ByteVal(0xb0) => OpCode_BCS_REL
     case ByteVal(0xb8) => OpCode_CLV
     case ByteVal(0xc1) => OpCode_CMP_INDX
@@ -195,11 +202,21 @@ trait OpCode_ABSX extends OpCode {
   def memSize = 0x03
 }
 
+trait OpCodeStore_ABSX extends OpCode_ABSX {
+
+  override val cycles = 0x05
+}
+
 trait OpCode_ABSY extends OpCode {
 
   val cycles = 0x04
 
   def memSize = 0x03
+}
+
+trait OpCodeStore_ABSY extends OpCode_ABSY {
+
+  override val cycles = 0x05
 }
 
 trait OpCode_INDX extends OpCode {
@@ -214,6 +231,11 @@ trait OpCode_INDY extends OpCode {
   val cycles = 0x05
 
   def memSize = 0x02
+}
+
+trait OpCodeStore_INDY extends OpCode_INDY {
+
+  override val cycles = 0x06
 }
 
 trait OpCode_REL extends OpCode {
@@ -397,7 +419,21 @@ object OpCode_ADC_ABSX extends OpCode_ABSX with SymName_ADC
 
 object OpCode_ROR_ABSX extends OpCodeRotate_ABSX with SymName_ROR
 
+object OpCode_STA_INDX extends OpCode_INDX with SymName_STA
+
+object OpCode_STA_ZP extends OpCode_ZP with SymName_STA
+
+object OpCode_STA_ABS extends OpCode_ABS with SymName_STA
+
 object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
+
+object OpCode_STA_INDY extends OpCodeStore_INDY with SymName_STA
+
+object OpCode_STA_ZPX extends OpCode_ZPX with SymName_STA
+
+object OpCode_STA_ABSY extends OpCodeStore_ABSY with SymName_STA
+
+object OpCode_STA_ABSX extends OpCodeStore_ABSX with SymName_STA
 
 object OpCode_BCS_REL extends OpCode_REL with SymName_BCS
 

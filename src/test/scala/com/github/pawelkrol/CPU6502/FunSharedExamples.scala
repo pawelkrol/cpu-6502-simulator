@@ -3,6 +3,8 @@ package Operations
 
 trait FunSharedExamples extends FunOperationsSpec {
 
+  protected def cycleCount: Map[OpCode, Int]
+
   protected def setupSharedExamples: Unit
 
   setupSharedExamples
@@ -13,15 +15,25 @@ trait FunSharedExamples extends FunOperationsSpec {
 
   protected var xr: ByteVal = _
 
+  protected var yr: ByteVal = _
+
+  protected var zpAddr: Short = _
+
   protected var addr: Short = _
 
   protected var includeSharedExamples: () => Unit = _
 
   protected def setupAbsOpArg(address: Short, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ value): _*) }
 
-  protected def setupAbsXOpArg(address: Short, xr: ByteVal, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ xr :+ value): _*) }
+  protected def setupAbsIndexedOpArg(address: Short, index: ByteVal, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ index :+ value): _*) }
+
+  protected def setupIndirectOpArg(zp: ByteVal, index: ByteVal, zpAddr: Short, value: ByteVal) { assignOpArg((zp +: index +: Util.addr2ByteVals(zpAddr) :+ value): _*) }
 
   protected def sharedExampleArguments(opCode: OpCode): () => List[Any]
+
+  private def assertCycleCount(cycles: Int) {
+    it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles.toShort) }
+  }
 
   def applySharedExamples(sym: String, op: OpCode) {
     includeSharedExamples = () => includeExamples(sym, sharedExampleArguments(op)())
@@ -31,7 +43,7 @@ trait FunSharedExamples extends FunOperationsSpec {
         describe("accumulator addressing mode") {
           testOpCode(op) {
             it("advances PC by 1 byte") { expect { operation }.toAdvancePC(0x01) }
-            it("uses 2 CPU cycles") { expect { operation }.toUseCycles(0x02) }
+            assertCycleCount(cycleCount(op))
 
             context(sym + " A") { assignOpArg() } {
               executeSharedExamples("AC", (opArg) => { AC = opArg })
@@ -44,7 +56,7 @@ trait FunSharedExamples extends FunOperationsSpec {
         describe("zeropage addressing mode") {
           testOpCode(op) {
             it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
-            it("uses 5 CPU cycles") { expect { operation }.toUseCycles(0x05) }
+            assertCycleCount(cycleCount(op))
 
             context(sym + " $02") { zp = 0x02 } {
               executeSharedExamples("$0002", (opArg) => { assignOpArg(zp, opArg) })
@@ -57,7 +69,7 @@ trait FunSharedExamples extends FunOperationsSpec {
         describe("zeropage,x addressing mode") {
           testOpCode(op) {
             it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
-            it("uses 6 CPU cycles") { expect { operation }.toUseCycles(0x06) }
+            assertCycleCount(cycleCount(op))
 
             context("XR = $02") { XR = 0x02 } {
               context(sym + " $02,X") { zp = 0x02; xr = 0x02 } {
@@ -72,7 +84,7 @@ trait FunSharedExamples extends FunOperationsSpec {
         describe("absolute addressing mode") {
           testOpCode(op) {
             it("advances PC by 3 bytes") { expect { operation }.toAdvancePC(0x03) }
-            it("uses 6 CPU cycles") { expect { operation }.toUseCycles(0x06) }
+            assertCycleCount(cycleCount(op))
 
             context(sym + " $C800") { addr = 0xc800.toShort } {
               executeSharedExamples("$C800", (opArg) => { setupAbsOpArg(addr, opArg) })
@@ -85,11 +97,60 @@ trait FunSharedExamples extends FunOperationsSpec {
         describe("absolute,x addressing mode") {
           testOpCode(op) {
             it("advances PC by 3 bytes") { expect { operation }.toAdvancePC(0x03) }
-            it("uses 7 CPU cycles") { expect { operation }.toUseCycles(0x07) }
+            assertCycleCount(cycleCount(op))
 
             context("XR = $02") { XR = 0x02 } {
               context(sym + " $C800,X") { addr = 0xc800.toShort; xr = 0x02 } {
-                executeSharedExamples("$C802", (opArg) => { setupAbsXOpArg(addr, xr, opArg) })
+                executeSharedExamples("$C802", (opArg) => { setupAbsIndexedOpArg(addr, xr, opArg) })
+              }
+            }
+          }
+        }
+      }
+
+      case _: OpCode_ABSY => {
+        describe("absolute,y addressing mode") {
+          testOpCode(op) {
+            it("advances PC by 3 bytes") { expect { operation }.toAdvancePC(0x03) }
+            assertCycleCount(cycleCount(op))
+
+            context("YR = $02") { YR = 0x02 } {
+              context(sym + " $C800,Y") { addr = 0xc800.toShort; yr = 0x02 } {
+                executeSharedExamples("$C802", (opArg) => { setupAbsIndexedOpArg(addr, yr, opArg) })
+              }
+            }
+          }
+        }
+      }
+
+      case _: OpCode_INDX => {
+        describe("(indirect,x) addressing mode") {
+          testOpCode(op) {
+            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            assertCycleCount(cycleCount(op))
+
+            context("XR = $02") { XR = 0x02 } {
+              context(sym + " ($02,X)") { zp = 0x02; xr = 0x02 } {
+                context("$0004 = $00, $0005 = $C8") { zpAddr = 0xc800.toShort } {
+                  executeSharedExamples("$C800", (opArg) => { setupIndirectOpArg(zp, xr, zpAddr, opArg) })
+                }
+              }
+            }
+          }
+        }
+      }
+
+      case _: OpCode_INDY => {
+        describe("(indirect),y addressing mode") {
+          testOpCode(op) {
+            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            assertCycleCount(cycleCount(op))
+
+            context("YR = $02") { YR = 0x02 } {
+              context(sym + " ($02),Y") { zp = 0x02; yr = 0x02 } {
+                context("$0002 = $00, $0003 = $C8") { zpAddr = 0xc800.toShort } {
+                  executeSharedExamples("$C802", (opArg) => { setupIndirectOpArg(zp, yr, zpAddr, opArg) })
+                }
               }
             }
           }
