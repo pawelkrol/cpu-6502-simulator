@@ -462,6 +462,46 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.testStatusFlag(SF, register.XR)
   }
 
+  /** [$8a] TXA */
+  private def opTXA {
+    register.AC = register.XR
+    register.testStatusFlag(ZF, register.AC)
+    register.testStatusFlag(SF, register.AC)
+  }
+
+  /** [$98] TYA */
+  private def opTYA {
+    register.AC = register.YR
+    register.testStatusFlag(ZF, register.AC)
+    register.testStatusFlag(SF, register.AC)
+  }
+
+  /** [$9a] TXS */
+  private def opTXS {
+    register.SP = register.XR
+  }
+
+  /** [$a8] TAY */
+  private def opTAY {
+    register.YR = register.AC
+    register.testStatusFlag(ZF, register.YR)
+    register.testStatusFlag(SF, register.YR)
+  }
+
+  /** [$aa] TAX */
+  private def opTAX {
+    register.XR = register.AC
+    register.testStatusFlag(ZF, register.XR)
+    register.testStatusFlag(SF, register.XR)
+  }
+
+  /** [$ba] TSX */
+  private def opTSX {
+    register.XR = register.SP
+    register.testStatusFlag(ZF, register.XR)
+    register.testStatusFlag(SF, register.XR)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -611,6 +651,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTX(get_addr_ZP)
       case OpCode_DEY =>      // $88
         opDEY
+      case OpCode_TXA =>      // $8a
+        opTXA
       case OpCode_STY_ABS =>  // $8c
         opSTY(get_addr_ABS)
       case OpCode_STA_ABS =>  // $8d
@@ -627,14 +669,24 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTA(get_addr_ZPX)
       case OpCode_STX_ZPY =>  // $96
         opSTX(get_addr_ZPY)
+      case OpCode_TYA =>      // $98
+        opTYA
       case OpCode_STA_ABSY => // $99
         opSTA(get_addr_ABSY.toShort)
+      case OpCode_TXS =>      // $9a
+        opTXS
       case OpCode_STA_ABSX => // $9d
         opSTA(get_addr_ABSX.toShort)
+      case OpCode_TAY =>      // $a8
+        opTAY
+      case OpCode_TAX =>      // $aa
+        opTAX
       case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
       case OpCode_CLV =>      // $b8
         opClearFlag(OF)
+      case OpCode_TSX =>      // $ba
+        opTSX
       case OpCode_INY =>      // $c8
         opINY
       case OpCode_CMP_IMM =>  // $c9

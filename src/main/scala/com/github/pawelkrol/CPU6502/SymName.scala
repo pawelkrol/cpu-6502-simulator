@@ -213,3 +213,33 @@ trait SymName_STY extends SymName {
 
   def symName = "STY"
 }
+
+trait SymName_TAX extends SymName {
+
+  def symName = "TAX"
+}
+
+trait SymName_TAY extends SymName {
+
+  def symName = "TAY"
+}
+
+trait SymName_TSX extends SymName {
+
+  def symName = "TSX"
+}
+
+trait SymName_TXA extends SymName {
+
+  def symName = "TXA"
+}
+
+trait SymName_TXS extends SymName {
+
+  def symName = "TXS"
+}
+
+trait SymName_TYA extends SymName {
+
+  def symName = "TYA"
+}
