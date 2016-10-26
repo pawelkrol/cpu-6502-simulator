@@ -91,6 +91,7 @@ object OpCode {
     case ByteVal(0x84) => OpCode_STY_ZP
     case ByteVal(0x85) => OpCode_STA_ZP
     case ByteVal(0x86) => OpCode_STX_ZP
+    case ByteVal(0x88) => OpCode_DEY
     case ByteVal(0x8c) => OpCode_STY_ABS
     case ByteVal(0x8d) => OpCode_STA_ABS
     case ByteVal(0x8e) => OpCode_STX_ABS
@@ -105,7 +106,9 @@ object OpCode {
     case ByteVal(0xb8) => OpCode_CLV
     case ByteVal(0xc1) => OpCode_CMP_INDX
     case ByteVal(0xc5) => OpCode_CMP_ZP
+    case ByteVal(0xc8) => OpCode_INY
     case ByteVal(0xc9) => OpCode_CMP_IMM
+    case ByteVal(0xca) => OpCode_DEX
     case ByteVal(0xcd) => OpCode_CMP_ABS
     case ByteVal(0xd0) => OpCode_BNE_REL
     case ByteVal(0xd1) => OpCode_CMP_INDY
@@ -115,6 +118,7 @@ object OpCode {
     case ByteVal(0xdd) => OpCode_CMP_ABSX
     case ByteVal(0xe1) => OpCode_SBC_INDX
     case ByteVal(0xe5) => OpCode_SBC_ZP
+    case ByteVal(0xe8) => OpCode_INX
     case ByteVal(0xe9) => OpCode_SBC_IMM
     case ByteVal(0xed) => OpCode_SBC_ABS
     case ByteVal(0xf0) => OpCode_BEQ_REL
@@ -440,6 +444,8 @@ object OpCode_STA_ZP extends OpCode_ZP with SymName_STA
 
 object OpCode_STX_ZP extends OpCode_ZP with SymName_STX
 
+object OpCode_DEY extends OpCode_IMP with SymName_DEY
+
 object OpCode_STY_ABS extends OpCode_ABS with SymName_STY
 
 object OpCode_STA_ABS extends OpCode_ABS with SymName_STA
@@ -468,7 +474,11 @@ object OpCode_CMP_INDX extends OpCode_INDX with SymName_CMP
 
 object OpCode_CMP_ZP extends OpCode_ZP with SymName_CMP
 
+object OpCode_INY extends OpCode_IMP with SymName_INY
+
 object OpCode_CMP_IMM extends OpCode_IMM with SymName_CMP
+
+object OpCode_DEX extends OpCode_IMP with SymName_DEX
 
 object OpCode_CMP_ABS extends OpCode_ABS with SymName_CMP
 
@@ -487,6 +497,8 @@ object OpCode_CMP_ABSX extends OpCode_ABSX with SymName_CMP
 object OpCode_SBC_INDX extends OpCode_INDX with SymName_SBC
 
 object OpCode_SBC_ZP extends OpCode_ZP with SymName_SBC
+
+object OpCode_INX extends OpCode_IMP with SymName_INX
 
 object OpCode_SBC_IMM extends OpCode_IMM with SymName_SBC
 

@@ -434,6 +434,34 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     memory.write(address, register.XR)
   }
 
+  /** [$88] DEY */
+  private def opDEY {
+    register.YR -= 1
+    register.testStatusFlag(ZF, register.YR)
+    register.testStatusFlag(SF, register.YR)
+  }
+
+  /** [$ca] DEX */
+  private def opDEX {
+    register.XR -= 1
+    register.testStatusFlag(ZF, register.XR)
+    register.testStatusFlag(SF, register.XR)
+  }
+
+  /** [$c8] INY */
+  private def opINY {
+    register.YR += 1
+    register.testStatusFlag(ZF, register.YR)
+    register.testStatusFlag(SF, register.YR)
+  }
+
+  /** [$e8] INX */
+  private def opINX {
+    register.XR += 1
+    register.testStatusFlag(ZF, register.XR)
+    register.testStatusFlag(SF, register.XR)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -581,6 +609,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTA(get_addr_ZP)
       case OpCode_STX_ZP =>   // $86
         opSTX(get_addr_ZP)
+      case OpCode_DEY =>      // $88
+        opDEY
       case OpCode_STY_ABS =>  // $8c
         opSTY(get_addr_ABS)
       case OpCode_STA_ABS =>  // $8d
@@ -605,14 +635,20 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opRelative(register.getStatusFlag(CF))
       case OpCode_CLV =>      // $b8
         opClearFlag(OF)
+      case OpCode_INY =>      // $c8
+        opINY
       case OpCode_CMP_IMM =>  // $c9
         opImmediateCMP
+      case OpCode_DEX =>      // $ca
+        opDEX
       case OpCode_BNE_REL =>  // $d0
         opRelative(!register.getStatusFlag(ZF))
       case OpCode_CLD =>      // $d8
         opClearFlag(DF)
       case OpCode_SBC_ZP =>   // $e5
         opZeroPageSBC
+      case OpCode_INX =>      // $e8
+        opINX
       case OpCode_SBC_IMM =>  // $e9
         opImmediateSBC
       case OpCode_BEQ_REL =>  // $f0
