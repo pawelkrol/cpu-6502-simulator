@@ -408,8 +408,21 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   }
 
   /** [$81] STA ($FF,X) */
+  /** [$85] STA $FF */
+  /** [$8d] STA $FFFF */
+  /** [$91] STA ($FF),Y */
+  /** [$95] STA $FF,X */
+  /** [$99] STA $FFFF,Y */
+  /** [$9d] STA $FFFF,X */
   private def opSTA(address: => Short) {
     memory.write(address, register.AC)
+  }
+
+  /** [$84] STY $FF */
+  /** [$8c] STY $FFFF */
+  /** [$94] STY $FF,X */
+  private def opSTY(address: => Short) {
+    memory.write(address, register.YR)
   }
 
   private def addPageCrossPenalty(offset: Int) {
@@ -553,14 +566,20 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteX(opROR(_))
       case OpCode_STA_INDX => // $81
         opSTA(get_addr_INDX)
+      case OpCode_STY_ZP =>   // $84
+        opSTY(get_addr_ZP)
       case OpCode_STA_ZP =>   // $85
         opSTA(get_addr_ZP)
+      case OpCode_STY_ABS =>  // $8c
+        opSTY(get_addr_ABS)
       case OpCode_STA_ABS =>  // $8d
         opSTA(get_addr_ABS)
       case OpCode_BCC_REL =>  // $90
         opRelative(!register.getStatusFlag(CF))
       case OpCode_STA_INDY => // $91
         opSTA(get_addr_INDY)
+      case OpCode_STY_ZPX =>  // $94
+        opSTY(get_addr_ZPX)
       case OpCode_STA_ZPX =>  // $95
         opSTA(get_addr_ZPX)
       case OpCode_STA_ABSY => // $99

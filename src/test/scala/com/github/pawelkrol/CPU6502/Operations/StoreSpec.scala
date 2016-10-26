@@ -3,6 +3,10 @@ package Operations
 
 trait StoreSpec extends FunSharedExamples {
 
+  protected def storedSymbol: String
+
+  protected def assignStoredValue(storedValue: ByteVal): Unit
+
   protected def sharedExampleArguments(address: Short) = List[Any](() => address.toInt, () => memoryRead(address)())
 
   protected def sharedExampleArguments(opCode: OpCode) = opCode match {
@@ -22,15 +26,18 @@ trait StoreSpec extends FunSharedExamples {
       sharedExampleArguments((Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr).toShort)
   }
 
-  protected def initStoreTestCase(ac: ByteVal, initTestCase: (Int) => Unit) {
-    AC = ac
+  protected def initStoreTestCase(storedValue: ByteVal, initTestCase: (Int) => Unit) {
+    assignStoredValue(storedValue)
     initTestCase(0xff) // irrelevant value in a target memory address to be overwritten after storing AC in it
   }
 
   protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
-    context("AC = $00") { initStoreTestCase(0x00, initTestCase) } { includeSharedExamples() }
-    context("AC = $01") { initStoreTestCase(0x01, initTestCase) } { includeSharedExamples() }
-    context("AC = $80") { initStoreTestCase(0x80, initTestCase) } { includeSharedExamples() }
-    context("AC = $FF") { initStoreTestCase(0xff, initTestCase) } { includeSharedExamples() }
+    val storedValues = Seq[ByteVal](0x00, 0x01, 0x80, 0xff)
+
+    storedValues.foreach((storedValue) => {
+      context("%s = $%02x".format(storedSymbol, storedValue())) { initStoreTestCase(storedValue, initTestCase) } {
+        includeSharedExamples()
+      }
+    })
   }
 }

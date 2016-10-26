@@ -3,6 +3,12 @@ package Operations
 
 class StoreAccumulatorSpec extends StoreSpec {
 
+  protected val storedSymbol = "AC"
+
+  protected def assignStoredValue(storedValue: ByteVal) {
+    AC = storedValue
+  }
+
   protected val cycleCount = Map[OpCode, Int](
     OpCode_STA_ZP -> 3,
     OpCode_STA_ZPX -> 4,

@@ -88,10 +88,13 @@ object OpCode {
     case ByteVal(0x7d) => OpCode_ADC_ABSX
     case ByteVal(0x7e) => OpCode_ROR_ABSX
     case ByteVal(0x81) => OpCode_STA_INDX
+    case ByteVal(0x84) => OpCode_STY_ZP
     case ByteVal(0x85) => OpCode_STA_ZP
+    case ByteVal(0x8c) => OpCode_STY_ABS
     case ByteVal(0x8d) => OpCode_STA_ABS
     case ByteVal(0x90) => OpCode_BCC_REL
     case ByteVal(0x91) => OpCode_STA_INDY
+    case ByteVal(0x94) => OpCode_STY_ZPX
     case ByteVal(0x95) => OpCode_STA_ZPX
     case ByteVal(0x99) => OpCode_STA_ABSY
     case ByteVal(0x9d) => OpCode_STA_ABSX
@@ -421,13 +424,19 @@ object OpCode_ROR_ABSX extends OpCodeRotate_ABSX with SymName_ROR
 
 object OpCode_STA_INDX extends OpCode_INDX with SymName_STA
 
+object OpCode_STY_ZP extends OpCode_ZP with SymName_STY
+
 object OpCode_STA_ZP extends OpCode_ZP with SymName_STA
+
+object OpCode_STY_ABS extends OpCode_ABS with SymName_STY
 
 object OpCode_STA_ABS extends OpCode_ABS with SymName_STA
 
 object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
 
 object OpCode_STA_INDY extends OpCodeStore_INDY with SymName_STA
+
+object OpCode_STY_ZPX extends OpCode_ZPX with SymName_STY
 
 object OpCode_STA_ZPX extends OpCode_ZPX with SymName_STA
 
