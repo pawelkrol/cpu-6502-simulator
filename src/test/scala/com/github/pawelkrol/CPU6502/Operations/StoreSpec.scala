@@ -14,6 +14,8 @@ trait StoreSpec extends FunSharedExamples {
       sharedExampleArguments(zp)
     case _: OpCode_ZPX => () =>
       sharedExampleArguments(zp + xr)
+    case _: OpCode_ZPY => () =>
+      sharedExampleArguments(zp + yr)
     case _: OpCode_ABS => () =>
       sharedExampleArguments(addr)
     case _: OpCode_ABSX => () =>

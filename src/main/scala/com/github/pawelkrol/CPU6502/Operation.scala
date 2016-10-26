@@ -20,6 +20,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
 
   private def get_addr_ZPX = get_addr_ZP + register.XR()
 
+  private def get_addr_ZPY = get_addr_ZP + register.YR()
+
   private def get_addr_INDX = get_val_from_addr(get_addr_ZPX)
 
   private def get_addr_INDY = (get_val_from_addr(get_addr_ZP) + register.YR()).toShort
@@ -425,6 +427,13 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     memory.write(address, register.YR)
   }
 
+  /** [$86] STX $FF */
+  /** [$8e] STX $FFFF */
+  /** [$96] STX $FF,Y */
+  private def opSTX(address: => Short) {
+    memory.write(address, register.XR)
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -570,10 +579,14 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTY(get_addr_ZP)
       case OpCode_STA_ZP =>   // $85
         opSTA(get_addr_ZP)
+      case OpCode_STX_ZP =>   // $86
+        opSTX(get_addr_ZP)
       case OpCode_STY_ABS =>  // $8c
         opSTY(get_addr_ABS)
       case OpCode_STA_ABS =>  // $8d
         opSTA(get_addr_ABS)
+      case OpCode_STX_ABS =>  // $8e
+        opSTX(get_addr_ABS)
       case OpCode_BCC_REL =>  // $90
         opRelative(!register.getStatusFlag(CF))
       case OpCode_STA_INDY => // $91
@@ -582,6 +595,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTY(get_addr_ZPX)
       case OpCode_STA_ZPX =>  // $95
         opSTA(get_addr_ZPX)
+      case OpCode_STX_ZPY =>  // $96
+        opSTX(get_addr_ZPY)
       case OpCode_STA_ABSY => // $99
         opSTA(get_addr_ABSY.toShort)
       case OpCode_STA_ABSX => // $9d

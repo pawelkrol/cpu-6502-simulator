@@ -90,12 +90,15 @@ object OpCode {
     case ByteVal(0x81) => OpCode_STA_INDX
     case ByteVal(0x84) => OpCode_STY_ZP
     case ByteVal(0x85) => OpCode_STA_ZP
+    case ByteVal(0x86) => OpCode_STX_ZP
     case ByteVal(0x8c) => OpCode_STY_ABS
     case ByteVal(0x8d) => OpCode_STA_ABS
+    case ByteVal(0x8e) => OpCode_STX_ABS
     case ByteVal(0x90) => OpCode_BCC_REL
     case ByteVal(0x91) => OpCode_STA_INDY
     case ByteVal(0x94) => OpCode_STY_ZPX
     case ByteVal(0x95) => OpCode_STA_ZPX
+    case ByteVal(0x96) => OpCode_STX_ZPY
     case ByteVal(0x99) => OpCode_STA_ABSY
     case ByteVal(0x9d) => OpCode_STA_ABSX
     case ByteVal(0xb0) => OpCode_BCS_REL
@@ -166,6 +169,13 @@ trait OpCode_ZP extends OpCode {
 }
 
 trait OpCode_ZPX extends OpCode {
+
+  val cycles = 0x04
+
+  def memSize = 0x02
+}
+
+trait OpCode_ZPY extends OpCode {
 
   val cycles = 0x04
 
@@ -428,9 +438,13 @@ object OpCode_STY_ZP extends OpCode_ZP with SymName_STY
 
 object OpCode_STA_ZP extends OpCode_ZP with SymName_STA
 
+object OpCode_STX_ZP extends OpCode_ZP with SymName_STX
+
 object OpCode_STY_ABS extends OpCode_ABS with SymName_STY
 
 object OpCode_STA_ABS extends OpCode_ABS with SymName_STA
+
+object OpCode_STX_ABS extends OpCode_ABS with SymName_STX
 
 object OpCode_BCC_REL extends OpCode_REL with SymName_BCC
 
@@ -439,6 +453,8 @@ object OpCode_STA_INDY extends OpCodeStore_INDY with SymName_STA
 object OpCode_STY_ZPX extends OpCode_ZPX with SymName_STY
 
 object OpCode_STA_ZPX extends OpCode_ZPX with SymName_STA
+
+object OpCode_STX_ZPY extends OpCode_ZPY with SymName_STX
 
 object OpCode_STA_ABSY extends OpCodeStore_ABSY with SymName_STA
 

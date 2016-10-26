@@ -80,6 +80,21 @@ trait FunSharedExamples extends FunOperationsSpec {
         }
       }
 
+      case _: OpCode_ZPY => {
+        describe("zeropage,y addressing mode") {
+          testOpCode(op) {
+            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            assertCycleCount(cycleCount(op))
+
+            context("YR = $02") { YR = 0x02 } {
+              context(sym + " $02,Y") { zp = 0x02; yr = 0x02 } {
+                executeSharedExamples("$0004", (opArg) => { assignOpArg(zp, yr, opArg) })
+              }
+            }
+          }
+        }
+      }
+
       case _: OpCode_ABS => {
         describe("absolute addressing mode") {
           testOpCode(op) {

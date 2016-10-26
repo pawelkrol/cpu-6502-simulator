@@ -12,6 +12,7 @@ trait FunOperationsSpec extends FunFunSpec {
     case op: OpCode_IMM => memory.write(0xc001, values(0))
     case op: OpCode_ZP => memory.write(0xc001, values(0)).write(values(0), values(1))
     case op: OpCode_ZPX => memory.write(0xc001, values(0)).write(values(0) + values(1)(), values(2))
+    case op: OpCode_ZPY => memory.write(0xc001, values(0)).write(values(0) + values(1)(), values(2))
     case op: OpCode_ABS => memory.write(0xc001, values(0)).write(0xc002, values(1)).write(Util.byteVals2Addr(values.take(2)), values(2))
     case op: OpCode_ABSX => memory.write(0xc001, values(0)).write(0xc002, values(1)).write(Util.byteVals2Addr(values.take(2)) + values(2)(), values(3))
     case op: OpCode_ABSY => memory.write(0xc001, values(0)).write(0xc002, values(1)).write(Util.byteVals2Addr(values.take(2)) + values(2)(), values(3))

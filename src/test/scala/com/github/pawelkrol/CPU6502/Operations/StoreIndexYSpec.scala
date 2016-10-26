@@ -1,7 +1,7 @@
 package com.github.pawelkrol.CPU6502
 package Operations
 
-class StoreIndexRegisterSpec extends StoreSpec {
+class StoreIndexYSpec extends StoreSpec {
 
   protected val storedSymbol = "YR"
 
