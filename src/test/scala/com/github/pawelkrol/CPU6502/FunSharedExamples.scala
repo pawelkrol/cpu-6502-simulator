@@ -31,7 +31,7 @@ trait FunSharedExamples extends FunOperationsSpec {
 
   protected def sharedExampleArguments(opCode: OpCode): () => List[Any]
 
-  private def assertCycleCount(cycles: Int) {
+  protected def assertCycleCount(cycles: Int) {
     it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles.toShort) }
   }
 
@@ -47,6 +47,19 @@ trait FunSharedExamples extends FunOperationsSpec {
 
             context(sym + " A") { assignOpArg() } {
               executeSharedExamples("AC", (opArg) => { AC = opArg })
+            }
+          }
+        }
+      }
+
+      case _: OpCode_IMM => {
+        describe("immediate addressing mode") {
+          testOpCode(op) {
+            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            assertCycleCount(cycleCount(op))
+
+            context(sym + " #$XX") {} {
+              executeSharedExamples("$C001", (opArg) => { assignOpArg(opArg) })
             }
           }
         }

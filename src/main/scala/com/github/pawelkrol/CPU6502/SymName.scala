@@ -129,6 +129,21 @@ trait SymName_JSR extends SymName {
   def symName = "JSR"
 }
 
+trait SymName_LDA extends SymName {
+
+  def symName = "LDA"
+}
+
+trait SymName_LDX extends SymName {
+
+  def symName = "LDX"
+}
+
+trait SymName_LDY extends SymName {
+
+  def symName = "LDY"
+}
+
 trait SymName_LSR extends SymName {
 
   def symName = "LSR"

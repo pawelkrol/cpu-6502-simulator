@@ -65,6 +65,8 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def SP_=(value: ByteVal) { register.SP = value }
 
+  def PC = register.PC
+
   private def getStatusFlag(flag: Status.Flag) = register.getStatusFlag(flag)
 
   def CF = getStatusFlag(Status.CF)

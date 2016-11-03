@@ -105,11 +105,16 @@ object OpCode {
     case ByteVal(0x99) => OpCode_STA_ABSY
     case ByteVal(0x9a) => OpCode_TXS
     case ByteVal(0x9d) => OpCode_STA_ABSX
+    case ByteVal(0xa0) => OpCode_LDY_IMM
+    case ByteVal(0xa4) => OpCode_LDY_ZP
     case ByteVal(0xa8) => OpCode_TAY
     case ByteVal(0xaa) => OpCode_TAX
+    case ByteVal(0xac) => OpCode_LDY_ABS
     case ByteVal(0xb0) => OpCode_BCS_REL
+    case ByteVal(0xb4) => OpCode_LDY_ZPX
     case ByteVal(0xb8) => OpCode_CLV
     case ByteVal(0xba) => OpCode_TSX
+    case ByteVal(0xbc) => OpCode_LDY_ABSX
     case ByteVal(0xc1) => OpCode_CMP_INDX
     case ByteVal(0xc5) => OpCode_CMP_ZP
     case ByteVal(0xc8) => OpCode_INY
@@ -478,15 +483,25 @@ object OpCode_TXS extends OpCode_IMP with SymName_TXS
 
 object OpCode_STA_ABSX extends OpCodeStore_ABSX with SymName_STA
 
+object OpCode_LDY_IMM extends OpCode_IMM with SymName_LDY
+
+object OpCode_LDY_ZP extends OpCode_ZP with SymName_LDY
+
 object OpCode_TAY extends OpCode_IMP with SymName_TAY
 
 object OpCode_TAX extends OpCode_IMP with SymName_TAX
 
+object OpCode_LDY_ABS extends OpCode_ABS with SymName_LDY
+
 object OpCode_BCS_REL extends OpCode_REL with SymName_BCS
+
+object OpCode_LDY_ZPX extends OpCode_ZPX with SymName_LDY
 
 object OpCode_CLV extends OpCode_IMP with SymName_CLV
 
 object OpCode_TSX extends OpCode_IMP with SymName_TSX
+
+object OpCode_LDY_ABSX extends OpCode_ABSX with SymName_LDY
 
 object OpCode_CMP_INDX extends OpCode_INDX with SymName_CMP
 

@@ -502,6 +502,22 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.testStatusFlag(SF, register.XR)
   }
 
+  /** [$a0] LDY #$FF */
+  /** [$a4] LDY $FF */
+  /** [$ac] LDY $FFFF */
+  /** [$b4] LDY $FF,X */
+  private def opLDY(value: ByteVal) {
+    register.YR = value
+    register.testStatusFlag(ZF, register.YR)
+    register.testStatusFlag(SF, register.YR)
+  }
+
+  /** [$bc] LDY $FFFF,X */
+  private def opAbsoluteXLDY {
+    opLDY(get_arg_ABSX)
+    addPageCrossPenalty(register.XR())
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -677,16 +693,26 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opTXS
       case OpCode_STA_ABSX => // $9d
         opSTA(get_addr_ABSX.toShort)
+      case OpCode_LDY_IMM =>  // $a0
+        opLDY(get_arg_IMM)
+      case OpCode_LDY_ZP =>   // $a4
+        opLDY(get_arg_ZP)
       case OpCode_TAY =>      // $a8
         opTAY
       case OpCode_TAX =>      // $aa
         opTAX
+      case OpCode_LDY_ABS =>  // $ac
+        opLDY(get_arg_ABS)
       case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
+      case OpCode_LDY_ZPX =>  // $b4
+        opLDY(get_arg_ZPX)
       case OpCode_CLV =>      // $b8
         opClearFlag(OF)
       case OpCode_TSX =>      // $ba
         opTSX
+      case OpCode_LDY_ABSX => // $bc
+        opAbsoluteXLDY
       case OpCode_INY =>      // $c8
         opINY
       case OpCode_CMP_IMM =>  // $c9
