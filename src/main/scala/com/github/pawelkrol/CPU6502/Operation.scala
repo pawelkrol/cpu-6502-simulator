@@ -32,6 +32,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
 
   private def get_arg_ZPX = memory.read(get_addr_ZPX)
 
+  private def get_arg_ZPY = memory.read(get_addr_ZPY)
+
   private def get_arg_ABS = memory.read(get_addr_ABS)
 
   private def get_arg_ABSX = memory.read(get_addr_ABSX)
@@ -518,6 +520,22 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     addPageCrossPenalty(register.XR())
   }
 
+  /** [$a2] LDX #$FF */
+  /** [$a6] LDX $FF */
+  /** [$ae] LDX $FFFF */
+  /** [$b6] LDX $FF,Y */
+  private def opLDX(value: ByteVal) {
+    register.XR = value
+    register.testStatusFlag(ZF, register.XR)
+    register.testStatusFlag(SF, register.XR)
+  }
+
+  /** [$be] LDX $FFFF,Y */
+  private def opAbsoluteYLDX {
+    opLDX(get_arg_ABSY)
+    addPageCrossPenalty(register.YR())
+  }
+
   private def addPageCrossPenalty(offset: Int) {
     if (page_cross(get_addr_ABS, offset))
       cycleCount += 1
@@ -695,24 +713,34 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTA(get_addr_ABSX.toShort)
       case OpCode_LDY_IMM =>  // $a0
         opLDY(get_arg_IMM)
+      case OpCode_LDX_IMM =>  // $a2
+        opLDX(get_arg_IMM)
       case OpCode_LDY_ZP =>   // $a4
         opLDY(get_arg_ZP)
+      case OpCode_LDX_ZP =>   // $a6
+        opLDX(get_arg_ZP)
       case OpCode_TAY =>      // $a8
         opTAY
       case OpCode_TAX =>      // $aa
         opTAX
       case OpCode_LDY_ABS =>  // $ac
         opLDY(get_arg_ABS)
+      case OpCode_LDX_ABS =>  // $ae
+        opLDX(get_arg_ABS)
       case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
       case OpCode_LDY_ZPX =>  // $b4
         opLDY(get_arg_ZPX)
+      case OpCode_LDX_ZPY =>  // $b6
+        opLDX(get_arg_ZPY)
       case OpCode_CLV =>      // $b8
         opClearFlag(OF)
       case OpCode_TSX =>      // $ba
         opTSX
       case OpCode_LDY_ABSX => // $bc
         opAbsoluteXLDY
+      case OpCode_LDX_ABSY => // $be
+        opAbsoluteYLDX
       case OpCode_INY =>      // $c8
         opINY
       case OpCode_CMP_IMM =>  // $c9
