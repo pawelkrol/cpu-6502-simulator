@@ -1,117 +1,68 @@
 package com.github.pawelkrol.CPU6502
 package Operations
 
-class CompareSpec extends FunOperationsSpec {
+trait CompareSpec extends FunSharedExamples {
 
-  describe("compare memory and accumulator") {
-    describe("immediate addressing mode") {
-      testOpCode(OpCode_CMP_IMM) {
-        it { expect { operation }.toAdvancePC(0x02) }
-        it { expect { operation }.toUseCycles(0x02) }
-        it { expect { operation }.notToChange { AC } }
+  protected def comparedSymbol: String
 
-        context("AC = $00") { AC = 0x00; SF = false; ZF = true } {
-          context("CMP #$00") { assignOpArg(0x00) } {
-            it { expect { operation }.toChange { CF }.from(false).to(true) }
-            it { expect { operation }.notToChange { ZF } }
-            it { expect { operation }.notToChange { SF } }
+  protected def assignLoadedValue(loadedValue: ByteVal): Unit
+
+  protected def fetchLoadedValue: () => ByteVal
+
+  protected def sharedExampleArguments(opCode: OpCode) = opCode match {
+    case _: OpCode_IMM => () => List[Any](() => (PC + 1).toShort)
+  }
+
+  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+    val loadedValues = Seq[ByteVal](0x00, 0x01, 0xff)
+    val comparedValues = Seq[ByteVal](0x00, 0x01, 0xff)
+
+    loadedValues.foreach((loadedValue) => {
+      context("%s = $%02X".format(comparedSymbol, loadedValue())) { assignLoadedValue(loadedValue) } {
+        it("does not modify loaded value") { expect { operation }.notToChange { fetchLoadedValue() } }
+
+        comparedValues.foreach((comparedValue) => {
+          context("compares with = $%02X".format(comparedValue())) { initTestCase(comparedValue()) } {
+            includeSharedExamples()
           }
-
-          context("CMP #$01") { assignOpArg(0x01) } {
-            it { expect { operation }.notToChange { CF } }
-            it { expect { operation }.toChange { ZF }.from(true).to(false) }
-            it { expect { operation }.toChange { SF }.from(false).to(true) }
-          }
-
-          context("CMP #$FF") { assignOpArg(0xff) } {
-            it { expect { operation }.notToChange { CF } }
-            it { expect { operation }.toChange { ZF }.from(true).to(false) }
-            it { expect { operation }.notToChange { SF } }
-          }
-        }
-
-        context("AC = $01") { AC = 0x01; SF = false; ZF = false } {
-          context("CMP #$00") { assignOpArg(0x00) } {
-            it { expect { operation }.toChange { CF }.from(false).to(true) }
-            it { expect { operation }.notToChange { ZF } }
-            it { expect { operation }.notToChange { SF } }
-          }
-
-          context("CMP #$01") { assignOpArg(0x01) } {
-            it { expect { operation }.toChange { CF }.from(false).to(true) }
-            it { expect { operation }.toChange { ZF }.from(false).to(true) }
-            it { expect { operation }.notToChange { SF } }
-          }
-
-          context("CMP #$FF") { assignOpArg(0xff) } {
-            it { expect { operation }.notToChange { CF } }
-            it { expect { operation }.notToChange { ZF } }
-            it { expect { operation }.notToChange { SF } }
-          }
-        }
-
-        context("AC = $FF") { AC = 0xff; SF = true; ZF = false } {
-          context("CMP #$00") { assignOpArg(0x00) } {
-            it { expect { operation }.toChange { CF }.from(false).to(true) }
-            it { expect { operation }.notToChange { ZF } }
-            it { expect { operation }.notToChange { SF } }
-          }
-
-          context("CMP #$01") { assignOpArg(0x01) } {
-            it { expect { operation }.toChange { CF }.from(false).to(true) }
-            it { expect { operation }.notToChange { ZF } }
-            it { expect { operation }.notToChange { SF } }
-          }
-
-          context("CMP #$FF") { assignOpArg(0xff) } {
-            it { expect { operation }.toChange { CF }.from(false).to(true) }
-            it { expect { operation }.toChange { ZF }.from(false).to(true) }
-            it { expect { operation }.toChange { SF }.from(true).to(false) }
-          }
-        }
+        })
       }
-    }
+    })
+  }
 
-    describe("zeropage addressing mode") {
-      testOpCode(OpCode_CMP_ZP) {
-        // TODO
-      }
-    }
+  protected def setupSharedExamples {
+    sharedExamples("compare", (args) => {
+      val fetchAddress: () => Short = args(0).asInstanceOf[() => Short]
 
-    describe("zeropage,x addressing mode") {
-      testOpCode(OpCode_CMP_ZPX) {
-        // TODO
-      }
-    }
+      val comparedValue: Int = memoryRead(fetchAddress())()
+      val loadedValue: Int = fetchLoadedValue()()
 
-    describe("absolute addressing mode") {
-      testOpCode(OpCode_CMP_ABS) {
-        // TODO
-      }
-    }
+      val message = "$%04X = $%02X".format(fetchAddress(), comparedValue)
 
-    describe("absolute,x addressing mode") {
-      testOpCode(OpCode_CMP_ABSX) {
-        // TODO
-      }
-    }
+      val expectedResults = Map(
+        0x00 -> Map(
+          0x00 -> (true, true, false),
+          0x01 -> (false, false, true),
+          0xff -> (false, false, false)
+        ),
+        0x01 -> Map(
+          0x00 -> (true, false, false),
+          0x01 -> (true, true, false),
+          0xff -> (false, false, false)
+        ),
+        0xff -> Map(
+          0x00 -> (true, false, true),
+          0x01 -> (true, false, true),
+          0xff -> (true, true, false)
+        )
+      )
 
-    describe("absolute,y addressing mode") {
-      testOpCode(OpCode_CMP_ABSY) {
-        // TODO
-      }
-    }
+      // AC/XR/YR = loadedValue, comparison against argument = comparedValue
+      val (carryFlag, zeroFlag, signFlag) = expectedResults(loadedValue)(comparedValue)
 
-    describe("(indirect,x) addressing mode") {
-      testOpCode(OpCode_CMP_INDX) {
-        // TODO
-      }
-    }
-
-    describe("(indirect),y addressing mode") {
-      testOpCode(OpCode_CMP_INDY) {
-        // TODO
-      }
-    }
+      it(message + " (CF should be " + carryFlag + ")") { expect { operation }.toChange { CF }.to(carryFlag) }
+      it(message + " (ZF should be " + zeroFlag + ")") { expect { operation }.toChange { ZF }.to(zeroFlag) }
+      it(message + " (SF should be " + signFlag + ")") { expect { operation }.toChange { SF }.to(signFlag) }
+    })
   }
 }
