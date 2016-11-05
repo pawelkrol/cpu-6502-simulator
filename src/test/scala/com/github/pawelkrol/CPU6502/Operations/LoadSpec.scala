@@ -18,6 +18,8 @@ trait LoadSpec extends FunSharedExamples {
     case _: OpCode_ABS => () => List[Any](memoryRead(addr)())
     case _: OpCode_ABSX => () => List[Any](memoryRead(addr + xr)())
     case _: OpCode_ABSY => () => List[Any](memoryRead(addr + yr)())
+    case _: OpCode_INDX => () => List[Any](memoryRead(Util.nibbles2Word(memoryRead(zp + xr)(), memoryRead(zp + xr + 1)()))())
+    case _: OpCode_INDY => () => List[Any](memoryRead(Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr)())
   }
 
   protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {

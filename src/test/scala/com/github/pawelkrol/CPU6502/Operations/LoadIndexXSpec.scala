@@ -21,7 +21,7 @@ class LoadIndexXSpec extends LoadSpec {
     })
   }
 
-  describe("load index X in memory") {
+  describe("load index X with memory") {
     cycleCount.keys.foreach((opCode) => applySharedExamples("LDX", opCode))
 
     describe("absolute,y addressing mode") {

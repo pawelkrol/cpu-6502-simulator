@@ -536,9 +536,42 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     addPageCrossPenalty(register.YR())
   }
 
-  private def addPageCrossPenalty(offset: Int) {
-    if (page_cross(get_addr_ABS, offset))
+  /** [$a1] LDA ($FF,X) */
+  /** [$a5] LDA $FF */
+  /** [$a9] LDA #$FF */
+  /** [$ad] LDA $FFFF */
+  /** [$b5] LDA $FF,Y */
+  private def opLDA(value: ByteVal) {
+    register.AC = value
+    register.testStatusFlag(ZF, register.AC)
+    register.testStatusFlag(SF, register.AC)
+  }
+
+  /** [$bd] LDA $FFFF,X */
+  private def opAbsoluteXLDA {
+    opLDA(get_arg_ABSX)
+    addPageCrossPenalty(register.XR())
+  }
+
+  /** [$b9] LDA $FFFF,Y */
+  private def opAbsoluteYLDA {
+    opLDA(get_arg_ABSY)
+    addPageCrossPenalty(register.YR())
+  }
+
+  /** [$b1] LDA ($FF),Y */
+  private def opIndirectYLDA {
+    opLDA(get_arg_INDY)
+    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
+  }
+
+  private def addPageCrossPenalty(address: Short, offset: Int) {
+    if (page_cross(address, offset))
       cycleCount += 1
+  }
+
+  private def addPageCrossPenalty(offset: Int) {
+    addPageCrossPenalty(get_addr_ABS, offset)
   }
 
   def eval(opCode: OpCode) {
@@ -713,32 +746,48 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSTA(get_addr_ABSX.toShort)
       case OpCode_LDY_IMM =>  // $a0
         opLDY(get_arg_IMM)
+      case OpCode_LDA_INDX => // $a1
+        opLDA(get_arg_INDX)
       case OpCode_LDX_IMM =>  // $a2
         opLDX(get_arg_IMM)
       case OpCode_LDY_ZP =>   // $a4
         opLDY(get_arg_ZP)
+      case OpCode_LDA_ZP =>   // $a5
+        opLDA(get_arg_ZP)
       case OpCode_LDX_ZP =>   // $a6
         opLDX(get_arg_ZP)
       case OpCode_TAY =>      // $a8
         opTAY
+      case OpCode_LDA_IMM =>  // $a9
+        opLDA(get_arg_IMM)
       case OpCode_TAX =>      // $aa
         opTAX
       case OpCode_LDY_ABS =>  // $ac
         opLDY(get_arg_ABS)
+      case OpCode_LDA_ABS =>  // $ab
+        opLDA(get_arg_ABS)
       case OpCode_LDX_ABS =>  // $ae
         opLDX(get_arg_ABS)
       case OpCode_BCS_REL =>  // $b0
         opRelative(register.getStatusFlag(CF))
+      case OpCode_LDA_INDY => // $b1
+        opIndirectYLDA
       case OpCode_LDY_ZPX =>  // $b4
         opLDY(get_arg_ZPX)
+      case OpCode_LDA_ZPX =>  // $b5
+        opLDA(get_arg_ZPX)
       case OpCode_LDX_ZPY =>  // $b6
         opLDX(get_arg_ZPY)
       case OpCode_CLV =>      // $b8
         opClearFlag(OF)
+      case OpCode_LDA_ABSY => // $b9
+        opAbsoluteYLDA
       case OpCode_TSX =>      // $ba
         opTSX
       case OpCode_LDY_ABSX => // $bc
         opAbsoluteXLDY
+      case OpCode_LDA_ABSX => // $bd
+        opAbsoluteXLDA
       case OpCode_LDX_ABSY => // $be
         opAbsoluteYLDX
       case OpCode_INY =>      // $c8

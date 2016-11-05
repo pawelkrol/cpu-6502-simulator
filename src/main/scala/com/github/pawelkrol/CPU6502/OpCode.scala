@@ -106,19 +106,27 @@ object OpCode {
     case ByteVal(0x9a) => OpCode_TXS
     case ByteVal(0x9d) => OpCode_STA_ABSX
     case ByteVal(0xa0) => OpCode_LDY_IMM
+    case ByteVal(0xa1) => OpCode_LDA_INDX
     case ByteVal(0xa2) => OpCode_LDX_IMM
     case ByteVal(0xa4) => OpCode_LDY_ZP
+    case ByteVal(0xa5) => OpCode_LDA_ZP
     case ByteVal(0xa6) => OpCode_LDX_ZP
     case ByteVal(0xa8) => OpCode_TAY
+    case ByteVal(0xa9) => OpCode_LDA_IMM
     case ByteVal(0xaa) => OpCode_TAX
     case ByteVal(0xac) => OpCode_LDY_ABS
+    case ByteVal(0xad) => OpCode_LDA_ABS
     case ByteVal(0xae) => OpCode_LDX_ABS
     case ByteVal(0xb0) => OpCode_BCS_REL
+    case ByteVal(0xb1) => OpCode_LDA_INDY
     case ByteVal(0xb4) => OpCode_LDY_ZPX
+    case ByteVal(0xb5) => OpCode_LDA_ZPX
     case ByteVal(0xb6) => OpCode_LDX_ZPY
     case ByteVal(0xb8) => OpCode_CLV
+    case ByteVal(0xb9) => OpCode_LDA_ABSY
     case ByteVal(0xba) => OpCode_TSX
     case ByteVal(0xbc) => OpCode_LDY_ABSX
+    case ByteVal(0xbd) => OpCode_LDA_ABSX
     case ByteVal(0xbe) => OpCode_LDX_ABSY
     case ByteVal(0xc1) => OpCode_CMP_INDX
     case ByteVal(0xc5) => OpCode_CMP_ZP
@@ -490,31 +498,47 @@ object OpCode_STA_ABSX extends OpCodeStore_ABSX with SymName_STA
 
 object OpCode_LDY_IMM extends OpCode_IMM with SymName_LDY
 
+object OpCode_LDA_INDX extends OpCode_INDX with SymName_LDA
+
 object OpCode_LDX_IMM extends OpCode_IMM with SymName_LDX
 
 object OpCode_LDY_ZP extends OpCode_ZP with SymName_LDY
+
+object OpCode_LDA_ZP extends OpCode_ZP with SymName_LDA
 
 object OpCode_LDX_ZP extends OpCode_ZP with SymName_LDX
 
 object OpCode_TAY extends OpCode_IMP with SymName_TAY
 
+object OpCode_LDA_IMM extends OpCode_IMM with SymName_LDA
+
 object OpCode_TAX extends OpCode_IMP with SymName_TAX
 
 object OpCode_LDY_ABS extends OpCode_ABS with SymName_LDY
+
+object OpCode_LDA_ABS extends OpCode_ABS with SymName_LDA
 
 object OpCode_LDX_ABS extends OpCode_ABS with SymName_LDX
 
 object OpCode_BCS_REL extends OpCode_REL with SymName_BCS
 
+object OpCode_LDA_INDY extends OpCode_INDY with SymName_LDA
+
 object OpCode_LDY_ZPX extends OpCode_ZPX with SymName_LDY
+
+object OpCode_LDA_ZPX extends OpCode_ZPX with SymName_LDA
 
 object OpCode_LDX_ZPY extends OpCode_ZPY with SymName_LDX
 
 object OpCode_CLV extends OpCode_IMP with SymName_CLV
 
+object OpCode_LDA_ABSY extends OpCode_ABSY with SymName_LDA
+
 object OpCode_TSX extends OpCode_IMP with SymName_TSX
 
 object OpCode_LDY_ABSX extends OpCode_ABSX with SymName_LDY
+
+object OpCode_LDA_ABSX extends OpCode_ABSX with SymName_LDA
 
 object OpCode_LDX_ABSY extends OpCode_ABSY with SymName_LDX
 
