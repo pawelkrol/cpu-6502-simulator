@@ -27,34 +27,8 @@ class LoadAccumulatorSpec extends LoadSpec {
   describe("load accumulator with memory") {
     cycleCount.keys.foreach((opCode) => applySharedExamples("LDA", opCode))
 
-    describe("absolute,x addressing mode") {
-      assertPageBoundaryCycleCount(OpCode_LDA_ABSX) { (address, offset, assertionCallback) =>
-        context("XR = $%02X".format(offset)) { XR = offset } {
-          context("LDA $%04X,X".format(address)) { setupAbsIndexedOpArg(address.toShort, offset, 0xff) } {
-            assertionCallback()
-          }
-        }
-      }
-    }
-
-    describe("absolute,y addressing mode") {
-      assertPageBoundaryCycleCount(OpCode_LDA_ABSY) { (address, offset, assertionCallback) =>
-        context("YR = $%02X".format(offset)) { YR = offset } {
-          context("LDA $%04X,Y".format(address)) { setupAbsIndexedOpArg(address.toShort, offset, 0xff) } {
-            assertionCallback()
-          }
-        }
-      }
-    }
-
-    describe("(indirect),y addressing mode") {
-      assertPageBoundaryCycleCount(OpCode_LDA_INDY) { (address, offset, assertionCallback) =>
-        context("YR = $%02X".format(offset)) { YR = offset } {
-          context("LDA ($%02X),Y".format(address)) { setupIndirectOpArg(zp.toShort, offset, address.toShort, 0xff) } {
-            assertionCallback()
-          }
-        }
-      }
-    }
+    pageBoundaryCrossCheck(OpCode_LDA_ABSX, "LDA")
+    pageBoundaryCrossCheck(OpCode_LDA_ABSY, "LDA")
+    pageBoundaryCrossCheck(OpCode_LDA_INDY, "LDA")
   }
 }

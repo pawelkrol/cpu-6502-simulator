@@ -31,29 +31,4 @@ trait LoadSpec extends FunSharedExamples {
       }
     })
   }
-
-  protected def assertPageBoundaryCycleCount(op: OpCode)(setupCallback: (Int, Int, () => Unit) => Unit) {
-    describe("cycle count when page boundary is crossed") {
-      val extraCycleCount = Map[Tuple2[Int, Int], Int](
-        (0xc800, 0x00) -> 0,
-        (0xc800, 0x01) -> 0,
-        (0xc800, 0xff) -> 0,
-        (0xc801, 0x00) -> 0,
-        (0xc801, 0x01) -> 0,
-        (0xc801, 0xff) -> 1,
-        (0xc8ff, 0x00) -> 0,
-        (0xc8ff, 0x01) -> 1,
-        (0xc8ff, 0xff) -> 1
-      )
-
-      testOpCode(op) {
-        extraCycleCount.foreach({ case (data, extraCycles) =>
-          val (address, offset) = data
-          setupCallback(address, offset, () => {
-            assertCycleCount(cycleCount(op) + extraCycles)
-          })
-        })
-      }
-    }
-  }
 }

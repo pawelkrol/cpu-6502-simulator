@@ -177,16 +177,38 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     }
   }
 
-  private def opCMP(accu: ByteVal, term: ByteVal) {
-    val result = accu() - term()
+  private def opCompare(value: ByteVal, term: ByteVal) {
+    val result = value() - term()
     register.testStatusFlag(ZF, (result & 0xff).toShort)
     register.testStatusFlag(SF, result.toShort)
     register.setStatusFlag(CF, result >= 0x00)
   }
 
+  /** [$c1] CMP ($FF,X) */
+  /** [$c5] CMP $FF */
   /** [$c9] CMP #$FF */
-  private def opImmediateCMP {
-    opCMP(register.AC, get_arg_IMM)
+  /** [$cd] CMP $FFFF */
+  /** [$d5] CMP $FF,X */
+  private def opCMP(term: ByteVal) {
+    opCompare(register.AC, term)
+  }
+
+  /** [$dd] CMP $FFFF,X */
+  private def opAbsoluteXCMP {
+    opCMP(get_arg_ABSX)
+    addPageCrossPenalty(register.XR())
+  }
+
+  /** [$d9] CMP $FFFF,Y */
+  private def opAbsoluteYCMP {
+    opCMP(get_arg_ABSY)
+    addPageCrossPenalty(register.YR())
+  }
+
+  /** [$d1] CMP ($FF),Y */
+  private def opIndirectYCMP {
+    opCMP(get_arg_INDY)
+    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
   }
 
   private def opSBC(term: ByteVal) {
@@ -790,16 +812,30 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteXLDA
       case OpCode_LDX_ABSY => // $be
         opAbsoluteYLDX
+      case OpCode_CMP_INDX => // $c1
+        opCMP(get_arg_INDX)
+      case OpCode_CMP_ZP =>   // $c5
+        opCMP(get_arg_ZP)
       case OpCode_INY =>      // $c8
         opINY
       case OpCode_CMP_IMM =>  // $c9
-        opImmediateCMP
+        opCMP(get_arg_IMM)
       case OpCode_DEX =>      // $ca
         opDEX
+      case OpCode_CMP_ABS =>  // $cd
+        opCMP(get_arg_ABS)
       case OpCode_BNE_REL =>  // $d0
         opRelative(!register.getStatusFlag(ZF))
+      case OpCode_CMP_INDY => // $d1
+        opIndirectYCMP
+      case OpCode_CMP_ZPX =>  // $d5
+        opCMP(get_arg_ZPX)
       case OpCode_CLD =>      // $d8
         opClearFlag(DF)
+      case OpCode_CMP_ABSY => // $d9
+        opAbsoluteYCMP
+      case OpCode_CMP_ABSX => // $dd
+        opAbsoluteXCMP
       case OpCode_SBC_ZP =>   // $e5
         opZeroPageSBC
       case OpCode_INX =>      // $e8

@@ -5,13 +5,22 @@ trait CompareSpec extends FunSharedExamples {
 
   protected def comparedSymbol: String
 
+  protected def opCodeSymbol: String
+
   protected def assignLoadedValue(loadedValue: ByteVal): Unit
 
   protected def fetchLoadedValue: () => ByteVal
 
-  protected def sharedExampleArguments(opCode: OpCode) = opCode match {
-    case _: OpCode_IMM => () => List[Any](() => (PC + 1).toShort)
-  }
+  protected def sharedExampleArguments(opCode: OpCode) = () => List[() => Int](() => opCode match {
+    case _: OpCode_IMM => PC + 1
+    case _: OpCode_ZP => zp()
+    case _: OpCode_ZPX => (zp + xr)()
+    case _: OpCode_ABS => addr
+    case _: OpCode_ABSX => addr + xr
+    case _: OpCode_ABSY => addr + yr
+    case _: OpCode_INDX => Util.nibbles2Word(memoryRead(zp + xr)(), memoryRead(zp + xr + 1)())
+    case _: OpCode_INDY => Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr
+  })
 
   protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
     val loadedValues = Seq[ByteVal](0x00, 0x01, 0xff)
@@ -31,13 +40,13 @@ trait CompareSpec extends FunSharedExamples {
   }
 
   protected def setupSharedExamples {
-    sharedExamples("compare", (args) => {
-      val fetchAddress: () => Short = args(0).asInstanceOf[() => Short]
+    sharedExamples(opCodeSymbol, (args) => {
+      val fetchAddress = args(0).asInstanceOf[() => Int]().toShort
 
-      val comparedValue: Int = memoryRead(fetchAddress())()
+      val comparedValue: Int = memoryRead(fetchAddress)()
       val loadedValue: Int = fetchLoadedValue()()
 
-      val message = "$%04X = $%02X".format(fetchAddress(), comparedValue)
+      val message = "$%04X = $%02X".format(fetchAddress, comparedValue)
 
       val expectedResults = Map(
         0x00 -> Map(
