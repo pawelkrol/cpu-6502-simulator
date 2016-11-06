@@ -99,6 +99,11 @@ trait SymName_CPX extends SymName {
   def symName = "CPX"
 }
 
+trait SymName_CPY extends SymName {
+
+  def symName = "CPY"
+}
+
 trait SymName_DEX extends SymName {
 
   def symName = "DEX"

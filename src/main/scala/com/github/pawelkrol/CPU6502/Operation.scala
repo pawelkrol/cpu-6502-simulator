@@ -218,6 +218,13 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     opCompare(register.XR, term)
   }
 
+  /** [$c0] CPY #$FF */
+  /** [$c4] CPY $FF */
+  /** [$cc] CPY $FFFF */
+  private def opCPY(term: ByteVal) {
+    opCompare(register.YR, term)
+  }
+
   private def opSBC(term: ByteVal) {
     if (register.getStatusFlag(DF)) {
       val carry = if (register.getStatusFlag(CF)) 0x00 else 0x01
@@ -819,8 +826,12 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteXLDA
       case OpCode_LDX_ABSY => // $be
         opAbsoluteYLDX
+      case OpCode_CPY_IMM =>  // $c0
+        opCPY(get_arg_IMM)
       case OpCode_CMP_INDX => // $c1
         opCMP(get_arg_INDX)
+      case OpCode_CPY_ZP =>   // $c4
+        opCPY(get_arg_ZP)
       case OpCode_CMP_ZP =>   // $c5
         opCMP(get_arg_ZP)
       case OpCode_INY =>      // $c8
@@ -829,6 +840,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opCMP(get_arg_IMM)
       case OpCode_DEX =>      // $ca
         opDEX
+      case OpCode_CPY_ABS =>  // $cc
+        opCPY(get_arg_ABS)
       case OpCode_CMP_ABS =>  // $cd
         opCMP(get_arg_ABS)
       case OpCode_BNE_REL =>  // $d0

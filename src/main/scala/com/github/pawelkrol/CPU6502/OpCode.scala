@@ -128,11 +128,14 @@ object OpCode {
     case ByteVal(0xbc) => OpCode_LDY_ABSX
     case ByteVal(0xbd) => OpCode_LDA_ABSX
     case ByteVal(0xbe) => OpCode_LDX_ABSY
+    case ByteVal(0xc0) => OpCode_CPY_IMM
     case ByteVal(0xc1) => OpCode_CMP_INDX
+    case ByteVal(0xc4) => OpCode_CPY_ZP
     case ByteVal(0xc5) => OpCode_CMP_ZP
     case ByteVal(0xc8) => OpCode_INY
     case ByteVal(0xc9) => OpCode_CMP_IMM
     case ByteVal(0xca) => OpCode_DEX
+    case ByteVal(0xcc) => OpCode_CPY_ABS
     case ByteVal(0xcd) => OpCode_CMP_ABS
     case ByteVal(0xd0) => OpCode_BNE_REL
     case ByteVal(0xd1) => OpCode_CMP_INDY
@@ -545,7 +548,11 @@ object OpCode_LDA_ABSX extends OpCode_ABSX with SymName_LDA
 
 object OpCode_LDX_ABSY extends OpCode_ABSY with SymName_LDX
 
+object OpCode_CPY_IMM extends OpCode_IMM with SymName_CPY
+
 object OpCode_CMP_INDX extends OpCode_INDX with SymName_CMP
+
+object OpCode_CPY_ZP extends OpCode_ZP with SymName_CPY
 
 object OpCode_CMP_ZP extends OpCode_ZP with SymName_CMP
 
@@ -554,6 +561,8 @@ object OpCode_INY extends OpCode_IMP with SymName_INY
 object OpCode_CMP_IMM extends OpCode_IMM with SymName_CMP
 
 object OpCode_DEX extends OpCode_IMP with SymName_DEX
+
+object OpCode_CPY_ABS extends OpCode_ABS with SymName_CPY
 
 object OpCode_CMP_ABS extends OpCode_ABS with SymName_CMP
 
