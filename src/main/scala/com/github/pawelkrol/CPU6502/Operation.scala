@@ -211,6 +211,13 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
   }
 
+  /** [$e0] CPX #$FF */
+  /** [$e4] CPX $FF */
+  /** [$ec] CPX $FFFF */
+  private def opCPX(term: ByteVal) {
+    opCompare(register.XR, term)
+  }
+
   private def opSBC(term: ByteVal) {
     if (register.getStatusFlag(DF)) {
       val carry = if (register.getStatusFlag(CF)) 0x00 else 0x01
@@ -836,12 +843,18 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteYCMP
       case OpCode_CMP_ABSX => // $dd
         opAbsoluteXCMP
+      case OpCode_CPX_IMM =>  // $e0
+        opCPX(get_arg_IMM)
+      case OpCode_CPX_ZP =>   // $e4
+        opCPX(get_arg_ZP)
       case OpCode_SBC_ZP =>   // $e5
         opZeroPageSBC
       case OpCode_INX =>      // $e8
         opINX
       case OpCode_SBC_IMM =>  // $e9
         opImmediateSBC
+      case OpCode_CPX_ABS =>  // $ec
+        opCPX(get_arg_ABS)
       case OpCode_BEQ_REL =>  // $f0
         opRelative(register.getStatusFlag(ZF))
       case OpCode_SED =>      // $f8
