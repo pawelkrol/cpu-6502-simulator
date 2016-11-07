@@ -911,8 +911,6 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opSetFlag(DF)
       case OpCode_INC_ABSX => // $fe
         opINC(get_addr_ABSX.toShort)
-      case _ =>
-        throw NotImplementedError()
     }
     cycleCount += opCode.cycles
     register.advancePC(opCode.memSize)
