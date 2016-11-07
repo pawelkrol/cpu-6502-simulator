@@ -612,6 +612,17 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.testStatusFlag(SF, decrementedValue)
   }
 
+  /** [$e6] INC $FF */
+  /** [$ee] INC $FFFF */
+  /** [$f6] INC $FF,X */
+  /** [$fe] INC $FFFF,X */
+  private def opINC(address: Short) {
+    val incrementedValue: ByteVal = memory.read(address) + 1
+    memory.write(address, incrementedValue)
+    register.testStatusFlag(ZF, incrementedValue)
+    register.testStatusFlag(SF, incrementedValue)
+  }
+
   private def addPageCrossPenalty(address: Short, offset: Int) {
     if (page_cross(address, offset))
       cycleCount += 1
@@ -881,16 +892,24 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opCPX(get_arg_ZP)
       case OpCode_SBC_ZP =>   // $e5
         opZeroPageSBC
+      case OpCode_INC_ZP =>   // $e6
+        opINC(get_addr_ZP)
       case OpCode_INX =>      // $e8
         opINX
       case OpCode_SBC_IMM =>  // $e9
         opImmediateSBC
       case OpCode_CPX_ABS =>  // $ec
         opCPX(get_arg_ABS)
+      case OpCode_INC_ABS =>  // $ee
+        opINC(get_addr_ABS)
       case OpCode_BEQ_REL =>  // $f0
         opRelative(register.getStatusFlag(ZF))
+      case OpCode_INC_ZPX =>  // $f6
+        opINC(get_addr_ZPX)
       case OpCode_SED =>      // $f8
         opSetFlag(DF)
+      case OpCode_INC_ABSX => // $fe
+        opINC(get_addr_ABSX.toShort)
       case _ =>
         throw NotImplementedError()
     }

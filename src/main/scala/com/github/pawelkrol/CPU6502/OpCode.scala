@@ -151,16 +151,20 @@ object OpCode {
     case ByteVal(0xe1) => OpCode_SBC_INDX
     case ByteVal(0xe4) => OpCode_CPX_ZP
     case ByteVal(0xe5) => OpCode_SBC_ZP
+    case ByteVal(0xe6) => OpCode_INC_ZP
     case ByteVal(0xe8) => OpCode_INX
     case ByteVal(0xe9) => OpCode_SBC_IMM
     case ByteVal(0xec) => OpCode_CPX_ABS
     case ByteVal(0xed) => OpCode_SBC_ABS
+    case ByteVal(0xee) => OpCode_INC_ABS
     case ByteVal(0xf0) => OpCode_BEQ_REL
     case ByteVal(0xf1) => OpCode_SBC_INDY
     case ByteVal(0xf5) => OpCode_SBC_ZPX
+    case ByteVal(0xf6) => OpCode_INC_ZPX
     case ByteVal(0xf8) => OpCode_SED
     case ByteVal(0xf9) => OpCode_SBC_ABSY
     case ByteVal(0xfd) => OpCode_SBC_ABSX
+    case ByteVal(0xfe) => OpCode_INC_ABSX
     case _ => throw IllegalOpCodeError(value)
   }
 }
@@ -598,6 +602,8 @@ object OpCode_CPX_ZP extends OpCode_ZP with SymName_CPX
 
 object OpCode_SBC_ZP extends OpCode_ZP with SymName_SBC
 
+object OpCode_INC_ZP extends OpCodeModify_ZP with SymName_INC
+
 object OpCode_INX extends OpCode_IMP with SymName_INX
 
 object OpCode_SBC_IMM extends OpCode_IMM with SymName_SBC
@@ -606,14 +612,20 @@ object OpCode_CPX_ABS extends OpCode_ABS with SymName_CPX
 
 object OpCode_SBC_ABS extends OpCode_ABS with SymName_SBC
 
+object OpCode_INC_ABS extends OpCodeModify_ABS with SymName_INC
+
 object OpCode_BEQ_REL extends OpCode_REL with SymName_BEQ
 
 object OpCode_SBC_INDY extends OpCode_INDY with SymName_SBC
 
 object OpCode_SBC_ZPX extends OpCode_ZPX with SymName_SBC
 
+object OpCode_INC_ZPX extends OpCodeModify_ZPX with SymName_INC
+
 object OpCode_SED extends OpCode_IMP with SymName_SED
 
 object OpCode_SBC_ABSY extends OpCode_ABSY with SymName_SBC
 
 object OpCode_SBC_ABSX extends OpCode_ABSX with SymName_SBC
+
+object OpCode_INC_ABSX extends OpCodeModify_ABSX with SymName_INC
