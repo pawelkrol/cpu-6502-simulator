@@ -169,6 +169,11 @@ trait SymName_LSR extends SymName {
   def symName = "LSR"
 }
 
+trait SymName_NOP extends SymName {
+
+  def symName = "NOP"
+}
+
 trait SymName_ORA extends SymName {
 
   def symName = "ORA"

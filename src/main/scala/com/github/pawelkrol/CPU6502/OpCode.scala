@@ -154,6 +154,7 @@ object OpCode {
     case ByteVal(0xe6) => OpCode_INC_ZP
     case ByteVal(0xe8) => OpCode_INX
     case ByteVal(0xe9) => OpCode_SBC_IMM
+    case ByteVal(0xea) => OpCode_NOP
     case ByteVal(0xec) => OpCode_CPX_ABS
     case ByteVal(0xed) => OpCode_SBC_ABS
     case ByteVal(0xee) => OpCode_INC_ABS
@@ -605,6 +606,8 @@ object OpCode_SBC_ZP extends OpCode_ZP with SymName_SBC
 object OpCode_INC_ZP extends OpCodeModify_ZP with SymName_INC
 
 object OpCode_INX extends OpCode_IMP with SymName_INX
+
+object OpCode_NOP extends OpCode_IMP with SymName_NOP
 
 object OpCode_SBC_IMM extends OpCode_IMM with SymName_SBC
 

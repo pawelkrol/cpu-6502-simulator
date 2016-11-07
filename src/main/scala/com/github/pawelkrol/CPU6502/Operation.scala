@@ -898,6 +898,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opINX
       case OpCode_SBC_IMM =>  // $e9
         opImmediateSBC
+      case OpCode_NOP =>      // $ea
       case OpCode_CPX_ABS =>  // $ec
         opCPX(get_arg_ABS)
       case OpCode_INC_ABS =>  // $ee
