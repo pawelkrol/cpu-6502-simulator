@@ -132,17 +132,21 @@ object OpCode {
     case ByteVal(0xc1) => OpCode_CMP_INDX
     case ByteVal(0xc4) => OpCode_CPY_ZP
     case ByteVal(0xc5) => OpCode_CMP_ZP
+    case ByteVal(0xc6) => OpCode_DEC_ZP
     case ByteVal(0xc8) => OpCode_INY
     case ByteVal(0xc9) => OpCode_CMP_IMM
     case ByteVal(0xca) => OpCode_DEX
     case ByteVal(0xcc) => OpCode_CPY_ABS
     case ByteVal(0xcd) => OpCode_CMP_ABS
+    case ByteVal(0xce) => OpCode_DEC_ABS
     case ByteVal(0xd0) => OpCode_BNE_REL
     case ByteVal(0xd1) => OpCode_CMP_INDY
     case ByteVal(0xd5) => OpCode_CMP_ZPX
+    case ByteVal(0xd6) => OpCode_DEC_ZPX
     case ByteVal(0xd8) => OpCode_CLD
     case ByteVal(0xd9) => OpCode_CMP_ABSY
     case ByteVal(0xdd) => OpCode_CMP_ABSX
+    case ByteVal(0xde) => OpCode_DEC_ABSX
     case ByteVal(0xe0) => OpCode_CPX_IMM
     case ByteVal(0xe1) => OpCode_SBC_INDX
     case ByteVal(0xe4) => OpCode_CPX_ZP
@@ -299,22 +303,22 @@ trait OpCode_AC extends OpCode {
   def memSize = 0x01
 }
 
-trait OpCodeRotate_ZP extends OpCode_ZP {
+trait OpCodeModify_ZP extends OpCode_ZP {
 
   override val cycles = 0x05
 }
 
-trait OpCodeRotate_ABS extends OpCode_ABS {
+trait OpCodeModify_ABS extends OpCode_ABS {
 
   override val cycles = 0x06
 }
 
-trait OpCodeRotate_ZPX extends OpCode_ZPX {
+trait OpCodeModify_ZPX extends OpCode_ZPX {
 
   override val cycles = 0x06
 }
 
-trait OpCodeRotate_ABSX extends OpCode_ABSX {
+trait OpCodeModify_ABSX extends OpCode_ABSX {
 
   override val cycles = 0x07
 }
@@ -328,7 +332,7 @@ object OpCode_ORA_INDX extends OpCode_INDX with SymName_ORA
 
 object OpCode_ORA_ZP extends OpCode_ZP with SymName_ORA
 
-object OpCode_ASL_ZP extends OpCodeRotate_ZP with SymName_ASL
+object OpCode_ASL_ZP extends OpCodeModify_ZP with SymName_ASL
 
 object OpCode_PHP extends OpCodePush_SP with SymName_PHP
 
@@ -338,7 +342,7 @@ object OpCode_ASL_AC extends OpCode_AC with SymName_ASL
 
 object OpCode_ORA_ABS extends OpCode_ABS with SymName_ORA
 
-object OpCode_ASL_ABS extends OpCodeRotate_ABS with SymName_ASL
+object OpCode_ASL_ABS extends OpCodeModify_ABS with SymName_ASL
 
 object OpCode_BPL_REL extends OpCode_REL with SymName_BPL
 
@@ -346,7 +350,7 @@ object OpCode_ORA_INDY extends OpCode_INDY with SymName_ORA
 
 object OpCode_ORA_ZPX extends OpCode_ZPX with SymName_ORA
 
-object OpCode_ASL_ZPX extends OpCodeRotate_ZPX with SymName_ASL
+object OpCode_ASL_ZPX extends OpCodeModify_ZPX with SymName_ASL
 
 object OpCode_CLC extends OpCode_IMP with SymName_CLC
 
@@ -354,7 +358,7 @@ object OpCode_ORA_ABSY extends OpCode_ABSY with SymName_ORA
 
 object OpCode_ORA_ABSX extends OpCode_ABSX with SymName_ORA
 
-object OpCode_ASL_ABSX extends OpCodeRotate_ABSX with SymName_ASL
+object OpCode_ASL_ABSX extends OpCodeModify_ABSX with SymName_ASL
 
 object OpCode_JSR_ABS extends OpCodeCall_ABS with SymName_JSR
 
@@ -364,7 +368,7 @@ object OpCode_BIT_ZP extends OpCode_ZP with SymName_BIT
 
 object OpCode_AND_ZP extends OpCode_ZP with SymName_AND
 
-object OpCode_ROL_ZP extends OpCodeRotate_ZP with SymName_ROL
+object OpCode_ROL_ZP extends OpCodeModify_ZP with SymName_ROL
 
 object OpCode_PLP extends OpCodePop_SP with SymName_PLP
 
@@ -376,7 +380,7 @@ object OpCode_BIT_ABS extends OpCode_ABS with SymName_BIT
 
 object OpCode_AND_ABS extends OpCode_ABS with SymName_AND
 
-object OpCode_ROL_ABS extends OpCodeRotate_ABS with SymName_ROL
+object OpCode_ROL_ABS extends OpCodeModify_ABS with SymName_ROL
 
 object OpCode_BMI_REL extends OpCode_REL with SymName_BMI
 
@@ -384,7 +388,7 @@ object OpCode_AND_INDY extends OpCode_INDY with SymName_AND
 
 object OpCode_AND_ZPX extends OpCode_ZPX with SymName_AND
 
-object OpCode_ROL_ZPX extends OpCodeRotate_ZPX with SymName_ROL
+object OpCode_ROL_ZPX extends OpCodeModify_ZPX with SymName_ROL
 
 object OpCode_SEC extends OpCode_IMP with SymName_SEC
 
@@ -392,7 +396,7 @@ object OpCode_AND_ABSY extends OpCode_ABSY with SymName_AND
 
 object OpCode_AND_ABSX extends OpCode_ABSX with SymName_AND
 
-object OpCode_ROL_ABSX extends OpCodeRotate_ABSX with SymName_ROL
+object OpCode_ROL_ABSX extends OpCodeModify_ABSX with SymName_ROL
 
 object OpCode_RTI extends OpCodeReturn_IMP with SymName_RTI
 
@@ -400,7 +404,7 @@ object OpCode_EOR_INDX extends OpCode_INDX with SymName_EOR
 
 object OpCode_EOR_ZP extends OpCode_ZP with SymName_EOR
 
-object OpCode_LSR_ZP extends OpCodeRotate_ZP with SymName_LSR
+object OpCode_LSR_ZP extends OpCodeModify_ZP with SymName_LSR
 
 object OpCode_PHA extends OpCodePush_SP with SymName_PHA
 
@@ -412,7 +416,7 @@ object OpCode_JMP_ABS extends OpCodeJump_ABS with SymName_JMP
 
 object OpCode_EOR_ABS extends OpCode_ABS with SymName_EOR
 
-object OpCode_LSR_ABS extends OpCodeRotate_ABS with SymName_LSR
+object OpCode_LSR_ABS extends OpCodeModify_ABS with SymName_LSR
 
 object OpCode_BVC_REL extends OpCode_REL with SymName_BVC
 
@@ -420,7 +424,7 @@ object OpCode_EOR_INDY extends OpCode_INDY with SymName_EOR
 
 object OpCode_EOR_ZPX extends OpCode_ZPX with SymName_EOR
 
-object OpCode_LSR_ZPX extends OpCodeRotate_ZPX with SymName_LSR
+object OpCode_LSR_ZPX extends OpCodeModify_ZPX with SymName_LSR
 
 object OpCode_CLI extends OpCode_IMP with SymName_CLI
 
@@ -428,7 +432,7 @@ object OpCode_EOR_ABSY extends OpCode_ABSY with SymName_EOR
 
 object OpCode_EOR_ABSX extends OpCode_ABSX with SymName_EOR
 
-object OpCode_LSR_ABSX extends OpCodeRotate_ABSX with SymName_LSR
+object OpCode_LSR_ABSX extends OpCodeModify_ABSX with SymName_LSR
 
 object OpCode_RTS extends OpCodeReturn_IMP with SymName_RTS
 
@@ -436,7 +440,7 @@ object OpCode_ADC_INDX extends OpCode_INDX with SymName_ADC
 
 object OpCode_ADC_ZP extends OpCode_ZP with SymName_ADC
 
-object OpCode_ROR_ZP extends OpCodeRotate_ZP with SymName_ROR
+object OpCode_ROR_ZP extends OpCodeModify_ZP with SymName_ROR
 
 object OpCode_PLA extends OpCodePop_SP with SymName_PLA
 
@@ -448,7 +452,7 @@ object OpCode_JMP_IND extends OpCodeJump_IND with SymName_JMP
 
 object OpCode_ADC_ABS extends OpCode_ABS with SymName_ADC
 
-object OpCode_ROR_ABS extends OpCodeRotate_ABS with SymName_ROR
+object OpCode_ROR_ABS extends OpCodeModify_ABS with SymName_ROR
 
 object OpCode_BVS_REL extends OpCode_REL with SymName_BVS
 
@@ -456,7 +460,7 @@ object OpCode_ADC_INDY extends OpCode_INDY with SymName_ADC
 
 object OpCode_ADC_ZPX extends OpCode_ZPX with SymName_ADC
 
-object OpCode_ROR_ZPX extends OpCodeRotate_ZPX with SymName_ROR
+object OpCode_ROR_ZPX extends OpCodeModify_ZPX with SymName_ROR
 
 object OpCode_SEI extends OpCode_IMP with SymName_SEI
 
@@ -464,7 +468,7 @@ object OpCode_ADC_ABSY extends OpCode_ABSY with SymName_ADC
 
 object OpCode_ADC_ABSX extends OpCode_ABSX with SymName_ADC
 
-object OpCode_ROR_ABSX extends OpCodeRotate_ABSX with SymName_ROR
+object OpCode_ROR_ABSX extends OpCodeModify_ABSX with SymName_ROR
 
 object OpCode_STA_INDX extends OpCode_INDX with SymName_STA
 
@@ -556,6 +560,8 @@ object OpCode_CPY_ZP extends OpCode_ZP with SymName_CPY
 
 object OpCode_CMP_ZP extends OpCode_ZP with SymName_CMP
 
+object OpCode_DEC_ZP extends OpCodeModify_ZP with SymName_DEC
+
 object OpCode_INY extends OpCode_IMP with SymName_INY
 
 object OpCode_CMP_IMM extends OpCode_IMM with SymName_CMP
@@ -566,17 +572,23 @@ object OpCode_CPY_ABS extends OpCode_ABS with SymName_CPY
 
 object OpCode_CMP_ABS extends OpCode_ABS with SymName_CMP
 
+object OpCode_DEC_ABS extends OpCodeModify_ABS with SymName_DEC
+
 object OpCode_BNE_REL extends OpCode_REL with SymName_BNE
 
 object OpCode_CMP_INDY extends OpCode_INDY with SymName_CMP
 
 object OpCode_CMP_ZPX extends OpCode_ZPX with SymName_CMP
 
+object OpCode_DEC_ZPX extends OpCodeModify_ZPX with SymName_DEC
+
 object OpCode_CLD extends OpCode_IMP with SymName_CLD
 
 object OpCode_CMP_ABSY extends OpCode_ABSY with SymName_CMP
 
 object OpCode_CMP_ABSX extends OpCode_ABSX with SymName_CMP
+
+object OpCode_DEC_ABSX extends OpCodeModify_ABSX with SymName_DEC
 
 object OpCode_CPX_IMM extends OpCode_IMM with SymName_CPX
 

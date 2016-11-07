@@ -104,6 +104,11 @@ trait SymName_CPY extends SymName {
   def symName = "CPY"
 }
 
+trait SymName_DEC extends SymName {
+
+  def symName = "DEC"
+}
+
 trait SymName_DEX extends SymName {
 
   def symName = "DEX"
@@ -117,6 +122,11 @@ trait SymName_DEY extends SymName {
 trait SymName_EOR extends SymName {
 
   def symName = "EOR"
+}
+
+trait SymName_INC extends SymName {
+
+  def symName = "INC"
 }
 
 trait SymName_INX extends SymName {

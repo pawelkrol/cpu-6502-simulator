@@ -601,6 +601,17 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
   }
 
+  /** [$c6] DEC $FF */
+  /** [$ce] DEC $FFFF */
+  /** [$d6] DEC $FF,X */
+  /** [$de] DEC $FFFF,X */
+  private def opDEC(address: Short) {
+    val decrementedValue: ByteVal = memory.read(address) - 1
+    memory.write(address, decrementedValue)
+    register.testStatusFlag(ZF, decrementedValue)
+    register.testStatusFlag(SF, decrementedValue)
+  }
+
   private def addPageCrossPenalty(address: Short, offset: Int) {
     if (page_cross(address, offset))
       cycleCount += 1
@@ -834,6 +845,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opCPY(get_arg_ZP)
       case OpCode_CMP_ZP =>   // $c5
         opCMP(get_arg_ZP)
+      case OpCode_DEC_ZP =>   // $c6
+        opDEC(get_addr_ZP)
       case OpCode_INY =>      // $c8
         opINY
       case OpCode_CMP_IMM =>  // $c9
@@ -844,18 +857,24 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opCPY(get_arg_ABS)
       case OpCode_CMP_ABS =>  // $cd
         opCMP(get_arg_ABS)
+      case OpCode_DEC_ABS =>  // $ce
+        opDEC(get_addr_ABS)
       case OpCode_BNE_REL =>  // $d0
         opRelative(!register.getStatusFlag(ZF))
       case OpCode_CMP_INDY => // $d1
         opIndirectYCMP
       case OpCode_CMP_ZPX =>  // $d5
         opCMP(get_arg_ZPX)
+      case OpCode_DEC_ZPX =>  // $d6
+        opDEC(get_addr_ZPX)
       case OpCode_CLD =>      // $d8
         opClearFlag(DF)
       case OpCode_CMP_ABSY => // $d9
         opAbsoluteYCMP
       case OpCode_CMP_ABSX => // $dd
         opAbsoluteXCMP
+      case OpCode_DEC_ABSX => // $de
+        opDEC(get_addr_ABSX.toShort)
       case OpCode_CPX_IMM =>  // $e0
         opCPX(get_arg_IMM)
       case OpCode_CPX_ZP =>   // $e4
