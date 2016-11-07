@@ -9,7 +9,7 @@ class StoreAccumulatorSpec extends StoreSpec {
     AC = storedValue
   }
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_STA_ZP -> 3,
     OpCode_STA_ZPX -> 4,
     OpCode_STA_ABS -> 4,

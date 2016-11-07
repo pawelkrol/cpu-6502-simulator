@@ -9,7 +9,7 @@ class StoreIndexXSpec extends StoreSpec {
     XR = storedValue
   }
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_STX_ZP -> 3,
     OpCode_STX_ZPY -> 4,
     OpCode_STX_ABS -> 4

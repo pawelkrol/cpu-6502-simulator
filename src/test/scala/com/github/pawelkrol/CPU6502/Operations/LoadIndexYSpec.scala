@@ -3,7 +3,7 @@ package Operations
 
 class LoadIndexYSpec extends LoadSpec {
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_LDY_IMM -> 2,
     OpCode_LDY_ZP -> 3,
     OpCode_LDY_ZPX -> 4,

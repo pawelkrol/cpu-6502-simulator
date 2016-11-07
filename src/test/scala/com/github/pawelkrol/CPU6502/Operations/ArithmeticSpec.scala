@@ -7,7 +7,13 @@ trait ArithmeticSpec extends FunOperationsSpec {
 
   setupSharedExamples
 
-  protected var zp: ByteVal = _
+  protected var xr: ByteVal = _
+
+  protected var yr: ByteVal = _
+
+  protected var zpAddr: Short = _
+
+  protected var addr: Short = _
 
   protected var includeSharedExamples: () => Unit = _
 
@@ -73,10 +79,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
     op match {
       case _: OpCode_IMM => {
         describe("immediate addressing mode") {
-          testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
-            it("uses 2 CPU cycles") { expect { operation }.toUseCycles(0x02) }
-
+          testOpCode(op, memSize = 0x02, cycles = 0x02) {
             includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(0xc001)()))
 
             context("$C000 = " + sym + " #$XX") {} {
@@ -87,10 +90,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
       }
       case _: OpCode_ZP => {
         describe("zeropage addressing mode") {
-          testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
-            it("uses 3 CPU cycles") { expect { operation }.toUseCycles(0x03) }
-
+          testOpCode(op, memSize = 0x02, cycles = 0x03) {
             includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(zp)()))
 
             context("$C000 = " + sym + " $02") { zp = 0x02 } {
@@ -101,43 +101,81 @@ trait ArithmeticSpec extends FunOperationsSpec {
       }
       case _: OpCode_ZPX => {
         describe("zeropage,x addressing mode") {
-          testOpCode(op) {
-            // TODO
+          testOpCode(op, memSize = 0x02, cycles = 0x04) {
+            includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(zp + xr)()))
+
+            context("XR = $02") { XR = 0x02 } {
+              context("$C000 = " + sym + " $02,X") { zp = 0x02; xr = 0x02 } {
+                executeSharedExamples("operation argument value at $04", (opArg) => { assignOpArg(zp, xr, opArg) })
+              }
+            }
           }
         }
       }
       case _: OpCode_ABS => {
         describe("absolute addressing mode") {
-          testOpCode(op) {
-            // TODO
+          testOpCode(op, memSize = 0x03, cycles = 0x04) {
+            includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(addr)()))
+
+            context("$C000 = " + sym + " $C800") { addr = 0xc800.toShort } {
+              executeSharedExamples("operation argument value at $C800", (opArg) => { setupAbsOpArg(addr, opArg) })
+            }
           }
         }
       }
       case _: OpCode_ABSX => {
         describe("absolute,x addressing mode") {
-          testOpCode(op) {
-            // TODO
+          testOpCode(op, memSize = 0x03, cycles = 0x04) {
+            includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(addr + xr)()))
+
+            context("XR = $02") { XR = 0x02 } {
+              context("$C000 = " + sym + " $C800,X") { addr = 0xc800.toShort; xr = 0x02 } {
+                executeSharedExamples("operation argument value at $C802", (opArg) => { setupAbsIndexedOpArg(addr, xr, opArg) })
+              }
+            }
           }
         }
       }
       case _: OpCode_ABSY => {
         describe("absolute,y addressing mode") {
-          testOpCode(op) {
-            // TODO
+          testOpCode(op, memSize = 0x03, cycles = 0x04) {
+            includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(addr + yr)()))
+
+            context("YR = $02") { YR = 0x02 } {
+              context("$C000 = " + sym + " $C800,Y") { addr = 0xc800.toShort; yr = 0x02 } {
+                executeSharedExamples("operation argument value at $C802", (opArg) => { setupAbsIndexedOpArg(addr, yr, opArg) })
+              }
+            }
           }
         }
       }
       case _: OpCode_INDX => {
         describe("(indirect,x) addressing mode") {
-          testOpCode(op) {
-            // TODO
+          testOpCode(op, memSize = 0x02, cycles = 0x06) {
+            includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(Util.nibbles2Word(memoryRead(zp + xr)(), memoryRead(zp + xr + 1)()))()))
+
+            context("XR = $02") { XR = 0x02 } {
+              context("$C000 = " + sym + " ($02,X)") { zp = 0x02; xr = 0x02 } {
+                context("$0004 = $00, $0005 = $C8") { zpAddr = 0xc800.toShort } {
+                  executeSharedExamples("operation argument value at $C800", (opArg) => { setupIndirectOpArg(zp, xr, zpAddr, opArg) })
+                }
+              }
+            }
           }
         }
       }
       case _: OpCode_INDY => {
         describe("(indirect),y addressing mode") {
-          testOpCode(op) {
-            // TODO
+          testOpCode(op, memSize = 0x02, cycles = 0x05) {
+            includeSharedExamples = () => includeExamples(sym, List[Any](CF, DF, AC(), () => memoryRead(Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr)()))
+
+            context("YR = $02") { YR = 0x02 } {
+              context("$C000 = " + sym + " ($02),Y") { zp = 0x02; yr = 0x02 } {
+                context("$0002 = $00, $0003 = $C8") { zpAddr = 0xc800.toShort } {
+                  executeSharedExamples("operation argument value at $C802", (opArg) => { setupIndirectOpArg(zp, yr, zpAddr, opArg) })
+                }
+              }
+            }
           }
         }
       }

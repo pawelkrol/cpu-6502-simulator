@@ -3,7 +3,7 @@ package Operations
 
 class LoadAccumulatorSpec extends LoadSpec {
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_LDA_IMM -> 2,
     OpCode_LDA_ZP -> 3,
     OpCode_LDA_ZPX -> 4,

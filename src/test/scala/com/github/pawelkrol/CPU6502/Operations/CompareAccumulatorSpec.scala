@@ -3,7 +3,7 @@ package Operations
 
 class CompareAccumulatorSpec extends CompareSpec {
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_CMP_IMM -> 2,
     OpCode_CMP_ZP -> 3,
     OpCode_CMP_ZPX -> 4,

@@ -3,6 +3,12 @@ package Operations
 
 class SubtractWithBorrowSpec extends ArithmeticSpec {
 
+  cycleCount = Map[OpCode, Int](
+    OpCode_SBC_ABSX -> 4,
+    OpCode_SBC_ABSY -> 4,
+    OpCode_SBC_INDY -> 5
+  )
+
   protected def setupSharedExamples {
     sharedExamples("SBC", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
@@ -876,5 +882,9 @@ class SubtractWithBorrowSpec extends ArithmeticSpec {
     applySharedExamples("SBC", OpCode_SBC_ABSY)
     applySharedExamples("SBC", OpCode_SBC_INDX)
     applySharedExamples("SBC", OpCode_SBC_INDY)
+
+    pageBoundaryCrossCheck(OpCode_SBC_ABSX, "SBC")
+    pageBoundaryCrossCheck(OpCode_SBC_ABSY, "SBC")
+    pageBoundaryCrossCheck(OpCode_SBC_INDY, "SBC")
   }
 }

@@ -27,13 +27,13 @@ class ImpliedSpec extends FunOperationsSpec {
 
     it("does not change registers") {
       registers.foreach(fetchRegister =>
-        expect { operation }.notToChange { println("fetched value="+fetchRegister()); fetchRegister() }
+        expect { operation }.notToChange { fetchRegister() }
       )
     }
 
     it("does not change flags") {
       flags.foreach(fetchFlag =>
-        expect { operation }.notToChange { println("fetched flag="+fetchFlag()); fetchFlag() }
+        expect { operation }.notToChange { fetchFlag() }
       )
     }
   })

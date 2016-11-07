@@ -3,7 +3,7 @@ package Operations
 
 class DecrementSpec extends UnarySpec {
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_DEC_ZP -> 5,
     OpCode_DEC_ZPX -> 6,
     OpCode_DEC_ABS -> 6,

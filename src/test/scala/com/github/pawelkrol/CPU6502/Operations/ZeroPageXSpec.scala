@@ -3,8 +3,6 @@ package Operations
 
 class ZeroPageXSpec extends FunOperationsSpec {
 
-  private var zp: ByteVal = _
-
   private var xr: ByteVal = _
 
   describe("zeropage,x addressing mode") {

@@ -3,7 +3,7 @@ package Operations
 
 class ShiftRightSpec extends RotateSpec {
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_LSR_AC -> 2,
     OpCode_LSR_ZP -> 5,
     OpCode_LSR_ZPX -> 6,

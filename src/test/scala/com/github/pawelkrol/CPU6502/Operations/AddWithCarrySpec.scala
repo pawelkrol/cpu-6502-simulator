@@ -3,6 +3,12 @@ package Operations
 
 class AddWithCarrySpec extends ArithmeticSpec {
 
+  cycleCount = Map[OpCode, Int](
+    OpCode_ADC_ABSX -> 4,
+    OpCode_ADC_ABSY -> 4,
+    OpCode_ADC_INDY -> 5
+  )
+
   protected def setupSharedExamples {
     sharedExamples("ADC", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
@@ -876,5 +882,9 @@ class AddWithCarrySpec extends ArithmeticSpec {
     applySharedExamples("ADC", OpCode_ADC_ABSY)
     applySharedExamples("ADC", OpCode_ADC_INDX)
     applySharedExamples("ADC", OpCode_ADC_INDY)
+
+    pageBoundaryCrossCheck(OpCode_ADC_ABSX, "ADC")
+    pageBoundaryCrossCheck(OpCode_ADC_ABSY, "ADC")
+    pageBoundaryCrossCheck(OpCode_ADC_INDY, "ADC")
   }
 }

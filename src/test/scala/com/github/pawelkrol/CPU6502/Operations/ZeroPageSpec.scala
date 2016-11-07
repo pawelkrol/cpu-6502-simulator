@@ -3,8 +3,6 @@ package Operations
 
 class ZeroPageSpec extends FunOperationsSpec {
 
-  private var zp: ByteVal = _
-
   describe("zeropage addressing mode") {
     testOpCode(OpCode_ORA_ZP, memSize = 0x02, cycles = 0x03) {
       context("AC = $00") { AC = 0x00; ZF = true; SF = false } {

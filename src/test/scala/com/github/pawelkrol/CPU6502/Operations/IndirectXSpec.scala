@@ -3,8 +3,6 @@ package Operations
 
 class IndirectXSpec extends FunOperationsSpec {
 
-  private var zp: ByteVal = _
-
   private var xr: ByteVal = _
 
   private var zpAddr: Seq[ByteVal] = _

@@ -3,15 +3,11 @@ package Operations
 
 trait FunSharedExamples extends FunOperationsSpec {
 
-  protected def cycleCount: Map[OpCode, Int]
-
   protected def setupSharedExamples: Unit
 
   setupSharedExamples
 
   protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit
-
-  protected var zp: ByteVal = _
 
   protected var xr: ByteVal = _
 
@@ -23,17 +19,7 @@ trait FunSharedExamples extends FunOperationsSpec {
 
   protected var includeSharedExamples: () => Unit = _
 
-  protected def setupAbsOpArg(address: Short, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ value): _*) }
-
-  protected def setupAbsIndexedOpArg(address: Short, index: ByteVal, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ index :+ value): _*) }
-
-  protected def setupIndirectOpArg(zp: ByteVal, index: ByteVal, zpAddr: Short, value: ByteVal) { assignOpArg((zp +: index +: Util.addr2ByteVals(zpAddr) :+ value): _*) }
-
   protected def sharedExampleArguments(opCode: OpCode): () => List[Any]
-
-  protected def assertCycleCount(cycles: Int) {
-    it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles.toShort) }
-  }
 
   def applySharedExamples(sym: String, op: OpCode) {
     includeSharedExamples = () => includeExamples(sym, sharedExampleArguments(op)())
@@ -183,69 +169,6 @@ trait FunSharedExamples extends FunOperationsSpec {
             }
           }
         }
-      }
-    }
-  }
-
-  protected def pageBoundaryCrossCheck(opCode: OpCode, symName: String) {
-    opCode match {
-      case _: OpCode_ABSX => {
-        describe("absolute,x addressing mode") {
-          assertPageBoundaryCycleCount(opCode) { (address, offset, assertionCallback) =>
-            context("XR = $%02X".format(offset)) { XR = offset } {
-              context("%s $%04X,X".format(symName, address)) { setupAbsIndexedOpArg(address.toShort, offset, 0xff) } {
-                assertionCallback()
-              }
-            }
-          }
-        }
-      }
-      case _: OpCode_ABSY => {
-        describe("absolute,y addressing mode") {
-          assertPageBoundaryCycleCount(opCode) { (address, offset, assertionCallback) =>
-            context("YR = $%02X".format(offset)) { YR = offset } {
-              context("%s $%04X,Y".format(symName, address)) { setupAbsIndexedOpArg(address.toShort, offset, 0xff) } {
-                assertionCallback()
-              }
-            }
-          }
-        }
-      }
-      case _: OpCode_INDY => {
-        describe("(indirect),y addressing mode") {
-          assertPageBoundaryCycleCount(opCode) { (address, offset, assertionCallback) =>
-            context("YR = $%02X".format(offset)) { YR = offset } {
-              context("%s ($%02X),Y".format(symName, address)) { setupIndirectOpArg(zp.toShort, offset, address.toShort, 0xff) } {
-                assertionCallback()
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  protected def assertPageBoundaryCycleCount(op: OpCode)(setupCallback: (Int, Int, () => Unit) => Unit) {
-    describe("cycle count when page boundary is crossed") {
-      val extraCycleCount = Map[Tuple2[Int, Int], Int](
-        (0xc800, 0x00) -> 0,
-        (0xc800, 0x01) -> 0,
-        (0xc800, 0xff) -> 0,
-        (0xc801, 0x00) -> 0,
-        (0xc801, 0x01) -> 0,
-        (0xc801, 0xff) -> 1,
-        (0xc8ff, 0x00) -> 0,
-        (0xc8ff, 0x01) -> 1,
-        (0xc8ff, 0xff) -> 1
-      )
-
-      testOpCode(op) {
-        extraCycleCount.foreach({ case (data, extraCycles) =>
-          val (address, offset) = data
-          setupCallback(address, offset, () => {
-            assertCycleCount(cycleCount(op) + extraCycles)
-          })
-        })
       }
     }
   }

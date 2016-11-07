@@ -120,6 +120,11 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.testStatusFlag(SF, register.AC)
   }
 
+  /** [$61] ADC ($FF,X) */
+  /** [$65] ADC $FF */
+  /** [$69] ADC #$FF */
+  /** [$6d] ADC $FFFF */
+  /** [$75] ADC $FF,X */
   private def opADC(term: ByteVal) {
     val carry = if (register.getStatusFlag(CF)) 0x01 else 0x00
     val old = register.AC()
@@ -147,14 +152,22 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     }
   }
 
-  /** [$69] ADC #$FF */
-  private def opImmediateADC {
-    opADC(get_arg_IMM)
+  /** [$7d] ADC $FFFF,X */
+  private def opAbsoluteXADC {
+    opADC(get_arg_ABSX)
+    addPageCrossPenalty(register.XR())
   }
 
-  /** [$65] ADC $FF */
-  private def opZeroPageADC {
-    opADC(get_arg_ZP)
+  /** [$79] ADC $FFFF,Y */
+  private def opAbsoluteYADC {
+    opADC(get_arg_ABSY)
+    addPageCrossPenalty(register.YR())
+  }
+
+  /** [$71] ADC ($FF),Y */
+  private def opIndirectYADC {
+    opADC(get_arg_INDY)
+    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
   }
 
   /** [$10] BPL *-1 */
@@ -225,6 +238,11 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     opCompare(register.YR, term)
   }
 
+  /** [$e1] SBC ($FF,X) */
+  /** [$e5] SBC $FF */
+  /** [$e9] SBC #$FF */
+  /** [$ed] SBC $FFFF */
+  /** [$f5] SBC $FF,X */
   private def opSBC(term: ByteVal) {
     if (register.getStatusFlag(DF)) {
       val carry = if (register.getStatusFlag(CF)) 0x00 else 0x01
@@ -256,14 +274,22 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     }
   }
 
-  /** [$e9] SBC #$FF */
-  private def opImmediateSBC {
-    opSBC(get_arg_IMM)
+  /** [$fd] SBC $FFFF,X */
+  private def opAbsoluteXSBC {
+    opSBC(get_arg_ABSX)
+    addPageCrossPenalty(register.XR())
   }
 
-  /** [$e5] SBC $FF */
-  private def opZeroPageSBC {
-    opSBC(get_arg_ZP)
+  /** [$f9] SBC $FFFF,Y */
+  private def opAbsoluteYSBC {
+    opSBC(get_arg_ABSY)
+    addPageCrossPenalty(register.YR())
+  }
+
+  /** [$f1] SBC ($FF),Y */
+  private def opIndirectYSBC {
+    opSBC(get_arg_INDY)
+    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
   }
 
   private def pushProgramCounterToStack {
@@ -744,26 +770,38 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opAbsoluteX(opLSR(_))
       case OpCode_RTS =>      // $60
         opRTS
+      case OpCode_ADC_INDX => // $61
+        opADC(get_arg_INDX)
       case OpCode_ADC_ZP =>   // $65
-        opZeroPageADC
+        opADC(get_arg_ZP)
       case OpCode_ROR_ZP =>   // $66
         opZeroPage(opROR(_))
       case OpCode_PLA =>      // $68
         opPLA
       case OpCode_ADC_IMM =>  // $69
-        opImmediateADC
+        opADC(get_arg_IMM)
       case OpCode_ROR_AC =>   // $6a
         opAccumulator(opROR(_))
       case OpCode_JMP_IND =>  // $6c
         opIndirectJMP
+      case OpCode_ADC_ABS =>  // $6d
+        opADC(get_arg_ABS)
       case OpCode_ROR_ABS =>  // $6e
         opAbsolute(opROR(_))
       case OpCode_BVS_REL =>  // $70
         opRelative(register.getStatusFlag(OF))
+      case OpCode_ADC_INDY => // $71
+        opIndirectYADC
+      case OpCode_ADC_ZPX =>  // $75
+        opADC(get_arg_ZPX)
       case OpCode_ROR_ZPX =>  // $76
         opZeroPageX(opROR(_))
       case OpCode_SEI =>      // $78
         opSetFlag(IF)
+      case OpCode_ADC_ABSY => // $79
+        opAbsoluteYADC
+      case OpCode_ADC_ABSX => // $7d
+        opAbsoluteXADC
       case OpCode_ROR_ABSX => // $7e
         opAbsoluteX(opROR(_))
       case OpCode_STA_INDX => // $81
@@ -888,27 +926,39 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opDEC(get_addr_ABSX.toShort)
       case OpCode_CPX_IMM =>  // $e0
         opCPX(get_arg_IMM)
+      case OpCode_SBC_INDX => // $e1
+        opSBC(get_arg_INDX)
       case OpCode_CPX_ZP =>   // $e4
         opCPX(get_arg_ZP)
       case OpCode_SBC_ZP =>   // $e5
-        opZeroPageSBC
+        opSBC(get_arg_ZP)
       case OpCode_INC_ZP =>   // $e6
         opINC(get_addr_ZP)
       case OpCode_INX =>      // $e8
         opINX
       case OpCode_SBC_IMM =>  // $e9
-        opImmediateSBC
+        opSBC(get_arg_IMM)
       case OpCode_NOP =>      // $ea
       case OpCode_CPX_ABS =>  // $ec
         opCPX(get_arg_ABS)
+      case OpCode_SBC_ABS =>  // $ed
+        opSBC(get_arg_ABS)
       case OpCode_INC_ABS =>  // $ee
         opINC(get_addr_ABS)
       case OpCode_BEQ_REL =>  // $f0
         opRelative(register.getStatusFlag(ZF))
+      case OpCode_SBC_INDY => // $f1
+        opIndirectYSBC
+      case OpCode_SBC_ZPX =>  // $f5
+        opSBC(get_arg_ZPX)
       case OpCode_INC_ZPX =>  // $f6
         opINC(get_addr_ZPX)
       case OpCode_SED =>      // $f8
         opSetFlag(DF)
+      case OpCode_SBC_ABSY => // $f9
+        opAbsoluteYSBC
+      case OpCode_SBC_ABSX => // $fd
+        opAbsoluteXSBC
       case OpCode_INC_ABSX => // $fe
         opINC(get_addr_ABSX.toShort)
     }

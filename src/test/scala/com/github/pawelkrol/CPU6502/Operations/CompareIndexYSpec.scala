@@ -3,7 +3,7 @@ package Operations
 
 class CompareIndexYSpec extends CompareSpec {
 
-  protected val cycleCount = Map[OpCode, Int](
+  cycleCount = Map[OpCode, Int](
     OpCode_CPY_IMM -> 2,
     OpCode_CPY_ZP -> 3,
     OpCode_CPY_ABS -> 4
