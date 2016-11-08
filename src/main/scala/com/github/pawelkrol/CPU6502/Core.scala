@@ -1,6 +1,25 @@
 package com.github.pawelkrol.CPU6502
 
-case class Core(memory: Memory, register: Register) extends Operation(memory, register)
+case class Core(memory: Memory, register: Register) extends Operation(memory, register) {
+
+  /** IRQ request active */
+  var haveIRQRequest = false
+
+  /** NMI request active */
+  var haveNMIRequest = false
+
+  /** Generate a CPU RESET */
+  def reset {
+    haveIRQRequest = false
+    haveNMIRequest = false
+    register.status = 0x00
+    register.PC = memory.get_val_from_addr(0xfffc.toShort)
+  }
+
+  /** Execute one CPU instruction */
+  def executeInstruction {
+  }
+}
 
 object Core {
 

@@ -6,9 +6,13 @@ import Status._
 
 abstract class Operation(memory: Memory, register: Register) extends StrictLogging {
 
+  /** Cycle count for the current instruction */
   var cycleCount = 0
 
-  private def get_val_from_addr(zp: Short) = Util.byteVals2Addr(Seq(memory.read(zp), memory.read(zp + 1)))
+  /** Total number of CPU cycles executed */
+  var totalCycles = 0
+
+  private def get_val_from_addr(addr: Short) = memory.get_val_from_addr(addr)
 
   private def get_addr_ABS = get_val_from_addr((register.PC + 1).toShort)
 
@@ -659,6 +663,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   }
 
   def eval(opCode: OpCode) {
+    cycleCount = 0
+
     opCode match {
       case OpCode_BRK_IMM =>  // $00
         opBRK
@@ -963,6 +969,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opINC(get_addr_ABSX.toShort)
     }
     cycleCount += opCode.cycles
+    totalCycles += cycleCount
     register.advancePC(opCode.memSize)
   }
 

@@ -20,6 +20,8 @@ class Memory {
   }
 
   def write(address: Int, value: ByteVal): Memory = write(address.toShort, value)
+
+  def get_val_from_addr(address: Short) = Util.byteVals2Addr(Seq(read(address), read((address + 1).toShort)))
 }
 
 /** Factory for [[com.github.pawelkrol.CPU6502.Memory]] instances */

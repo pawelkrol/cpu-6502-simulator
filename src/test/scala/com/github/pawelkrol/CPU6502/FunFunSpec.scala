@@ -111,4 +111,10 @@ trait FunFunSpec extends FunSpec {
     testCount += 1
     xit("no message (test #" + testCount + ")")(testFun)
   }
+
+  private var _subject: () => Unit = _
+
+  def subject(operation: => Unit ) { _subject = () => operation }
+
+  def subject { _subject() }
 }
