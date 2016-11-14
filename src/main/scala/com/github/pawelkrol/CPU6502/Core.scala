@@ -28,6 +28,13 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
 
   /** Execute one CPU instruction */
   def executeInstruction {
+    val opCode = OpCode(memory.read(register.PC))
+    eval(opCode)
+  }
+
+  /** Execute n CPU instructions */
+  def executeInstructions(n: Int) {
+    1 to n foreach { _ => executeInstruction }
   }
 }
 

@@ -21,4 +21,25 @@ class MemorySpec extends FunFunSpec {
       }
     }
   }
+
+  describe("read") {
+    describe("fetching sequence of bytes") {
+      context("$C000 = $00; $C001 = $C8; $C002 = $FF") { memory.write(0xc000, 0x00).write(0xc001, 0xc8).write(0xc002, 0xff) } {
+        it("reads a sequence of bytes starting from a memory location") {
+          expect { memory.read(0xc000, 0x03) }.toEqual(Seq[ByteVal](0x00, 0xc8, 0xff))
+        }
+      }
+    }
+  }
+
+  describe("write") {
+    describe("variable number of arguments") {
+      it("writes a variable number of bytes starting from a memory location") {
+        expect {
+          memory.write(0xc000, 0xa9, 0x00, 0x8d, 0x11, 0xd0, 0x60)
+          memory.read(0xc000, 0x06)
+        }.toEqual(Seq[ByteVal](0xa9, 0x00, 0x8d, 0x11, 0xd0, 0x60))
+      }
+    }
+  }
 }
