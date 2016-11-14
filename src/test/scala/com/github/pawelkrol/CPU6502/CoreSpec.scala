@@ -21,19 +21,19 @@ class CoreSpec extends FunFunSpec {
     }
   }
 
-  context("irq request") { subject { core.executeInstruction } } {
+  context("irq request") { subject { core.requestIRQ } } {
     it("generates an IRQ") {
-      // TODO
+      expect { subject }.toChange { core.haveIRQRequest }.to(true)
     }
   }
 
-  context("nmi request") {} {
+  context("nmi request") { core.requestNMI } {
     it("generates an NMI") {
-      // TODO
+      expect { subject }.toChange { core.haveNMIRequest }.to(true)
     }
   }
 
-  context("execute instruction") {} {
+  context("execute instruction") { subject { core.executeInstruction } } {
     it("executes one CPU instruction") {
       // TODO
     }

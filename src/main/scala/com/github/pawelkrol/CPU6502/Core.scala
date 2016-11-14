@@ -16,6 +16,16 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
     register.PC = memory.get_val_from_addr(0xfffc.toShort)
   }
 
+  /** Generate an IRQ */
+  def requestIRQ {
+    haveIRQRequest = true
+  }
+
+  /** Generate an NMI */
+  def requestNMI {
+    haveNMIRequest = true
+  }
+
   /** Execute one CPU instruction */
   def executeInstruction {
   }
