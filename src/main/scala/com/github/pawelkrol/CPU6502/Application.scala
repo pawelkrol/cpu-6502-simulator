@@ -40,9 +40,13 @@ object Application extends Logging {
       case None =>
         // arguments are invalid, usage message will have been displayed
     }
+
+    System.exit(0)
   }
 
   def runWith(arguments: Arguments) {
+    core.reset
+
     // Initialize program counter with a custom start address
     core.register.PC = arguments.startAddress match {
       case Some(addr) =>
@@ -53,8 +57,6 @@ object Application extends Logging {
 
     verbose = arguments.verbose
 
-    logRegisters
-
-    Runner.go
+    Runner.go(arguments.file.get, arguments.cycleCount)
   }
 }

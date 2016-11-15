@@ -6,7 +6,27 @@ trait Logging extends StrictLogging {
 
   val core: Core
 
+  val log = logger
+
   protected var verbose = false
+
+  def logInstruction(opCode: OpCode) {
+    val memory = core.memory
+    val register = core.register
+
+    // TODO
+    // val instruction = ".C:0902 8D 20 D0    STA $D020      - A:00 X:FF Y:FF SP:F9 ..-...Z."
+
+    val bytes = memory.read(register.PC, opCode.memSize).map(byte => "%02X".format(byte())).mkString(" ")
+    val instruction = ".C:%04X %-11s %s %s".format(
+      register.PC,
+      bytes,
+      opCode.symName,
+      "#TODO#"
+    )
+
+    log.debug(instruction)
+  }
 
   def logRegisters {
     val memory = core.memory
@@ -23,6 +43,7 @@ trait Logging extends StrictLogging {
       Util.binaryString(register.status)
     )
 
-    logger.debug(registers)
+    if (verbose)
+      log.debug(registers)
   }
 }

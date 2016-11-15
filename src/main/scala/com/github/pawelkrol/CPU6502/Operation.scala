@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.StrictLogging
 
 import Status._
 
-abstract class Operation(memory: Memory, register: Register) extends StrictLogging {
+abstract class Operation(memory: Memory, register: Register) {
 
   /** Cycle count for the current instruction */
   var cycleCount = 0
@@ -336,7 +336,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     val hi = (lo & 0xff00) | ((lo + 1) & 0x00ff)
     register.setPC(get_arg_ABS() | (memory.read(hi)() << 8))
     if (hi.toShort != (lo + 1).toShort)
-      logger.info("6502 indirect jump bug triggered at $%04x, indirect address = $%04x".format(pc, lo))
+      Application.log.info("6502 indirect jump bug triggered at $%04x, indirect address = $%04x".format(pc, lo))
     register.advancePC(-OpCode_JMP_IND.memSize) // additionally compensate for an advancement in "eval"
   }
 
