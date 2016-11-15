@@ -1,10 +1,9 @@
 package com.github.pawelkrol.CPU6502
 
-import com.typesafe.scalalogging.StrictLogging
 import java.io.File
 import scopt.OptionParser
 
-object Application extends StrictLogging {
+object Application extends Logging {
 
   private val appVersion = "0.01-SNAPSHOT"
 
@@ -44,7 +43,18 @@ object Application extends StrictLogging {
   }
 
   def runWith(arguments: Arguments) {
-    // logger.debug("Printing out hello message")
-    // println(Message.hello(arguments.name))
+    // Initialize program counter with a custom start address
+    core.register.PC = arguments.startAddress match {
+      case Some(addr) =>
+        addr.toShort
+      case None =>
+        core.memory.get_val_from_addr(0xfffc.toShort)
+    }
+
+    verbose = arguments.verbose
+
+    logRegisters
+
+    Runner.go
   }
 }

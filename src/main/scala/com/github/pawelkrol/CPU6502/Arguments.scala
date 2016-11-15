@@ -11,7 +11,13 @@ case class Arguments(
 
   def validate {
     // startAddress shall be a 16-bit hexadecimal number
-    // TODO
+    startAddress match {
+      case Some(addr) =>
+        if (addr < 0x0000 || addr >= Memory.size)
+          throw new IllegalArgumentException("Error: invalid start address: $%04x".format(addr))
+      case None =>
+    }
+
     // file shall exist
     file match {
       case Some(f) =>

@@ -10,6 +10,10 @@ object ProguardConf {
   *;
 }
 
+-keep public class ch.qos.logback.classic.LoggerContext {
+  *;
+}
+
 -keep public class ch.qos.logback.core.pattern.PatternLayoutEncoderBase {
   *;
 }

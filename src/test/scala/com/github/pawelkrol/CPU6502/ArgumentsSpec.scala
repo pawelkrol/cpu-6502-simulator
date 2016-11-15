@@ -18,5 +18,17 @@ class ArgumentsSpec extends FunSpec {
         Arguments(file = Some(new File("main.prg"))).validate
       }
     }
+
+    it("fails to validate negative start address") {
+      intercept[IllegalArgumentException] {
+        Arguments(startAddress = Some(-1)).validate
+      }
+    }
+
+    it("fails to validate start address outside of an available memory range") {
+      intercept[IllegalArgumentException] {
+        Arguments(startAddress = Some(0x10000)).validate
+      }
+    }
   }
 }
