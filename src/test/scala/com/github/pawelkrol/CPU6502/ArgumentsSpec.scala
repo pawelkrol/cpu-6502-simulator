@@ -1,25 +1,21 @@
+package com.github.pawelkrol.CPU6502
+
 import org.scalatest.FunSpec
 
-import com.github.pawelkrol.CPU6502.Arguments
+import java.io.File
 
 class ArgumentsSpec extends FunSpec {
 
   describe("validate") {
-    it("passes default name validation") {
-      Arguments().validate
-    }
-
-    it("passes alphabetical name validation") {
-      Arguments("Sunn").validate
-    }
-
-    it("passes name with empty space validation") {
-      Arguments("Sunn O").validate
-    }
-
-    it("fails to validate non-alphabetical name") {
+    it("fails to validate missing file name") {
       intercept[IllegalArgumentException] {
-        Arguments("Sunn O)))").validate
+        Arguments().validate
+      }
+    }
+
+    it("fails to validate non-existing file name") {
+      intercept[IllegalArgumentException] {
+        Arguments(file = Some(new File("main.prg"))).validate
       }
     }
   }
