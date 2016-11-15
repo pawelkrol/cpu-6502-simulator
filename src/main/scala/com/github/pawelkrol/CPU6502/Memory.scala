@@ -31,6 +31,8 @@ class Memory {
 
   def get_val_from_addr(address: Short) = Util.byteVals2Addr(Seq(read(address), read((address + 1).toShort)))
 
+  def get_val_from_zp(address: Short) = Util.byteVals2Addr(Seq(read(address), read(((address + 1) & 0xff).toShort)))
+
   /** Initialize the memory subsystem */
   def init {
     _MEMORY = Array.fill[ByteVal](Memory.size)(0xff)

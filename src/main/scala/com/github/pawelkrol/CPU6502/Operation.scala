@@ -11,6 +11,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
 
   protected def get_val_from_addr(addr: Short) = memory.get_val_from_addr(addr)
 
+  protected def get_val_from_zp(addr: Short) = memory.get_val_from_zp(addr)
+
   private def get_addr_ABS = get_val_from_addr((register.PC + 1).toShort)
 
   private def get_addr_ABSX = get_addr_ABS + register.XR()
@@ -19,13 +21,13 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
 
   private def get_addr_ZP = memory.read(register.PC + 1)
 
-  private def get_addr_ZPX = get_addr_ZP + register.XR()
+  private def get_addr_ZPX = (get_addr_ZP + register.XR()) & 0xff
 
-  private def get_addr_ZPY = get_addr_ZP + register.YR()
+  private def get_addr_ZPY = (get_addr_ZP + register.YR()) & 0xff
 
-  private def get_addr_INDX = get_val_from_addr(get_addr_ZPX)
+  private def get_addr_INDX = get_val_from_zp(get_addr_ZPX)
 
-  private def get_addr_INDY = (get_val_from_addr(get_addr_ZP) + register.YR()).toShort
+  private def get_addr_INDY = (get_val_from_zp(get_addr_ZP) + register.YR()).toShort
 
   private def get_arg_IMM = memory.read(register.PC + 1)
 
@@ -168,7 +170,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** [$71] ADC ($FF),Y */
   private def opIndirectYADC {
     opADC(get_arg_INDY)
-    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
+    addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
 
   /** [$10] BPL *-1 */
@@ -222,7 +224,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** [$d1] CMP ($FF),Y */
   private def opIndirectYCMP {
     opCMP(get_arg_INDY)
-    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
+    addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
 
   /** [$e0] CPX #$FF */
@@ -290,7 +292,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** [$f1] SBC ($FF),Y */
   private def opIndirectYSBC {
     opSBC(get_arg_INDY)
-    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
+    addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
 
   private def pushWordToStack(word: Short) {
@@ -629,7 +631,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** [$b1] LDA ($FF),Y */
   private def opIndirectYLDA {
     opLDA(get_arg_INDY)
-    addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
+    addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
 
   /** [$c6] DEC $FF */
