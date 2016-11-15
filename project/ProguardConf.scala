@@ -2,10 +2,6 @@ object ProguardConf {
 
   val cpu6502Simulator =
 """
--dontnote
--dontwarn
--ignorewarnings
-
 -keep public class ch.qos.logback.core.ConsoleAppender {
   *;
 }

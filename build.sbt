@@ -1,11 +1,8 @@
 scalacOptions += "-feature"
 
-lazy val root = (project in file(".")).
-  settings(
-    name := "cpu-6502-simulator",
-    version := "0.01-SNAPSHOT",
-    scalaVersion := "2.11.8"
-  )
+scalaVersion := "2.11.8"
+
+version := "0.01-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.7",
@@ -18,15 +15,3 @@ libraryDependencies ++= Seq(
 artifactName := { (sv: ScalaVersion, module: ModuleID, artifact: Artifact) =>
   artifact.name + "-" + module.revision + "." + artifact.extension
 }
-
-proguardSettings
-
-ProguardKeys.filteredInputs in Proguard <++= (packageBin in Compile) map ProguardOptions.noFilter
-
-ProguardKeys.inputs in Proguard <<= (dependencyClasspath in Compile) map { _.files }
-
-ProguardKeys.options in Proguard += ProguardOptions.keepMain("com.github.pawelkrol.cpu6502.Application")
-
-ProguardKeys.options in Proguard += ProguardConf.cpu6502Simulator
-
-ProguardKeys.proguardVersion in Proguard := "5.3"
