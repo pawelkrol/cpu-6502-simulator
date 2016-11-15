@@ -23,7 +23,7 @@ class CoreSpec extends FunFunSpec {
       it { expect { subject }.toChange { core.haveIRQRequest }.to(false) }
       it { expect { subject }.toChange { core.haveNMIRequest }.to(false) }
       it { expect { subject }.toChange { register.status }.to(0x00) }
-      it { expect { subject }.toChange { register.PC }.to(0xffff.toShort) }
+      it { expect { subject }.toChange { register.PC }.to(0x0200.toShort) }
     }
   }
 

@@ -42,4 +42,17 @@ class MemorySpec extends FunFunSpec {
       }
     }
   }
+
+  context("init") { subject { memory.init } } {
+    it("fills memory with an illegal opcode") {
+      expect { subject }.toChange { memory.read(0x0000, Memory.size) }.to(
+        List.fill[ByteVal](Memory.size)(0xff).updated(0xfffc, ByteVal(0x00)).updated(0xfffd, ByteVal(0x02))
+      )
+    }
+
+    it("sets RESET vector to $0200") {
+      expect { subject }.toChange { memory.read(0xfffc) }.to(0x00)
+      expect { subject }.toChange { memory.read(0xfffd) }.to(0x02)
+    }
+  }
 }

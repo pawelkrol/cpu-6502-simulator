@@ -33,13 +33,13 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
   def executeInstruction = {
     if (haveNMIRequest) {
       haveNMIRequest = false
-      interrupt
+      interrupt(register.PC)
       register.setPC(get_val_from_addr(0xfffa.toShort))
       cycleCount = 7
     }
     else if (haveIRQRequest && !register.getStatusFlag(Status.IF)) {
       haveIRQRequest = false
-      interrupt
+      interrupt(register.PC)
       register.setPC(get_val_from_addr(0xfffe.toShort))
       cycleCount = 7
     }

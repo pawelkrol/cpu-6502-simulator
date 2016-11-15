@@ -6,7 +6,9 @@ package com.github.pawelkrol.CPU6502
  */
 class Memory {
 
-  private var _MEMORY = Array.fill[ByteVal](0x10000)(0xff)
+  private var _MEMORY: Array[ByteVal] = _
+
+  init
 
   def offset(address: Short) = Util.short2Int(address)
 
@@ -28,10 +30,19 @@ class Memory {
   def write(address: Int, values: ByteVal*): Memory = write(address.toShort, values)
 
   def get_val_from_addr(address: Short) = Util.byteVals2Addr(Seq(read(address), read((address + 1).toShort)))
+
+  /** Initialize the memory subsystem */
+  def init {
+    _MEMORY = Array.fill[ByteVal](Memory.size)(0xff)
+    _MEMORY(0xfffc) = 0x00
+    _MEMORY(0xfffd) = 0x02
+  }
 }
 
 /** Factory for [[com.github.pawelkrol.CPU6502.Memory]] instances */
 object Memory {
+
+  val size = 0x10000
 
   /** Creates an empty memory representation */
   def apply() = new Memory()

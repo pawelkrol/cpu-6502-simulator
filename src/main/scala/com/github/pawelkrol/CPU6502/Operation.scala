@@ -299,8 +299,8 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     register.push(memory, pcl)
   }
 
-  protected def interrupt {
-    pushWordToStack(register.PC)
+  protected def interrupt(pc: Short) {
+    pushWordToStack(pc)
     register.push(memory, register.status)
     register.setStatusFlag(IF, true)
   }
@@ -308,7 +308,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** [$00] BRK */
   private def opBRK {
     register.setStatusFlag(BF, true)
-    interrupt
+    interrupt((register.PC + 2).toShort)
     register.setPC(get_val_from_addr(0xfffe.toShort))
     register.advancePC(-OpCode_BRK_IMM.memSize) // additionally compensate for an advancement in "eval"
   }
