@@ -9,10 +9,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** Cycle count for the current instruction */
   var cycleCount = 0
 
-  /** Total number of CPU cycles executed */
-  var totalCycles = 0
-
-  private def get_val_from_addr(addr: Short) = memory.get_val_from_addr(addr)
+  protected def get_val_from_addr(addr: Short) = memory.get_val_from_addr(addr)
 
   private def get_addr_ABS = get_val_from_addr((register.PC + 1).toShort)
 
@@ -296,18 +293,22 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
     addPageCrossPenalty(get_val_from_addr(get_addr_ZP), register.YR())
   }
 
-  private def pushProgramCounterToStack {
-    val (pcl, pch) = Util.word2Nibbles((register.PC + 2).toShort)
+  private def pushWordToStack(word: Short) {
+    val (pcl, pch) = Util.word2Nibbles(word)
     register.push(memory, pch)
     register.push(memory, pcl)
+  }
+
+  protected def interrupt {
+    pushWordToStack(register.PC)
+    register.push(memory, register.status)
+    register.setStatusFlag(IF, true)
   }
 
   /** [$00] BRK */
   private def opBRK {
     register.setStatusFlag(BF, true)
-    pushProgramCounterToStack
-    register.push(memory, register.status)
-    register.setStatusFlag(IF, true)
+    interrupt
     register.setPC(get_val_from_addr(0xfffe.toShort))
     register.advancePC(-OpCode_BRK_IMM.memSize) // additionally compensate for an advancement in "eval"
   }
@@ -315,7 +316,7 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
   /** [$20] JSR $FFFF */
   private def opJSR {
     val address = get_addr_ABS
-    pushProgramCounterToStack
+    pushWordToStack((register.PC + 2).toShort)
     register.setPC(address)
     register.advancePC(-OpCode_JSR_ABS.memSize) // additionally compensate for an advancement in "eval"
   }
@@ -969,7 +970,6 @@ abstract class Operation(memory: Memory, register: Register) extends StrictLoggi
         opINC(get_addr_ABSX.toShort)
     }
     cycleCount += opCode.cycles
-    totalCycles += cycleCount
     register.advancePC(opCode.memSize)
   }
 

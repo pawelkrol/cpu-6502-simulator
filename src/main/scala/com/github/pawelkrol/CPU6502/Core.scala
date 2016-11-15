@@ -2,6 +2,9 @@ package com.github.pawelkrol.CPU6502
 
 case class Core(memory: Memory, register: Register) extends Operation(memory, register) {
 
+  /** Total number of CPU cycles executed */
+  var totalCycles = 0
+
   /** IRQ request active */
   var haveIRQRequest = false
 
@@ -27,9 +30,25 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
   }
 
   /** Execute one CPU instruction */
-  def executeInstruction {
-    val opCode = OpCode(memory.read(register.PC))
-    eval(opCode)
+  def executeInstruction = {
+    if (haveNMIRequest) {
+      haveNMIRequest = false
+      interrupt
+      register.setPC(get_val_from_addr(0xfffa.toShort))
+      cycleCount = 7
+    }
+    else if (haveIRQRequest && !register.getStatusFlag(Status.IF)) {
+      haveIRQRequest = false
+      interrupt
+      register.setPC(get_val_from_addr(0xfffe.toShort))
+      cycleCount = 7
+    }
+    else {
+      val opCode = OpCode(memory.read(register.PC))
+      eval(opCode)
+    }
+    totalCycles += cycleCount
+    cycleCount
   }
 
   /** Execute n CPU instructions */
