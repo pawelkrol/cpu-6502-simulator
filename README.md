@@ -46,6 +46,10 @@ You may have to add the following automatic export to your `~/.bash_profile`:
 
     export _JAVA_OPTIONS="-Xms1024m -Xmx2G -Xss256m"
 
+In order to publish an artifact to [Sonatype](https://oss.sonatype.org/) type the following:
+
+    $ sbt publishSigned publishLocal
+
 EXAMPLES
 --------
 
