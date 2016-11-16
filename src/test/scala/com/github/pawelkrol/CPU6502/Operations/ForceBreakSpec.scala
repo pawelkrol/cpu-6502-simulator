@@ -3,7 +3,7 @@ package com.github.pawelkrol.CPU6502
 class ForceBreakSpec extends FunOperationsSpec {
 
   describe("immediate addressing mode") {
-    testOpCode(OpCode_BRK_IMM) {
+    testOpCode(OpCode_BRK_IMP) {
       context("$FFFE/$FFFF = $FF48") { memoryWrite(0xfffe, 0x48); memoryWrite(0xffff, 0xff) } {
         it("sets PC to $FFFE/FFFF vector") { expect { operation }.toSetPC(0xff48.toShort) }
         it("uses 7 CPU cycles") { expect { operation }.toUseCycles(0x07) }

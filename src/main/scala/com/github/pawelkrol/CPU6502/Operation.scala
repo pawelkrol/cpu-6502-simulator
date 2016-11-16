@@ -312,7 +312,7 @@ abstract class Operation(memory: Memory, register: Register) {
     register.setStatusFlag(BF, true)
     interrupt((register.PC + 2).toShort)
     register.setPC(get_val_from_addr(0xfffe.toShort))
-    register.advancePC(-OpCode_BRK_IMM.memSize) // additionally compensate for an advancement in "eval"
+    register.advancePC(-OpCode_BRK_IMP.memSize) // additionally compensate for an advancement in "eval"
   }
 
   /** [$20] JSR $FFFF */
@@ -669,7 +669,7 @@ abstract class Operation(memory: Memory, register: Register) {
     cycleCount = 0
 
     opCode match {
-      case OpCode_BRK_IMM =>  // $00
+      case OpCode_BRK_IMP =>  // $00
         opBRK
       case OpCode_ORA_INDX => // $01
         opIndirectX(_ | _)

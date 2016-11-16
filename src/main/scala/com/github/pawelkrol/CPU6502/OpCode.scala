@@ -9,13 +9,19 @@ trait OpCode {
 
   def symName: String
 
+  def bytes = Application.core.memory.read(Application.core.register.PC, memSize)
+
+  protected def argBytes = bytes.tail
+
+  def argValue: String
+
   override def toString = symName
 }
 
 object OpCode {
 
   def apply(value: ByteVal) = value match {
-    case ByteVal(0x00) => OpCode_BRK_IMM
+    case ByteVal(0x00) => OpCode_BRK_IMP
     case ByteVal(0x01) => OpCode_ORA_INDX
     case ByteVal(0x05) => OpCode_ORA_ZP
     case ByteVal(0x06) => OpCode_ASL_ZP
@@ -173,6 +179,8 @@ object OpCode {
 trait OpCode_SP extends OpCode {
 
   def memSize = 0x01
+
+  def argValue = ""
 }
 
 trait OpCodePop_SP extends OpCode_SP {
@@ -190,6 +198,8 @@ trait OpCode_IMP extends OpCode {
   val cycles = 0x02
 
   def memSize = 0x01
+
+  def argValue = ""
 }
 
 trait OpCodeReturn_IMP extends OpCode_IMP {
@@ -202,6 +212,8 @@ trait OpCode_IMM extends OpCode {
   val cycles = 0x02
 
   def memSize = 0x02
+
+  def argValue = "#$%02X".format(argBytes.head())
 }
 
 trait OpCode_ZP extends OpCode {
@@ -209,6 +221,8 @@ trait OpCode_ZP extends OpCode {
   val cycles = 0x03
 
   def memSize = 0x02
+
+  def argValue = "$%02X".format(argBytes.head())
 }
 
 trait OpCode_ZPX extends OpCode {
@@ -216,6 +230,8 @@ trait OpCode_ZPX extends OpCode {
   val cycles = 0x04
 
   def memSize = 0x02
+
+  def argValue = "$%02X,X".format(argBytes.head())
 }
 
 trait OpCode_ZPY extends OpCode {
@@ -223,6 +239,8 @@ trait OpCode_ZPY extends OpCode {
   val cycles = 0x04
 
   def memSize = 0x02
+
+  def argValue = "$%02X,Y".format(argBytes.head())
 }
 
 trait OpCode_ABS extends OpCode {
@@ -230,6 +248,8 @@ trait OpCode_ABS extends OpCode {
   val cycles = 0x04
 
   def memSize = 0x03
+
+  def argValue = "$%04X".format(Util.byteVals2Addr(argBytes))
 }
 
 trait OpCodeCall_ABS extends OpCode_ABS {
@@ -249,13 +269,18 @@ trait OpCode_IND extends OpCode {
   def memSize = 0x03
 }
 
-trait OpCodeJump_IND extends OpCode_IND
+trait OpCodeJump_IND extends OpCode_IND {
+
+  def argValue = "($%04X)".format(Util.byteVals2Addr(argBytes))
+}
 
 trait OpCode_ABSX extends OpCode {
 
   val cycles = 0x04
 
   def memSize = 0x03
+
+  def argValue = "$%04X,X".format(Util.byteVals2Addr(argBytes))
 }
 
 trait OpCodeStore_ABSX extends OpCode_ABSX {
@@ -268,6 +293,8 @@ trait OpCode_ABSY extends OpCode {
   val cycles = 0x04
 
   def memSize = 0x03
+
+  def argValue = "$%04X,Y".format(Util.byteVals2Addr(argBytes))
 }
 
 trait OpCodeStore_ABSY extends OpCode_ABSY {
@@ -280,6 +307,8 @@ trait OpCode_INDX extends OpCode {
   val cycles = 0x06
 
   def memSize = 0x02
+
+  def argValue = "($%02X,X)".format(argBytes.head())
 }
 
 trait OpCode_INDY extends OpCode {
@@ -287,6 +316,8 @@ trait OpCode_INDY extends OpCode {
   val cycles = 0x05
 
   def memSize = 0x02
+
+  def argValue = "($%02X),Y".format(argBytes.head())
 }
 
 trait OpCodeStore_INDY extends OpCode_INDY {
@@ -299,6 +330,10 @@ trait OpCode_REL extends OpCode {
   val cycles = 0x02
 
   def memSize = 0x02
+
+  def argValue = {
+    "$%04X".format(Application.core.register.PC + argBytes.head.value + memSize)
+  }
 }
 
 trait OpCode_AC extends OpCode {
@@ -306,6 +341,8 @@ trait OpCode_AC extends OpCode {
   val cycles = 0x02
 
   def memSize = 0x01
+
+  def argValue = "A"
 }
 
 trait OpCodeModify_ZP extends OpCode_ZP {
@@ -328,7 +365,7 @@ trait OpCodeModify_ABSX extends OpCode_ABSX {
   override val cycles = 0x07
 }
 
-object OpCode_BRK_IMM extends OpCode_IMM with SymName_BRK {
+object OpCode_BRK_IMP extends OpCode_IMP with SymName_BRK {
 
   override val cycles = 0x07
 }

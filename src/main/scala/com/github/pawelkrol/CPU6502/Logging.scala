@@ -11,21 +11,20 @@ trait Logging extends StrictLogging {
   protected var verbose = false
 
   def logInstruction(opCode: OpCode) {
-    val memory = core.memory
     val register = core.register
 
     // TODO
     // val instruction = ".C:0902 8D 20 D0    STA $D020      - A:00 X:FF Y:FF SP:F9 ..-...Z."
 
-    val bytes = memory.read(register.PC, opCode.memSize).map(byte => "%02X".format(byte())).mkString(" ")
-    val instruction = ".C:%04X %-11s %s %s".format(
+    val bytes = opCode.bytes.map(byte => "%02X".format(byte())).mkString(" ")
+    val instruction = ".C:%04X %-11s %s %-10s".format(
       register.PC,
       bytes,
       opCode.symName,
-      "#TODO#"
+      opCode.argValue
     )
 
-    log.debug(instruction)
+    log.info(instruction)
   }
 
   def logRegisters {
@@ -43,7 +42,6 @@ trait Logging extends StrictLogging {
       Util.binaryString(register.status)
     )
 
-    if (verbose)
-      log.debug(registers)
+    log.debug(registers)
   }
 }
