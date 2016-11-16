@@ -18,7 +18,7 @@ This `cpu-6502-simulator` application is setup with [sbt 0.13.12](http://www.sca
 
 Dependency management is normally handled automatically by your build tool.
 
-`cpu-6502-simulator` is packaged as a standalone JAR using `proguard:proguard` command of an `sbt` shell.
+`cpu-6502-simulator` may optionally be packaged as a standalone executable JAR using `proguard:proguard` command of an `sbt` shell.
 
 VERSION
 -------
@@ -34,7 +34,7 @@ You can automatically download and install this library by adding the following 
 
     libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.01-SNAPSHOT"
 
-In order to build and run an application JAR by hand type the following:
+In order to build and run an executable application JAR type the following:
 
     $ git clone git://github.com/pawelkrol/cpu-6502-simulator.git
     $ cd cpu-6502-simulator/
@@ -94,7 +94,7 @@ Run simulator until 100 cycles count is reached:
     val cycleCount = 100
     val file = new File("main.prg")
 
-    Runner(core).go(file, Some(cycleCount))
+    Runner.go(file, Some(cycleCount))
 
 Apply the same command that additionally produces verbose output:
 
@@ -112,7 +112,7 @@ Apply the same command that additionally produces verbose output:
 
     Application.verbose = true
 
-    Runner(core).go(file, Some(cycleCount))
+    Runner.go(file, Some(cycleCount))
 
 COPYRIGHT AND LICENCE
 ---------------------

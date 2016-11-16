@@ -16,20 +16,6 @@ artifactName := { (sv: ScalaVersion, module: ModuleID, artifact: Artifact) =>
   artifact.name + "-" + module.revision + "." + artifact.extension
 }
 
-packagedArtifacts in publishLocal := {
-  val artifacts = (packagedArtifacts in publishLocal).value
-  val (jar, file) = artifacts.find(_._1.`type` == "jar").get
-  artifacts.updated(jar, new java.io.File(file.getCanonicalPath.replace("target", "target/scala-2.11/proguard")))
-}
-
-/*
-packagedArtifacts in publish := {
-  val artifacts = (packagedArtifacts in publishLocal).value
-  val (jar, file) = artifacts.find(_._1.`type` == "jar").get
-  artifacts.updated(jar, new java.io.File(file.getCanonicalPath.replace("target", "target/scala-2.11/proguard")))
-}
-*/
-
 // Disable using the Scala version in output paths and artifacts:
 crossPaths := false
 

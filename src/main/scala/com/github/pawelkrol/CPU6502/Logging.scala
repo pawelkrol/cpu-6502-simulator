@@ -8,7 +8,7 @@ trait Logging extends StrictLogging {
 
   val log = logger
 
-  protected var verbose = false
+  var verbose = false
 
   def logInstruction(opCode: OpCode) {
     val register = core.register

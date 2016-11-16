@@ -22,7 +22,7 @@ object AppBuild extends Build {
       inputs in Proguard <<= (dependencyClasspath in Compile) map { _.files },
       options in Proguard += keepMain(main),
       options in Proguard += "-dontnote",
-      options in Proguard += "-dontobfuscate",
+      // options in Proguard += "-dontobfuscate",
       // options in Proguard += "-dontoptimize",
       options in Proguard += "-dontwarn",
       // options in Proguard += "-ignorewarnings",
