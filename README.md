@@ -16,7 +16,7 @@ This `cpu-6502-simulator` application is setup with [sbt 0.13.12](http://www.sca
 VERSION
 -------
 
-Version 0.01-SNAPSHOT (2016-11-15)
+Version 0.01-SNAPSHOT (2016-11-16)
 
 INSTALLATION
 ------------

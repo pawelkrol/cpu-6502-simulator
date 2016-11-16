@@ -13,18 +13,23 @@ trait Logging extends StrictLogging {
   def logInstruction(opCode: OpCode) {
     val register = core.register
 
-    // TODO
-    // val instruction = ".C:0902 8D 20 D0    STA $D020      - A:00 X:FF Y:FF SP:F9 ..-...Z."
-
     val bytes = opCode.bytes.map(byte => "%02X".format(byte())).mkString(" ")
-    val instruction = ".C:%04X %-11s %s %-10s".format(
+    val instruction = ".C:%04X %-11s %s %-10s - A:%02X X:%02X Y:%02X SP:%02X %s".format(
       register.PC,
       bytes,
       opCode.symName,
-      opCode.argValue
+      opCode.argValue,
+      register.AC(),
+      register.XR(),
+      register.YR(),
+      register.SP(),
+      register.statusFlags
     )
 
     log.info(instruction)
+
+    if (verbose)
+      println(instruction)
   }
 
   def logRegisters {
@@ -43,5 +48,18 @@ trait Logging extends StrictLogging {
     )
 
     log.debug(registers)
+  }
+
+  def logInfo(message: String) {
+    log.info(message)
+
+    if (verbose)
+      println(message)
+  }
+
+  def logWarning(message: String) {
+    log.warn(message)
+
+    println(message)
   }
 }

@@ -61,4 +61,14 @@ class RegisterSpec extends FunFunSpec {
     context("test argument value $ff") { value = 0xff } { testTestStatusFlag(ZF -> false, SF -> true, CF -> false) }
     context("test argument value $100") { value = 0x100 } { testTestStatusFlag(ZF -> true, SF -> false, CF -> true) }
   }
+
+  describe("statusFlags") {
+    context("SR = $00") { register = Register(SR = 0x00) } {
+      it("..-.....") { assert(register.statusFlags === "..-.....") }
+    }
+
+    context("SR = $FF") { register = Register(SR = 0xff) } {
+      it("NV-BDIZC") { assert(register.statusFlags === "NV-BDIZC") }
+    }
+  }
 }

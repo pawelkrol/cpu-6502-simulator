@@ -28,4 +28,13 @@ trait Register {
     }
     setStatusFlag(flag, status)
   }
+
+  def statusFlags = {
+    val flags = List[Tuple2[Flag, String]](
+      SF -> "N", OF -> "V", BF -> "B", DF -> "D", IF -> "I", ZF -> "Z", CF -> "C"
+    ).map({ case (flag, letter) =>
+      if (getStatusFlag(flag)) letter else "."
+    })
+    ((flags.take(2) :+ "-") ++ flags.drop(2)).mkString
+  }
 }

@@ -17,7 +17,7 @@ object Runner {
     val data = source.drop(2).map(ByteVal(_))
     core.memory.write(loadAddr, data)
 
-    Application.log.info("Loaded '%s' at $%04X-$%04X".format(file.getCanonicalPath, loadAddr, (loadAddr + data.size - 1) & 0xffff))
+    Application.logInfo("Loaded '%s' at $%04X-$%04X".format(file.getCanonicalPath, loadAddr, (loadAddr + data.size - 1) & 0xffff))
   }
 
   def go(file: File, cycleCount: Option[Int]) {
@@ -32,7 +32,7 @@ object Runner {
       cycleCount match {
         case Some(maxCycles) =>
           if (core.totalCycles >= maxCycles) {
-            Application.log.warn("Maximum number of cycles (%d) reached".format(maxCycles))
+            Application.logWarning("Maximum number of cycles (%d) reached".format(maxCycles))
             System.exit(0)
           }
         case None =>
