@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.01-SNAPSHOT (2016-11-16)
+Version 0.01 (2016-11-16)
 
 INSTALLATION
 ------------
@@ -32,7 +32,7 @@ You can automatically download and install this library by adding the following 
 
     resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.01-SNAPSHOT"
+    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.01"
 
 In order to build and run an executable application JAR type the following:
 
@@ -40,7 +40,7 @@ In order to build and run an executable application JAR type the following:
     $ cd cpu-6502-simulator/
     $ sbt clean update compile test package proguard:proguard
 
-    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.01-SNAPSHOT.jar
+    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.01.jar
 
 You may have to add the following automatic export to your `~/.bash_profile`:
 

@@ -11,7 +11,7 @@ object AppBuild extends Build {
 
   val appName = "cpu-6502-simulator"
 
-  val appVersion = "0.01-SNAPSHOT"
+  val appVersion = "0.01"
 
   lazy val cpu6502Simulator = Project(
     id = appName,
