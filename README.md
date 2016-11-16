@@ -40,7 +40,7 @@ In order to build and run an executable application JAR type the following:
     $ cd cpu-6502-simulator/
     $ sbt clean update compile test package proguard:proguard
 
-    $ java -Dfile.encoding=UTF8 -jar target/scala-2.11/proguard/cpu-6502-simulator-0.01-SNAPSHOT.jar
+    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.01-SNAPSHOT.jar
 
 You may have to add the following automatic export to your `~/.bash_profile`:
 
