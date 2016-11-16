@@ -15,3 +15,60 @@ libraryDependencies ++= Seq(
 artifactName := { (sv: ScalaVersion, module: ModuleID, artifact: Artifact) =>
   artifact.name + "-" + module.revision + "." + artifact.extension
 }
+
+packagedArtifacts in publishLocal := {
+  val artifacts = (packagedArtifacts in publishLocal).value
+  val (jar, file) = artifacts.find(_._1.`type` == "jar").get
+  artifacts.updated(jar, new java.io.File(file.getCanonicalPath.replace("target", "target/scala-2.11/proguard")))
+}
+
+/*
+packagedArtifacts in publish := {
+  val artifacts = (packagedArtifacts in publishLocal).value
+  val (jar, file) = artifacts.find(_._1.`type` == "jar").get
+  artifacts.updated(jar, new java.io.File(file.getCanonicalPath.replace("target", "target/scala-2.11/proguard")))
+}
+*/
+
+// Disable using the Scala version in output paths and artifacts:
+crossPaths := false
+
+publishTo <<= version { v: String =>
+  val nexus = "https://oss.sonatype.org/"
+  if (v.trim.endsWith("SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+name := "cpu-6502-simulator"
+
+organization := "com.github.pawelkrol"
+
+publishMavenStyle := true
+
+publishArtifact in Test := false
+
+pomIncludeRepository := { _ => false }
+
+pomExtra := (
+  <url>https://github.com/pawelkrol/cpu-6502-simulator</url>
+  <licenses>
+    <license>
+      <name>Scala License</name>
+      <url>http://www.scala-lang.org/node/146</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>git://github.com/pawelkrol/cpu-6502-simulator.git</url>
+    <connection>scm:git:git://github.com/pawelkrol/cpu-6502-simulator.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>pawelkrol</id>
+      <name>Pawel Krol</name>
+      <url>https://github.com/pawelkrol/cpu-6502-simulator</url>
+    </developer>
+  </developers>
+)
