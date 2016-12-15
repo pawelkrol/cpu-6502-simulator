@@ -6,7 +6,8 @@ Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator ent
 0.02-SNAPSHOT (2016-12-15)
 --------------------------
 
-* Bug fixed: Add 1 to program counter pulled from stack when returning from subroutine
+* Bug fixed: Add 1 to program counter pulled from stack when returning from subroutine (previous implementation resulted in broken RTS operation)
+* Bug fixed: Repair broken packaging while publishing artifact to remote repository (previous implementation resulted in creating application and javadoc JARs overwritten with contents of sources JAR)
 
 0.01 (2016-11-16)
 -----------------

@@ -12,10 +12,6 @@ libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.0.0" % "test"
 )
 
-artifactName := { (sv: ScalaVersion, module: ModuleID, artifact: Artifact) =>
-  artifact.name + "-" + module.revision + "." + artifact.extension
-}
-
 // Disable using the Scala version in output paths and artifacts:
 crossPaths := false
 
