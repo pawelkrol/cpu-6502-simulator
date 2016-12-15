@@ -477,7 +477,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$60] RTS */
   private def opRTS {
     pullProgramCounterFromStack
-    register.advancePC(-OpCode_RTS.memSize) // additionally compensate for an advancement in "eval"
+    register.advancePC(-OpCode_RTS.memSize + 0x01) // additionally compensate for an advancement in "eval"
   }
 
   /** [$81] STA ($FF,X) */
