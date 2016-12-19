@@ -6,6 +6,6 @@ class IllegalOpCodeError(message: String) extends Error(message)
 
 object IllegalOpCodeError {
 
-  def apply(value: ByteVal) =
-    new IllegalOpCodeError("Illegal opcode $%02x at address $%04x".format(value(), Application.core.register.PC))
+  def apply(value: ByteVal, core: Core) =
+    new IllegalOpCodeError("Illegal opcode $%02x at address $%04x".format(value(), core.register.PC))
 }

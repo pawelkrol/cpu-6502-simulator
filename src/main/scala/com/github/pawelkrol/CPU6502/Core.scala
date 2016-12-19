@@ -44,8 +44,8 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
       cycleCount = 7
     }
     else {
-      val opCode = OpCode(memory.read(register.PC))
-      Application.logInstruction(opCode)
+      val opCode = OpCode(memory.read(register.PC), this)
+      Application.logInstruction(opCode, this)
       eval(opCode)
     }
     totalCycles += cycleCount

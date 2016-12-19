@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.02-SNAPSHOT (2016-12-15)
+Version 0.02-SNAPSHOT (2016-12-19)
 
 INSTALLATION
 ------------
@@ -55,13 +55,13 @@ EXAMPLES
 
 Load program from a file on disk:
 
-    import com.github.pawelkrol.CPU6502.Application
     import com.github.pawelkrol.CPU6502.ByteVal
+    import com.github.pawelkrol.CPU6502.Core
 
     import io.Codec.ISO8859
     import io.Source.fromFile
 
-    val core = Application.core
+    val core = Core()
 
     val fileName = "main.prg"
     val targetAddress = 0x1000.toShort
@@ -71,9 +71,9 @@ Load program from a file on disk:
 
 Write compiled code directly into a memory:
 
-    import com.github.pawelkrol.CPU6502.Application
+    import com.github.pawelkrol.CPU6502.Core
 
-    val core = Application.core
+    val core = Core()
 
     val targetAddress = 0x1000.toShort
 
@@ -86,12 +86,12 @@ Write compiled code directly into a memory:
 
 Run simulator until 100 cycles count is reached:
 
-    import com.github.pawelkrol.CPU6502.Application
+    import com.github.pawelkrol.CPU6502.Core
     import com.github.pawelkrol.CPU6502.Runner
 
     import java.io.File
 
-    val core = Application.core
+    val core = Core()
     core.reset
     core.register.PC = 0x1000
 
@@ -103,11 +103,12 @@ Run simulator until 100 cycles count is reached:
 Apply the same command that additionally produces verbose output:
 
     import com.github.pawelkrol.CPU6502.Application
+    import com.github.pawelkrol.CPU6502.Core
     import com.github.pawelkrol.CPU6502.Runner
 
     import java.io.File
 
-    val core = Application.core
+    val core = Core()
     core.reset
     core.register.PC = 0x1000
 

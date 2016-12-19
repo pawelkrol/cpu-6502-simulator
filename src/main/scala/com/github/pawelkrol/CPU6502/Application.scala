@@ -7,7 +7,7 @@ object Application extends Logging {
 
   private val appVersion = "0.02-SNAPSHOT"
 
-  val core = Core()
+  private val core = Core()
 
   private val parser = new OptionParser[Arguments]("cpu-6502-simulator") {
     head("cpu-6502-simulator", appVersion)
@@ -23,7 +23,7 @@ object Application extends Logging {
   }
 
   def main(args: Array[String]) = {
-    println("\nCPU 6502 Simulator %s (2016-11-16)\nCopyright (C) 2016 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
+    println("\nCPU 6502 Simulator %s (2016-12-19)\nCopyright (C) 2016 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
 
     parser.parse(args, Arguments()) match {
       case Some(arguments) => {
@@ -57,6 +57,6 @@ object Application extends Logging {
 
     verbose = arguments.verbose
 
-    Runner.go(arguments.file.get, arguments.cycleCount)
+    Runner.go(core, arguments.file.get, arguments.cycleCount)
   }
 }

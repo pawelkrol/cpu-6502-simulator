@@ -2,15 +2,12 @@ package com.github.pawelkrol.CPU6502
 
 class OpCodeSpec extends FunFunSpec {
 
-  private var memory: Memory = _
-
-  private var register: Register = _
+  private var core: Core = _
 
   private var opCode: ByteVal = _
 
   before {
-    memory = Application.core.memory
-    register = Application.core.register
+    core = Core()
   }
 
   describe("argument value") {
@@ -52,12 +49,12 @@ class OpCodeSpec extends FunFunSpec {
       0x7e -> "$FFFF,X"  // ROR $FFFF,X
     )
 
-    context("PC = $1000") { register.PC = 0x1000 } {
+    context("PC = $1000") { core.register.PC = 0x1000 } {
       argValues.foreach({ case (value, argValue) => {
-        val opCode = OpCode(value)
-        context("$1000 = $%02X; $1001 = $FF; $1002 = $FF".format(value, opCode.symName)) { memory.write(0x1000, value, 0xff, 0xff) } {
+        val opCode = OpCode(value, core)
+        context("$1000 = $%02X; $1001 = $FF; $1002 = $FF".format(value, opCode.symName)) { core.memory.write(0x1000, value, 0xff, 0xff) } {
           it("%s %s".format(opCode.symName, argValue)) {
-            assert(opCode.argValue === argValue)
+            assert(opCode.argValue(core) === argValue)
           }
         }
       } })
@@ -65,11 +62,11 @@ class OpCodeSpec extends FunFunSpec {
   }
 
   describe("illegal opcode") {
-    context("PC = $1000") { register.PC = 0x1000 } {
+    context("PC = $1000") { core.register.PC = 0x1000 } {
       context("$1000 = $02") { opCode = 0x02 } {
         it("throws an illegal opcode error") {
           val caught = intercept[IllegalOpCodeError] {
-            OpCode(opCode)
+            OpCode(opCode, core)
           }
           assert(caught.getMessage === "Illegal opcode $02 at address $1000")
         }

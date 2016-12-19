@@ -4,21 +4,19 @@ import com.typesafe.scalalogging.StrictLogging
 
 trait Logging extends StrictLogging {
 
-  val core: Core
-
   val log = logger
 
   var verbose = false
 
-  def logInstruction(opCode: OpCode) {
+  def logInstruction(opCode: OpCode, core: Core) {
     val register = core.register
 
-    val bytes = opCode.bytes.map(byte => "%02X".format(byte())).mkString(" ")
+    val bytes = opCode.bytes(core).map(byte => "%02X".format(byte())).mkString(" ")
     val instruction = ".C:%04X %-11s %s %-10s - A:%02X X:%02X Y:%02X SP:%02X %s".format(
       register.PC,
       bytes,
       opCode.symName,
-      opCode.argValue,
+      opCode.argValue(core),
       register.AC(),
       register.XR(),
       register.YR(),
@@ -32,7 +30,7 @@ trait Logging extends StrictLogging {
       println(instruction)
   }
 
-  def logRegisters {
+  def logRegisters(core: Core) {
     val memory = core.memory
     val register = core.register
 

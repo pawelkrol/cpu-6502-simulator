@@ -9,18 +9,18 @@ trait OpCode {
 
   def symName: String
 
-  def bytes = Application.core.memory.read(Application.core.register.PC, memSize)
+  def bytes(core: Core) = core.memory.read(core.register.PC, memSize)
 
-  protected def argBytes = bytes.tail
+  protected def argBytes(core: Core) = bytes(core).tail
 
-  def argValue: String
+  def argValue(core: Core): String
 
   override def toString = symName
 }
 
 object OpCode {
 
-  def apply(value: ByteVal) = value match {
+  def apply(value: ByteVal, core: Core) = value match {
     case ByteVal(0x00) => OpCode_BRK_IMP
     case ByteVal(0x01) => OpCode_ORA_INDX
     case ByteVal(0x05) => OpCode_ORA_ZP
@@ -172,7 +172,7 @@ object OpCode {
     case ByteVal(0xf9) => OpCode_SBC_ABSY
     case ByteVal(0xfd) => OpCode_SBC_ABSX
     case ByteVal(0xfe) => OpCode_INC_ABSX
-    case _ => throw IllegalOpCodeError(value)
+    case _ => throw IllegalOpCodeError(value, core)
   }
 }
 
@@ -180,7 +180,7 @@ trait OpCode_SP extends OpCode {
 
   def memSize = 0x01
 
-  def argValue = ""
+  def argValue(core: Core) = ""
 }
 
 trait OpCodePop_SP extends OpCode_SP {
@@ -199,7 +199,7 @@ trait OpCode_IMP extends OpCode {
 
   def memSize = 0x01
 
-  def argValue = ""
+  def argValue(core: Core) = ""
 }
 
 trait OpCodeReturn_IMP extends OpCode_IMP {
@@ -213,7 +213,7 @@ trait OpCode_IMM extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = "#$%02X".format(argBytes.head())
+  def argValue(core: Core) = "#$%02X".format(argBytes(core).head())
 }
 
 trait OpCode_ZP extends OpCode {
@@ -222,7 +222,7 @@ trait OpCode_ZP extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = "$%02X".format(argBytes.head())
+  def argValue(core: Core) = "$%02X".format(argBytes(core).head())
 }
 
 trait OpCode_ZPX extends OpCode {
@@ -231,7 +231,7 @@ trait OpCode_ZPX extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = "$%02X,X".format(argBytes.head())
+  def argValue(core: Core) = "$%02X,X".format(argBytes(core).head())
 }
 
 trait OpCode_ZPY extends OpCode {
@@ -240,7 +240,7 @@ trait OpCode_ZPY extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = "$%02X,Y".format(argBytes.head())
+  def argValue(core: Core) = "$%02X,Y".format(argBytes(core).head())
 }
 
 trait OpCode_ABS extends OpCode {
@@ -249,7 +249,7 @@ trait OpCode_ABS extends OpCode {
 
   def memSize = 0x03
 
-  def argValue = "$%04X".format(Util.byteVals2Addr(argBytes))
+  def argValue(core: Core) = "$%04X".format(Util.byteVals2Addr(argBytes(core)))
 }
 
 trait OpCodeCall_ABS extends OpCode_ABS {
@@ -271,7 +271,7 @@ trait OpCode_IND extends OpCode {
 
 trait OpCodeJump_IND extends OpCode_IND {
 
-  def argValue = "($%04X)".format(Util.byteVals2Addr(argBytes))
+  def argValue(core: Core) = "($%04X)".format(Util.byteVals2Addr(argBytes(core)))
 }
 
 trait OpCode_ABSX extends OpCode {
@@ -280,7 +280,7 @@ trait OpCode_ABSX extends OpCode {
 
   def memSize = 0x03
 
-  def argValue = "$%04X,X".format(Util.byteVals2Addr(argBytes))
+  def argValue(core: Core) = "$%04X,X".format(Util.byteVals2Addr(argBytes(core)))
 }
 
 trait OpCodeStore_ABSX extends OpCode_ABSX {
@@ -294,7 +294,7 @@ trait OpCode_ABSY extends OpCode {
 
   def memSize = 0x03
 
-  def argValue = "$%04X,Y".format(Util.byteVals2Addr(argBytes))
+  def argValue(core: Core) = "$%04X,Y".format(Util.byteVals2Addr(argBytes(core)))
 }
 
 trait OpCodeStore_ABSY extends OpCode_ABSY {
@@ -308,7 +308,7 @@ trait OpCode_INDX extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = "($%02X,X)".format(argBytes.head())
+  def argValue(core: Core) = "($%02X,X)".format(argBytes(core).head())
 }
 
 trait OpCode_INDY extends OpCode {
@@ -317,7 +317,7 @@ trait OpCode_INDY extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = "($%02X),Y".format(argBytes.head())
+  def argValue(core: Core) = "($%02X),Y".format(argBytes(core).head())
 }
 
 trait OpCodeStore_INDY extends OpCode_INDY {
@@ -331,9 +331,7 @@ trait OpCode_REL extends OpCode {
 
   def memSize = 0x02
 
-  def argValue = {
-    "$%04X".format(Application.core.register.PC + argBytes.head.value + memSize)
-  }
+  def argValue(core: Core) = "$%04X".format(core.register.PC + argBytes(core).head.value + memSize)
 }
 
 trait OpCode_AC extends OpCode {
@@ -342,7 +340,7 @@ trait OpCode_AC extends OpCode {
 
   def memSize = 0x01
 
-  def argValue = "A"
+  def argValue(core: Core) = "A"
 }
 
 trait OpCodeModify_ZP extends OpCode_ZP {

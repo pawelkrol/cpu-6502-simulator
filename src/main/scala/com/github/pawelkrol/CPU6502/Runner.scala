@@ -6,9 +6,7 @@ import java.io.File
 
 object Runner {
 
-  private val core = Application.core
-
-  private def loadFile(file: File) {
+  private def loadFile(file: File, core: Core) {
     val source = fromFile(file)(ISO8859).toArray
 
     val loadBytes = source.take(2).map(_.toInt).map(ByteVal(_))
@@ -20,14 +18,14 @@ object Runner {
     Application.logInfo("Loaded '%s' at $%04X-$%04X".format(file.getCanonicalPath, loadAddr, (loadAddr + data.size - 1) & 0xffff))
   }
 
-  def go(file: File, cycleCount: Option[Int]) {
-    loadFile(file)
+  def go(core: Core, file: File, cycleCount: Option[Int]) {
+    loadFile(file, core)
 
-    Application.logRegisters
+    Application.logRegisters(core)
 
     while(true) {
       core.executeInstruction
-      Application.logRegisters
+      Application.logRegisters(core)
 
       cycleCount match {
         case Some(maxCycles) =>

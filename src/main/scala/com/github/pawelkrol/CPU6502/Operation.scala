@@ -336,7 +336,7 @@ abstract class Operation(memory: Memory, register: Register) {
     val hi = (lo & 0xff00) | ((lo + 1) & 0x00ff)
     register.setPC(get_arg_ABS() | (memory.read(hi)() << 8))
     if (hi.toShort != (lo + 1).toShort)
-      Application.log.info("6502 indirect jump bug triggered at $%04x, indirect address = $%04x".format(pc, lo))
+      Application.logInfo("6502 indirect jump bug triggered at $%04x, indirect address = $%04x".format(pc, lo))
     register.advancePC(-OpCode_JMP_IND.memSize) // additionally compensate for an advancement in "eval"
   }
 
