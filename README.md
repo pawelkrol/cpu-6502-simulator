@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.02-SNAPSHOT (2016-12-19)
+Version 0.02-SNAPSHOT (2016-12-31)
 
 INSTALLATION
 ------------
@@ -124,4 +124,4 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2016 by Pawel Krol.
 
-This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.11.8 or, at your option, any later version of Scala you may have available.
+This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.12.1 or, at your option, any later version of Scala you may have available.

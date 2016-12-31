@@ -3,12 +3,13 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
-0.02-SNAPSHOT (2016-12-19)
+0.02-SNAPSHOT (2016-12-31)
 --------------------------
 
 * Refactoring: Allow instantiation of multiple `Core` objects by removing all references to a single `Core` instance accessible globally in the main `Application` object (previous implementation resulted in inability to instantiate a standalone `Core` object and its tight coupling with the main `Application` object)
 * Bug fixed: Add 1 to program counter pulled from stack when returning from subroutine (previous implementation resulted in broken RTS operation)
 * Bug fixed: Repair broken packaging while publishing artifact to remote repository (previous implementation resulted in creating application and javadoc JARs overwritten with contents of sources JAR)
+* `Scala` version upgraded to 2.12.1
 
 0.01 (2016-11-16)
 -----------------

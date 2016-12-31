@@ -43,10 +43,10 @@ class Register(var AC: ByteVal, var XR: ByteVal, var YR: ByteVal, SR: ByteVal, v
 object Register {
 
   /** Creates a new set of empty registers */
-  def apply() = new Register(AC = 0x00, XR = 0x00, YR = 0x00, SR = 0x20, SP = 0xff, PC = 0x00)
+  def apply() = new Register(AC = 0x00, XR = 0x00, YR = 0x00, SR = 0x20, SP = 0xff, PC = 0x0000)
 
   /** Creates a new set of empty registers with status register initialized with an arbitrary byte */
-  def apply(SR: ByteVal) = new Register(AC = 0x00, XR = 0x00, YR = 0x00, SR, SP = 0xff, PC = 0x00)
+  def apply(SR: ByteVal) = new Register(AC = 0x00, XR = 0x00, YR = 0x00, SR, SP = 0xff, PC = 0x0000)
 
   /** Creates a new set of empty registers with program counter initialized with an arbitrary byte */
   def apply(PC: Short) = new Register(AC = 0x00, XR = 0x00, YR = 0x00, SR = 0x20, SP = 0xff, PC)
