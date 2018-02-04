@@ -1,11 +1,8 @@
-import com.typesafe.sbt.SbtProguard.ProguardKeys.{ filteredInputs, inputs, options, proguardVersion }
-import com.typesafe.sbt.SbtProguard.ProguardOptions.{ keepMain, noFilter }
-
 lazy val root = (project in file(".")).settings(
   javaOptions += "-Xmx1G",
   name := "cpu-6502-simulator",
   organization := "com.github.pawelkrol",
-  scalaVersion := "2.12.1",
+  scalaVersion := "2.12.4",
   version := "0.03-SNAPSHOT"
 )
 
@@ -14,11 +11,11 @@ maxErrors := 1
 scalacOptions += "-feature"
 
 libraryDependencies ++= Seq(
-  "ch.qos.logback" % "logback-classic" % "1.1.8",
-  "com.github.scopt" %% "scopt" % "3.5.0",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-  "org.scalactic" %% "scalactic" % "3.0.1" % "test"
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.github.scopt" %% "scopt" % "3.7.0",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+  "org.scalactic" %% "scalactic" % "3.0.5" % "test"
 )
 
 // Disable using the Scala version in output paths and artifacts:
@@ -60,14 +57,14 @@ pomExtra := (
   </developers>
 )
 
-proguardSettings
+enablePlugins(SbtProguard)
 
-ProguardKeys.filteredInputs in Proguard <++= (packageBin in Compile) map noFilter
+proguardFilteredInputs in Proguard ++= ProguardOptions.noFilter((packageBin in Compile).value)
 
-ProguardKeys.inputs in Proguard := { (dependencyClasspath in Compile).value.files }
+proguardInputs in Proguard := (dependencyClasspath in Compile).value.files
 
-ProguardKeys.options in Proguard += keepMain("com.github.pawelkrol.CPU6502.Application")
+proguardOptions in Proguard += ProguardOptions.keepMain("com.github.pawelkrol.CPU6502.Application")
 
-ProguardKeys.options in Proguard += ProguardConf.cpu6502Simulator
+proguardOptions in Proguard += ProguardConf.cpu6502Simulator
 
-ProguardKeys.proguardVersion in Proguard := "5.3.2"
+proguardVersion in Proguard := "5.3.3"

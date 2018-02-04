@@ -124,4 +124,4 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2016-2018 by Pawel Krol.
 
-This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.12.1 or, at your option, any later version of Scala you may have available.
+This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.12.4 or, at your option, any later version of Scala you may have available.
