@@ -7,8 +7,8 @@ package com.github.pawelkrol.CPU6502
 class SimpleMemory extends Memory {
 
   /** Initialize the simple memory subsystem */
-  def init {
-    _MEMORY = Array.fill[ByteVal](Memory.size)(0xff)
+  override def init {
+    super.init
     _MEMORY(0xfffc) = 0x00
     _MEMORY(0xfffd) = 0x02
   }

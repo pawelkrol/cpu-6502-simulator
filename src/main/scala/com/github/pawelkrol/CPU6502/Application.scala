@@ -23,7 +23,7 @@ object Application extends Logging {
   }
 
   def main(args: Array[String]) = {
-    println("\nCPU 6502 Simulator %s (2018-04-02)\nCopyright (C) 2016-2018 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
+    println("\nCPU 6502 Simulator %s (2018-02-04)\nCopyright (C) 2016-2018 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
 
     parser.parse(args, Arguments()) match {
       case Some(arguments) => {
