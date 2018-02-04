@@ -5,7 +5,7 @@ import scopt.OptionParser
 
 object Application extends Logging {
 
-  private val appVersion = "0.02"
+  private val appVersion = "0.03-SNAPSHOT"
 
   private val core = Core()
 
@@ -23,7 +23,7 @@ object Application extends Logging {
   }
 
   def main(args: Array[String]) = {
-    println("\nCPU 6502 Simulator %s (2017-01-01)\nCopyright (C) 2016, 2017 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
+    println("\nCPU 6502 Simulator %s (2018-04-02)\nCopyright (C) 2016-2018 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
 
     parser.parse(args, Arguments()) match {
       case Some(arguments) => {

@@ -13,7 +13,7 @@ class CoreSpec extends FunFunSpec {
   }
 
   before {
-    memory = Memory()
+    memory = SimpleMemory()
     register = Register(0x00, 0x00, 0x00, 0x20, 0xf9, 0xc000)
     core = Core(memory, register)
   }

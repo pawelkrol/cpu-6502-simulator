@@ -1,11 +1,11 @@
 package com.github.pawelkrol.CPU6502
 
-class MemorySpec extends FunFunSpec {
+class SimpleMemorySpec extends FunFunSpec {
 
-  private var memory: Memory = _
+  private var memory: SimpleMemory = _
 
   before {
-    memory = Memory()
+    memory = SimpleMemory()
   }
 
   describe("get_val_from_addr") {

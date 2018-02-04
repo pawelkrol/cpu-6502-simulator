@@ -61,8 +61,8 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
 object Core {
 
   /** Initializes a new CPU core */
-  def apply() = new Core(Memory(), Register())
+  def apply() = new Core(SimpleMemory(), Register())
 
   /** Initializes a new CPU core with program counter initialized with an arbitrary byte */
-  def apply(PC: Int) = new Core(Memory(), Register(PC.toShort))
+  def apply(PC: Int) = new Core(SimpleMemory(), Register(PC.toShort))
 }

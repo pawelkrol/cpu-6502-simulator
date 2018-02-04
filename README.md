@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.02 (2017-01-01)
+Version 0.03-SNAPSHOT (2018-04-02)
 
 INSTALLATION
 ------------
@@ -32,7 +32,7 @@ You can automatically download and install this library by adding the following 
 
     resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.02"
+    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.03-SNAPSHOT"
 
 In order to build and run an executable application JAR type the following:
 
@@ -40,7 +40,7 @@ In order to build and run an executable application JAR type the following:
     $ cd cpu-6502-simulator/
     $ sbt clean update compile test package proguard:proguard
 
-    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.02.jar
+    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.03-SNAPSHOT.jar
 
 You may have to add the following automatic export to your `~/.bash_profile`:
 
@@ -122,6 +122,6 @@ Apply the same command that additionally produces verbose output:
 COPYRIGHT AND LICENCE
 ---------------------
 
-Copyright (C) 2016, 2017 by Pawel Krol.
+Copyright (C) 2016-2018 by Pawel Krol.
 
 This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.12.1 or, at your option, any later version of Scala you may have available.
