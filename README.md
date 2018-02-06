@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.03-SNAPSHOT (2018-02-04)
+Version 0.03-SNAPSHOT (2018-02-06)
 
 INSTALLATION
 ------------

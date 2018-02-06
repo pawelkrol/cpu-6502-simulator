@@ -14,37 +14,41 @@ class CommodoreMemory extends Memory with ResourceLoader {
 
   private val chargen = loadROM("chargen")
 
-  private val io = Array.fill[ByteVal](0x1000)(0xff)
+  protected val io = Array.fill[ByteVal](0x1000)(0xff)
 
   private val kernal = loadROM("kernal")
 
-  def read(address: Short): ByteVal = {
+  def read(address: Short): ByteVal = readFrom(offset(address), _MEMORY)
+
+  protected def readFrom(address: Int, memory: Array[ByteVal]): ByteVal = {
     val memoryConfiguration = MemoryConfiguration(_MEMORY(0x0001))
-    offset(address) match {
+    address match {
       case addr if (0x0000 <= addr && addr < 0xa000) =>
-        memoryConfiguration.readFrom0000To9FFF(addr, _MEMORY)
+        memoryConfiguration.readFrom0000To9FFF(addr, memory)
       case addr if (0xa000 <= addr && addr < 0xc000) =>
-        memoryConfiguration.readFromA000ToBFFF(addr, _MEMORY, basic)
+        memoryConfiguration.readFromA000ToBFFF(addr, memory, basic)
       case addr if (0xc000 <= addr && addr < 0xd000) =>
-        memoryConfiguration.readFromC000ToCFFF(addr, _MEMORY)
+        memoryConfiguration.readFromC000ToCFFF(addr, memory)
       case addr if (0xd000 <= addr && addr < 0xe000) =>
-        memoryConfiguration.readFromD000ToDFFF(addr, _MEMORY, chargen, io)
+        memoryConfiguration.readFromD000ToDFFF(addr, memory, chargen, io)
       case addr if (0xe000 <= addr && addr < 0x10000) =>
-        memoryConfiguration.readFromE000ToFFFF(addr, _MEMORY, kernal)
+        memoryConfiguration.readFromE000ToFFFF(addr, memory, kernal)
       case _ =>
         throw new RuntimeException("invalid address: $%04x".format(address))
     }
   }
 
-  def write(address: Short, value: ByteVal): Memory = {
+  def write(address: Short, value: ByteVal): Memory = writeTo(offset(address), value, _MEMORY)
+
+  def writeTo(address: Int, value: ByteVal, memory: Array[ByteVal]): Memory = {
     val memoryConfiguration = MemoryConfiguration(_MEMORY(0x0001))
-    offset(address) match {
+    address match {
       case addr if (0x0000 <= addr && addr < 0xd000) =>
-        memoryConfiguration.writeTo0000ToCFFF(addr, value, _MEMORY)
+        memoryConfiguration.writeTo0000ToCFFF(addr, value, memory)
       case addr if (0xd000 <= addr && addr < 0xe000) =>
-        memoryConfiguration.writeToD000ToDFFF(addr, value, _MEMORY, io)
+        memoryConfiguration.writeToD000ToDFFF(addr, value, memory, io)
       case addr if (0xe000 <= addr && addr < 0x10000) =>
-        memoryConfiguration.writeToE000ToFFFF(addr, value, _MEMORY)
+        memoryConfiguration.writeToE000ToFFFF(addr, value, memory)
       case _ =>
         throw new RuntimeException("invalid address: $%04x".format(address))
     }
