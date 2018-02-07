@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.03-SNAPSHOT (2018-02-06)
+Version 0.03-SNAPSHOT (2018-02-07)
 
 INSTALLATION
 ------------
@@ -98,7 +98,7 @@ Run simulator until 100 cycles count is reached:
     val cycleCount = 100
     val file = new File("main.prg")
 
-    Runner.go(file, Some(cycleCount))
+    Runner.go(core, file, Some(cycleCount))
 
 Apply the same command that additionally produces verbose output:
 
@@ -117,7 +117,28 @@ Apply the same command that additionally produces verbose output:
 
     Application.verbose = true
 
-    Runner.go(file, Some(cycleCount))
+    Runner.go(core, file, Some(cycleCount))
+
+Simulate running a program using +60k RAM memory expansion:
+
+    import com.github.pawelkrol.CPU6502.Commodore.ExtendedMemory
+    import com.github.pawelkrol.CPU6502.Core
+
+    val memory = ExtendedMemory()
+    val core = Core(memory)
+
+    /** Use the following switches in a source code of a simulated program:
+     *
+     *  ; Switch $1000-$ffff address space to an additional memory bank:
+     *  LDY #$80
+     *  STA $D100
+     *
+     *  ; Switch $1000-$ffff address space to an onboard memory bank:
+     *  LDY #$00
+     *  STA $D100
+     */
+
+    // Runner.go(core, file, Some(cycleCount))
 
 COPYRIGHT AND LICENCE
 ---------------------

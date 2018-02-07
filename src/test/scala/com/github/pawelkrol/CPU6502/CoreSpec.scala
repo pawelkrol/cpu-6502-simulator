@@ -124,6 +124,14 @@ class CoreSpec extends FunFunSpec {
         }
       }
     }
+
+    context("with a Commodore 64C memory representation") { core = Core(CommodoreMemory()) } {
+      context("simulate power-up RESET entry (starting from a default Kernal vector $FCE2") { subject { core.reset } } {
+        it { expect { subject }.toChange { core.register.PC }.to(0xfce2.toShort) }
+        it { expect { subject; core.executeInstruction }.toChange { core.register.PC }.to(0xfce4.toShort) }
+        it { expect { subject; core.executeInstruction }.toChange { core.register.XR() }.to(0xff) }
+      }
+    }
   }
 
   describe("get cycles") {

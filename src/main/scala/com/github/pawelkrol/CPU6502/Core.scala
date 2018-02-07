@@ -65,4 +65,7 @@ object Core {
 
   /** Initializes a new CPU core with program counter initialized with an arbitrary byte */
   def apply(PC: Int) = new Core(SimpleMemory(), Register(PC.toShort))
+
+  /** Initializes a new CPU core with a custom memory implementation */
+  def apply(memory: Memory) = new Core(memory, Register())
 }
