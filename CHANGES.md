@@ -3,8 +3,8 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
-0.03-SNAPSHOT (2018-02-07)
---------------------------
+0.03 (2018-02-07)
+-----------------
 
 * Enhancement: Enable customisation of a simulated program's memory by replacing `Memory` class with a generic trait that a user's program may extend from
 * New feature: Provide an implementation of `CommodoreMemory` which may be used as a replacement of `Memory` object specified upon `Core` initialisation (it uses Kernal, Charset Generator, and Basic binaries, selecting an appropriate memory module based on a value change applied to `$01` I/O register)
