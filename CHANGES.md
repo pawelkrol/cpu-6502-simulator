@@ -3,6 +3,11 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
+0.04-SNAPSHOT (2018-02-10)
+--------------------------
+
+* Enhancement: Expose direct access to Charset Generator and VIC data
+
 0.03 (2018-02-07)
 -----------------
 

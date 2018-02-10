@@ -12,9 +12,9 @@ class CommodoreMemory extends Memory with ResourceLoader {
 
   private val basic = loadROM("basic")
 
-  private val chargen = loadROM("chargen")
+  val chargen = loadROM("chargen")
 
-  protected val io = Array.fill[ByteVal](0x1000)(0xff)
+  val io = Array.fill[ByteVal](0x1000)(0xff)
 
   private val kernal = loadROM("kernal")
 
