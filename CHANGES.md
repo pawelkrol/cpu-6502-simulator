@@ -7,6 +7,7 @@ Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator ent
 --------------------------
 
 * Enhancement: Expose direct access to Charset Generator and VIC data
+* Enhancement: Ensure VIC data of new `CommodoreMemory` instances is always initialised with Kernal's I/O defaults
 
 0.03 (2018-02-07)
 -----------------

@@ -14,9 +14,9 @@ class CommodoreMemory extends Memory with ResourceLoader {
 
   val chargen = loadROM("chargen")
 
-  val io = Array.fill[ByteVal](0x1000)(0xff)
-
   private val kernal = loadROM("kernal")
+
+  val io = kernal.slice(0x0cb9, 0x0ce9) ++ Array.fill[ByteVal](0x0fd0)(0xff)
 
   def read(address: Short): ByteVal = readFrom(offset(address), _MEMORY)
 
