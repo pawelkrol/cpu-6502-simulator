@@ -331,7 +331,7 @@ trait OpCode_REL extends OpCode {
 
   def memSize = 0x02
 
-  def argValue(core: Core) = "$%04X".format(core.register.PC + argBytes(core).head.value + memSize)
+  def argValue(core: Core) = "$%04X".format((core.register.PC + argBytes(core).head.value + memSize) & 0xffff)
 }
 
 trait OpCode_AC extends OpCode {

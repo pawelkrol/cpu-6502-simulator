@@ -3,6 +3,11 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
+0.05-SNAPSHOT (2018-03-15)
+--------------------------
+
+* Bug fixed: Properly log relative branch arguments when program counter is greater than `$7FFF` (previously they were expanded incorrectly, e.g. `BNE $FFFF8000` instead of `BNE $8000`)
+
 0.04 (2018-02-27)
 -----------------
 

@@ -3,7 +3,7 @@ lazy val root = (project in file(".")).settings(
   name := "cpu-6502-simulator",
   organization := "com.github.pawelkrol",
   scalaVersion := "2.12.4",
-  version := "0.04"
+  version := "0.05-SNAPSHOT"
 )
 
 maxErrors := 1

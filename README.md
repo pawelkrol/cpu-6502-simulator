@@ -3,18 +3,18 @@ CPU 6502 Simulator
 
 `cpu-6502-simulator` is a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/). The goal of this project has been to provide a tool for execution of any 6502-compiled code in a simulation-based environment. It was heavily inspired and is primarily based upon the work done by _Ullrich von Bassewitz_ in his `sim65` program (originally written in plain `C`).
 
-### What is the motivation behind building another MOS 6502 CPU simulator?
+### What was the motivation behind building another MOS 6502 CPU simulator?
 
 1. There has been no such utility written in [Scala](http://www.scala-lang.org/) ever before.
 2. Just to treat it as a practice in building [Scala](http://www.scala-lang.org/) applications.
-3. As a necessity is the mother of all invention, and since I am aiming at developing a complete unit-testing framework targetting MOS 6502 CPU (specifically any code that is meant to run on the [Commodore 64](https://en.wikipedia.org/wiki/Commodore_64)) to help me with testing of complex subroutine executions, writing this simulator might be considered an interim step of a larger development process (while still designed to be usable as a standalone tool, this simulator is not an ultimate goal of my work). Another potential utility of this library is to ease implementation of a 6502 disassembler of binary programs.
+3. As a necessity is the mother of all invention, and since back then I was aiming at developing a complete [unit-testing framework](https://github.com/pawelkrol/Scala-CommTest) targetting MOS 6502 CPU (specifically any code that was meant to run on the [Commodore 64](https://en.wikipedia.org/wiki/Commodore_64)) to help me with testing of complex subroutine executions, I considered writing this simulator an interim step of a larger development process (while still designed to be usable as a standalone tool, this simulator was not an ultimate goal of my work). Another potential utility of this library is to ease implementation of a 6502 disassembler of binary programs.
 
 `cpu-6502-simulator` is not restricted to be executed as a standalone application JAR, although it leaves this possibility (without too many options to configure simulation environment however). It comes up bundled with the minimal set of dependencies required to build, test and include it in your own [Scala](http://www.scala-lang.org/) projects.
 
 PREREQUISITES
 -------------
 
-This `cpu-6502-simulator` application is setup with [sbt 0.13.12](http://www.scala-sbt.org/) as a build tool, [sbt-proguard 0.2.2](https://github.com/sbt/sbt-proguard) as an sbt [plugin](http://www.scala-sbt.org/0.13/docs/Plugins.html) for running [ProGuard 5.2.1](http://proguard.sourceforge.net/), [ScalaTest 3.0.0](http://www.scalatest.org/) as a unit-testing framework, [Scalactic 3.0.0](http://www.scalactic.org/) as a small library of utilities, [scopt 3.4.0](https://github.com/scopt/scopt) as a command line options parsing library, [Scala Logging 3.5.0](https://github.com/typesafehub/scala-logging) as a logging library wrapping [SLF4J](http://www.slf4j.org/), and [Logback 1.1.7](http://logback.qos.ch/) as a backend logging framework.
+This `cpu-6502-simulator` application is setup with [sbt 0.13.17](http://www.scala-sbt.org/) as a build tool, [sbt-proguard 0.3.0](https://github.com/sbt/sbt-proguard) as an sbt [plugin](http://www.scala-sbt.org/0.13/docs/Plugins.html) for running [ProGuard 5.3.3](http://proguard.sourceforge.net/), [ScalaTest 3.0.5](http://www.scalatest.org/) as a unit-testing framework, [Scalactic 3.0.5](http://www.scalactic.org/) as a small library of utilities, [scopt 3.7.0](https://github.com/scopt/scopt) as a command line options parsing library, [Scala Logging 3.8.0](https://github.com/typesafehub/scala-logging) as a logging library wrapping [SLF4J](http://www.slf4j.org/), and [Logback 1.2.3](http://logback.qos.ch/) as a backend logging framework.
 
 Dependency management is normally handled automatically by your build tool.
 
@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.04 (2018-02-27)
+Version 0.05-SNAPSHOT (2018-03-15)
 
 INSTALLATION
 ------------
@@ -32,7 +32,7 @@ You can automatically download and install this library by adding the following 
 
     resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.04"
+    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.05-SNAPSHOT"
 
 In order to build and run an executable application JAR type the following:
 
@@ -40,7 +40,7 @@ In order to build and run an executable application JAR type the following:
     $ cd cpu-6502-simulator/
     $ sbt clean update compile test package proguard:proguard
 
-    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.04.jar
+    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.05-SNAPSHOT.jar
 
 You may have to add the following automatic export to your `~/.bash_profile`:
 

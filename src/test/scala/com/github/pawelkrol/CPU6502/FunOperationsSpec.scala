@@ -4,7 +4,7 @@ trait FunOperationsSpec extends FunFunSpec {
 
   private var memory: Memory = _
   private var register: Register = _
-  private var core: Core = _
+  protected var core: Core = _
 
   var opCode: OpCode = _
 
