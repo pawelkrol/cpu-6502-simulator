@@ -3,7 +3,7 @@ lazy val root = (project in file(".")).settings(
   name := "cpu-6502-simulator",
   organization := "com.github.pawelkrol",
   scalaVersion := "2.12.4",
-  version := "0.04-SNAPSHOT"
+  version := "0.04"
 )
 
 maxErrors := 1
@@ -13,7 +13,7 @@ scalacOptions += "-feature"
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.github.scopt" %% "scopt" % "3.7.0",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0",
   "org.scalatest" %% "scalatest" % "3.0.5" % "test",
   "org.scalactic" %% "scalactic" % "3.0.5" % "test"
 )

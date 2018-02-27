@@ -3,11 +3,12 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
-0.04-SNAPSHOT (2018-02-10)
---------------------------
+0.04 (2018-02-27)
+-----------------
 
 * Enhancement: Expose direct access to Charset Generator and VIC data
 * Enhancement: Ensure VIC data of new `CommodoreMemory` instances is always initialised with Kernal's I/O defaults
+* `scala-logging` version upgraded to 3.8.0
 
 0.03 (2018-02-07)
 -----------------
