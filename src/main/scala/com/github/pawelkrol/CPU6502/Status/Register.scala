@@ -18,9 +18,9 @@ trait Register {
    * @param status A boolean value (true/false) that says if a status flag is set or cleared
    * @return a new set of registers with a status flag set to a new value
    */
-  def setStatusFlag(flag: Flag, status: Boolean) { _SR = if (status) _SR | flag.srBits else _SR & ~flag.srBits }
+  def setStatusFlag(flag: Flag, status: Boolean): Unit = { _SR = if (status) _SR | flag.srBits else _SR & ~flag.srBits }
 
-  def testStatusFlag(flag: Flag, value: Short) {
+  def testStatusFlag(flag: Flag, value: Short): Unit = {
     val status = flag match {
       case ZF => (value & 0xff) == 0
       case SF => (value & 0x80) != 0

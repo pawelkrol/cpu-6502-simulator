@@ -9,7 +9,7 @@ class AddWithCarrySpec extends ArithmeticSpec {
     OpCode_ADC_INDY -> 5
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("ADC", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
       val decimal: Boolean = args(1).asInstanceOf[Boolean]

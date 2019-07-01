@@ -7,7 +7,7 @@ class IndirectXSpec extends FunOperationsSpec {
 
   private var zpAddr: Seq[ByteVal] = _
 
-  private def setupOpArg(zp: ByteVal, xr: ByteVal, zpAddr: Seq[ByteVal], value: ByteVal) { assignOpArg((zp +: xr +: zpAddr :+ value): _*) }
+  private def setupOpArg(zp: ByteVal, xr: ByteVal, zpAddr: Seq[ByteVal], value: ByteVal): Unit = { assignOpArg((zp +: xr +: zpAddr :+ value): _*) }
 
   describe("(indirect,x) addressing mode") {
     testOpCode(OpCode_ORA_INDX) {

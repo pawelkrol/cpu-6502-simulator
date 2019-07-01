@@ -9,7 +9,7 @@ class SubtractWithBorrowSpec extends ArithmeticSpec {
     OpCode_SBC_INDY -> 5
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("SBC", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
       val decimal: Boolean = args(1).asInstanceOf[Boolean]

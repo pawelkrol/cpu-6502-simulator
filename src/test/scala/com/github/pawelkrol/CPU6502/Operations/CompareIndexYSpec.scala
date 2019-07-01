@@ -13,7 +13,7 @@ class CompareIndexYSpec extends CompareSpec {
 
   protected def opCodeSymbol = "CPY"
 
-  protected def assignLoadedValue(loadedValue: ByteVal) {
+  protected def assignLoadedValue(loadedValue: ByteVal): Unit = {
     YR = loadedValue
   }
 

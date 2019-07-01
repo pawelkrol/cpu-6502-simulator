@@ -12,10 +12,10 @@ trait FunFunSpec extends FunSpec {
 
   private var testCount: Int = 0
 
-  def before(code: => Any) { beforeEach = () => code }
+  def before(code: => Any): Unit = { beforeEach = () => code }
 
   class FromToValidator[T](code: => Any, predicate: => T, initial: T) {
-    def to(ending: T) {
+    def to(ending: T): Unit = {
       assert(predicate == initial)
       code
       assert(predicate == ending)
@@ -49,7 +49,7 @@ trait FunFunSpec extends FunSpec {
 
   val internalIt: FunFunSpec.this.ItWord = it
 
-  def it(message: String)(test: => Any) {
+  def it(message: String)(test: => Any): Unit = {
     val beforeIt = applyContext
     internalIt(message)({ beforeIt(); test })
   }
@@ -60,7 +60,7 @@ trait FunFunSpec extends FunSpec {
     () => { if (beforeCallback != null) beforeCallback(); beforeAll(stack) }
   }
 
-  def it(test: => Any) {
+  def it(test: => Any): Unit = {
     testCount += 1
     it("no message (test #" + testCount + ")")(test)
   }
@@ -78,11 +78,11 @@ trait FunFunSpec extends FunSpec {
 
   def provided(init: => Any)(test: => Any) = new Provisioning(beforeEach, init, test)
 
-  private def beforeAll(stack: Stack[() => Any]) { stack.foreach(code => code()) }
+  private def beforeAll(stack: Stack[() => Any]): Unit = { stack.foreach(code => code()) }
 
   private var beforeStack = new Stack[() => Any]
 
-  def context(description: String)(init: => Any)(tests: => Any) {
+  def context(description: String)(init: => Any)(tests: => Any): Unit = {
     beforeStack.push(() => init)
     describe(description) { tests }
     beforeStack.pop
@@ -90,12 +90,12 @@ trait FunFunSpec extends FunSpec {
 
   private var examples = scala.collection.mutable.HashMap[String, (List[Any]) => Unit]()
 
-  def includeExamples(name: String, args: => List[Any]) {
+  def includeExamples(name: String, args: => List[Any]): Unit = {
     applyContext()
     examples(name)(args)
   }
 
-  def sharedExamples(name: String, func: (List[Any]) => Unit) {
+  def sharedExamples(name: String, func: (List[Any]) => Unit): Unit = {
     examples.put(name, func)
   }
 
@@ -107,14 +107,14 @@ trait FunFunSpec extends FunSpec {
     ignore(specText) {}
   }
 
-  protected def xit(testFun: => Any) {
+  protected def xit(testTags: Tag*)(testFun: => Any): Unit = {
     testCount += 1
-    xit("no message (test #" + testCount + ")")(testFun)
+    xit("no message (test #" + testCount + ")", testTags: _*)(testFun)
   }
 
   private var _subject: () => Unit = _
 
-  def subject(operation: => Unit ) { _subject = () => operation }
+  def subject(operation: => Unit ): Unit = { _subject = () => operation }
 
-  def subject { _subject() }
+  def subject: Unit = { _subject() }
 }

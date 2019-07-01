@@ -11,7 +11,7 @@ class LoadIndexYSpec extends LoadSpec {
     OpCode_LDY_ABSX -> 4
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("LDY", (args) => {
       val expectedValue: Int = args(0).asInstanceOf[Int]
 

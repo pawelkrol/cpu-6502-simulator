@@ -18,7 +18,7 @@ class CompareAccumulatorSpec extends CompareSpec {
 
   protected def opCodeSymbol = "CMP"
 
-  protected def assignLoadedValue(loadedValue: ByteVal) {
+  protected def assignLoadedValue(loadedValue: ByteVal): Unit = {
     AC = loadedValue
   }
 

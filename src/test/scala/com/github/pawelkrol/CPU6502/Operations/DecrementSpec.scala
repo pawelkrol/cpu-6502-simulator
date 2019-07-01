@@ -10,7 +10,7 @@ class DecrementSpec extends UnarySpec {
     OpCode_DEC_ABSX -> 7
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("DEC", (args) => {
       val fetchValue: () => Int = args(0).asInstanceOf[() => Int]
 

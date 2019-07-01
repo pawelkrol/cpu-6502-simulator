@@ -5,7 +5,7 @@ class AbsoluteSpec extends FunOperationsSpec {
 
   private var addr: Short = _
 
-  private def setupOpArg(address: Short, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ value): _*) }
+  private def setupOpArg(address: Short, value: ByteVal): Unit = { assignOpArg((Util.addr2ByteVals(address) :+ value): _*) }
 
   describe("absolute addressing mode") {
     testOpCode(OpCode_ORA_ABS) {

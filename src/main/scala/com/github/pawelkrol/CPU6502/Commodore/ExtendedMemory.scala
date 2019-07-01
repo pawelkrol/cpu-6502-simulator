@@ -15,7 +15,7 @@ class ExtendedMemory(
   private var plus60kEnabled: Boolean = false
 
   /** Initialize the memory subsystem */
-  override def init {
+  override def init: Unit = {
     super.init
     _EXTENDED_MEMORY = Array.fill[ByteVal](Memory.size)(0xff)
   }

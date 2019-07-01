@@ -6,19 +6,19 @@ import java.io.File
 
 object Runner {
 
-  private def loadFile(file: File, core: Core) {
+  private def loadFile(file: File, core: Core): Unit = {
     val source = fromFile(file)(ISO8859).toArray
 
     val loadBytes = source.take(2).map(_.toInt).map(ByteVal(_))
     val loadAddr = Util.byteVals2Addr(loadBytes.toSeq)
 
-    val data = source.drop(2).map(ByteVal(_))
+    val data = source.drop(2).map(ByteVal(_)).toSeq
     core.memory.write(loadAddr, data)
 
     Application.logInfo("Loaded '%s' at $%04X-$%04X".format(file.getCanonicalPath, loadAddr, (loadAddr + data.size - 1) & 0xffff))
   }
 
-  def go(core: Core, file: File, cycleCount: Option[Int]) {
+  def go(core: Core, file: File, cycleCount: Option[Int]): Unit = {
     loadFile(file, core)
 
     Application.logRegisters(core)

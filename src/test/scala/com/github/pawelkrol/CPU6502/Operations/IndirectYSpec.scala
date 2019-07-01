@@ -7,7 +7,7 @@ class IndirectYSpec extends FunOperationsSpec {
 
   private var zpAddr: Seq[ByteVal] = _
 
-  private def setupOpArg(zp: ByteVal, yr: ByteVal, zpAddr: Seq[ByteVal], value: ByteVal) { assignOpArg((zp +: yr +: zpAddr :+ value): _*) }
+  private def setupOpArg(zp: ByteVal, yr: ByteVal, zpAddr: Seq[ByteVal], value: ByteVal): Unit = { assignOpArg((zp +: yr +: zpAddr :+ value): _*) }
 
   describe("(indirect),y addressing mode") {
     testOpCode(OpCode_ORA_INDY) {

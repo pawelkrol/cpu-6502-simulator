@@ -5,7 +5,7 @@ class StoreIndexXSpec extends StoreSpec {
 
   protected val storedSymbol = "XR"
 
-  protected def assignStoredValue(storedValue: ByteVal) {
+  protected def assignStoredValue(storedValue: ByteVal): Unit = {
     XR = storedValue
   }
 
@@ -15,7 +15,7 @@ class StoreIndexXSpec extends StoreSpec {
     OpCode_STX_ABS -> 4
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("STX", (args) => {
       val fetchAddress: () => Int = args(0).asInstanceOf[() => Int]
       val fetchValue: () => Int = args(1).asInstanceOf[() => Int]

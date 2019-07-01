@@ -28,12 +28,12 @@ trait StoreSpec extends FunSharedExamples {
       sharedExampleArguments((Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr).toShort)
   }
 
-  protected def initStoreTestCase(storedValue: ByteVal, initTestCase: (Int) => Unit) {
+  protected def initStoreTestCase(storedValue: ByteVal, initTestCase: (Int) => Unit): Unit = {
     assignStoredValue(storedValue)
     initTestCase(0xff) // irrelevant value in a target memory address to be overwritten after storing AC in it
   }
 
-  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit = {
     val storedValues = Seq[ByteVal](0x00, 0x01, 0x80, 0xff)
 
     storedValues.foreach((storedValue) => {

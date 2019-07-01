@@ -22,7 +22,7 @@ trait CompareSpec extends FunSharedExamples {
     case _: OpCode_INDY => Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr
   })
 
-  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit = {
     val loadedValues = Seq[ByteVal](0x00, 0x01, 0xff)
     val comparedValues = Seq[ByteVal](0x00, 0x01, 0xff)
 
@@ -39,7 +39,7 @@ trait CompareSpec extends FunSharedExamples {
     })
   }
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples(opCodeSymbol, (args) => {
       val fetchAddress = args(0).asInstanceOf[() => Int]().toShort
 

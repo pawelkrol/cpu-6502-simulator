@@ -3,13 +3,13 @@ package Operations
 
 class ReturnSpec extends FunOperationsSpec {
 
-  private def assertSetPC(stack: Int, add: Int) {
+  private def assertSetPC(stack: Int, add: Int): Unit = {
     context("$%04X = $00, $%04X = $C8".format(stack, stack + 1)) { memoryWrite(stack, 0x00); memoryWrite(stack + 1, 0xc8) } {
       it("sets PC to $C800") { expect { operation }.toSetPC((0xc800 + add).toShort) }
     }
   }
 
-  private def assertSetSR {
+  private def assertSetSR: Unit = {
     context("$01FA = %00110110") { memoryWrite(0x01fa, 0x35) } {
       it("sets SR to $35") { expect { operation }.toSetSR(0x35) }
     }

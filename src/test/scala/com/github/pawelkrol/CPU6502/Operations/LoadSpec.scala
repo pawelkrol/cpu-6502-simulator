@@ -3,7 +3,7 @@ package Operations
 
 trait LoadSpec extends FunSharedExamples {
 
-  protected def assertFlags(value: Int) {
+  protected def assertFlags(value: Int): Unit = {
     val signFlag = (value & 0x80) == 0x80
     val zeroFlag = value == 0x00
     it("ZF = " + zeroFlag) { expect { operation }.toChange { ZF }.to(zeroFlag) }
@@ -22,7 +22,7 @@ trait LoadSpec extends FunSharedExamples {
     case _: OpCode_INDY => () => List[Any](memoryRead(Util.nibbles2Word(memoryRead(zp)(), memoryRead(zp + 1)()) + yr)())
   }
 
-  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit = {
     val loadedValues = Seq[Int](0x00, 0x01, 0x80, 0xff)
 
     loadedValues.foreach((loadedValue) => {

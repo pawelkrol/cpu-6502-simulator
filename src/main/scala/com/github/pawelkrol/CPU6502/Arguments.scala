@@ -9,7 +9,7 @@ case class Arguments(
   verbose: Boolean = false
 ) {
 
-  def validate {
+  def validate: Unit = {
     // startAddress shall be a 16-bit hexadecimal number
     startAddress match {
       case Some(addr) =>

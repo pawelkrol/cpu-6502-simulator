@@ -5,7 +5,7 @@ class StoreIndexYSpec extends StoreSpec {
 
   protected val storedSymbol = "YR"
 
-  protected def assignStoredValue(storedValue: ByteVal) {
+  protected def assignStoredValue(storedValue: ByteVal): Unit = {
     YR = storedValue
   }
 
@@ -15,7 +15,7 @@ class StoreIndexYSpec extends StoreSpec {
     OpCode_STY_ABS -> 4
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("STY", (args) => {
       val fetchAddress: () => Int = args(0).asInstanceOf[() => Int]
       val fetchValue: () => Int = args(1).asInstanceOf[() => Int]

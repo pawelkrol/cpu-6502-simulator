@@ -9,12 +9,12 @@ CPU 6502 Simulator
 2. Just to treat it as a practice in building [Scala](http://www.scala-lang.org/) applications.
 3. As a necessity is the mother of all invention, and since back then I was aiming at developing a complete [unit-testing framework](https://github.com/pawelkrol/Scala-CommTest) targetting MOS 6502 CPU (specifically any code that was meant to run on the [Commodore 64](https://en.wikipedia.org/wiki/Commodore_64)) to help me with testing of complex subroutine executions, I considered writing this simulator an interim step of a larger development process (while still designed to be usable as a standalone tool, this simulator was not an ultimate goal of my work). Another potential utility of this library is to ease implementation of a 6502 disassembler of binary programs.
 
-`cpu-6502-simulator` is not restricted to be executed as a standalone application JAR, although it leaves this possibility (without too many options to configure simulation environment however). It comes up bundled with the minimal set of dependencies required to build, test and include it in your own [Scala](http://www.scala-lang.org/) projects.
+`cpu-6502-simulator` is not restricted to be executed as a standalone application JAR, although it leaves this possibility (without too many options to configure simulation environment however). It comes up bundled with the minimal set of dependencies required to build, test and include it in your own [Scala 2.13](http://www.scala-lang.org/) projects.
 
 PREREQUISITES
 -------------
 
-This `cpu-6502-simulator` application is setup with [sbt 0.13.17](http://www.scala-sbt.org/) as a build tool, [sbt-proguard 0.3.0](https://github.com/sbt/sbt-proguard) as an sbt [plugin](http://www.scala-sbt.org/0.13/docs/Plugins.html) for running [ProGuard 5.3.3](http://proguard.sourceforge.net/), [ScalaTest 3.0.5](http://www.scalatest.org/) as a unit-testing framework, [Scalactic 3.0.5](http://www.scalactic.org/) as a small library of utilities, [scopt 3.7.0](https://github.com/scopt/scopt) as a command line options parsing library, [Scala Logging 3.8.0](https://github.com/typesafehub/scala-logging) as a logging library wrapping [SLF4J](http://www.slf4j.org/), and [Logback 1.2.3](http://logback.qos.ch/) as a backend logging framework.
+This `cpu-6502-simulator` application is setup with [sbt 1.2.8](http://www.scala-sbt.org/) as a build tool, [sbt-proguard 0.3.0](https://github.com/sbt/sbt-proguard) as an sbt [plugin](http://www.scala-sbt.org/0.13/docs/Plugins.html) for running [ProGuard 5.3.3](http://proguard.sourceforge.net/), [ScalaTest 3.0.5](http://www.scalatest.org/) as a unit-testing framework, [Scalactic 3.0.5](http://www.scalactic.org/) as a small library of utilities, [scopt 3.7.0](https://github.com/scopt/scopt) as a command line options parsing library, [Scala Logging 3.8.0](https://github.com/typesafehub/scala-logging) as a logging library wrapping [SLF4J](http://www.slf4j.org/), and [Logback 1.2.3](http://logback.qos.ch/) as a backend logging framework.
 
 Dependency management is normally handled automatically by your build tool.
 
@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.05-SNAPSHOT (2018-03-15)
+Version 0.05-SNAPSHOT (2019-07-01)
 
 INSTALLATION
 ------------
@@ -143,6 +143,6 @@ Simulate running a program using +60k RAM memory expansion:
 COPYRIGHT AND LICENCE
 ---------------------
 
-Copyright (C) 2016-2018 by Pawel Krol.
+Copyright (C) 2016-2019 by Pawel Krol.
 
-This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.12.4 or, at your option, any later version of Scala you may have available.
+This library is free open source software; you can redistribute it and/or modify it under [the same terms](https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md) as Scala itself, either Scala version 2.13.0 or, at your option, any later version of Scala you may have available.

@@ -7,7 +7,7 @@ import scala.util.matching.Regex
 
 class LoggingSpec extends FunOperationsSpec {
 
-  private def testBranchLog(pc: Int, opArg: Int) {
+  private def testBranchLog(pc: Int, opArg: Int): Unit = {
     val address = "$%04X".format(pc + opArg)
     val offset =
       if (opArg < 0x00)

@@ -12,7 +12,7 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
   var haveNMIRequest = false
 
   /** Generate a CPU RESET */
-  def reset {
+  def reset: Unit = {
     haveIRQRequest = false
     haveNMIRequest = false
     register.status = 0x00
@@ -20,12 +20,12 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
   }
 
   /** Generate an IRQ */
-  def requestIRQ {
+  def requestIRQ: Unit = {
     haveIRQRequest = true
   }
 
   /** Generate an NMI */
-  def requestNMI {
+  def requestNMI: Unit = {
     haveNMIRequest = true
   }
 
@@ -53,7 +53,7 @@ case class Core(memory: Memory, register: Register) extends Operation(memory, re
   }
 
   /** Execute n CPU instructions */
-  def executeInstructions(n: Int) {
+  def executeInstructions(n: Int): Unit = {
     1 to n foreach { _ => executeInstruction }
   }
 }

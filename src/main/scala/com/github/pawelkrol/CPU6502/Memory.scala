@@ -32,7 +32,7 @@ trait Memory {
   def get_val_from_zp(address: Short) = Util.byteVals2Addr(Seq(read(address), read(((address + 1) & 0xff).toShort)))
 
   /** Initialize the memory subsystem */
-  def init {
+  def init: Unit = {
     _MEMORY = Array.fill[ByteVal](Memory.size)(0xff)
   }
 

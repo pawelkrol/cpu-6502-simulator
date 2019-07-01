@@ -17,7 +17,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
 
   protected var includeSharedExamples: () => Unit = _
 
-  private def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  private def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit = {
     val decimalFlags = Map(true -> "with decimal flag", false -> "without decimal flag")
     decimalFlags.foreach { case (decimalFlag, decimalContext) => {
       val testedAccumulatorValues = decimalFlag match {
@@ -36,7 +36,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
     }}
   }
 
-  private def executeSharedExamplesWithCarryOptions(decimal: Boolean, target: String, initTestCase: (Int) => Unit) {
+  private def executeSharedExamplesWithCarryOptions(decimal: Boolean, target: String, initTestCase: (Int) => Unit): Unit = {
     decimal match {
       case true => {
         context("with carry flag") { CF = true } {
@@ -59,7 +59,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
     }
   }
 
-  private def executeSharedExamplesWithDecimalFlag(target: String, initTestCase: (Int) => Unit) {
+  private def executeSharedExamplesWithDecimalFlag(target: String, initTestCase: (Int) => Unit): Unit = {
     context(target + " = $00") { initTestCase(0x00) } { includeSharedExamples() }
     context(target + " = $01") { initTestCase(0x01) } { includeSharedExamples() }
     context(target + " = $09") { initTestCase(0x09) } { includeSharedExamples() }
@@ -67,7 +67,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
     context(target + " = $99") { initTestCase(0x99) } { includeSharedExamples() }
   }
 
-  private def executeSharedExamplesWithoutDecimalFlag(target: String, initTestCase: (Int) => Unit) {
+  private def executeSharedExamplesWithoutDecimalFlag(target: String, initTestCase: (Int) => Unit): Unit = {
     context(target + " = $00") { initTestCase(0x00) } { includeSharedExamples() }
     context(target + " = $01") { initTestCase(0x01) } { includeSharedExamples() }
     context(target + " = $7f") { initTestCase(0x7f) } { includeSharedExamples() }
@@ -75,7 +75,7 @@ trait ArithmeticSpec extends FunOperationsSpec {
     context(target + " = $ff") { initTestCase(0xff) } { includeSharedExamples() }
   }
 
-  def applySharedExamples(sym: String, op: OpCode) {
+  def applySharedExamples(sym: String, op: OpCode): Unit = {
     op match {
       case _: OpCode_IMM => {
         describe("immediate addressing mode") {
