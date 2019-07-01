@@ -4,7 +4,7 @@ lazy val root = (project in file(".")).settings(
   organization := "com.github.pawelkrol",
   scalaVersion := "2.13.0",
   scalacOptions ++= Seq("-deprecation", "-feature"),
-  version := "0.05-SNAPSHOT"
+  version := "0.05"
 )
 
 maxErrors := 1
