@@ -13,7 +13,7 @@ class CompareIndexXSpec extends CompareSpec {
 
   protected def opCodeSymbol = "CPX"
 
-  protected def assignLoadedValue(loadedValue: ByteVal) {
+  protected def assignLoadedValue(loadedValue: ByteVal): Unit = {
     XR = loadedValue
   }
 

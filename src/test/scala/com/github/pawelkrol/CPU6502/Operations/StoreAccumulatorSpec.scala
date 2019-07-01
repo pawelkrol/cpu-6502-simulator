@@ -5,7 +5,7 @@ class StoreAccumulatorSpec extends StoreSpec {
 
   protected val storedSymbol = "AC"
 
-  protected def assignStoredValue(storedValue: ByteVal) {
+  protected def assignStoredValue(storedValue: ByteVal): Unit = {
     AC = storedValue
   }
 
@@ -19,7 +19,7 @@ class StoreAccumulatorSpec extends StoreSpec {
     OpCode_STA_INDY -> 6
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("STA", (args) => {
       val fetchAddress: () => Int = args(0).asInstanceOf[() => Int]
       val fetchValue: () => Int = args(1).asInstanceOf[() => Int]

@@ -3,7 +3,7 @@ package Operations
 
 class ImpliedSpec extends FunOperationsSpec {
 
-  private def setupShareExamples(flag: String) {
+  private def setupShareExamples(flag: String): Unit = {
     sharedExamples(flag, (args) => {
       val fetchValue: () => Boolean = args(0).asInstanceOf[() => Boolean]
       val expectedValue: Boolean = args(1).asInstanceOf[Boolean]
@@ -38,7 +38,7 @@ class ImpliedSpec extends FunOperationsSpec {
     }
   })
 
-  private def executeSharedExamples(flagName: String, reader: () => Boolean, writer: (Boolean) => Unit, flagValue: => Boolean) {
+  private def executeSharedExamples(flagName: String, reader: () => Boolean, writer: (Boolean) => Unit, flagValue: => Boolean): Unit = {
     context(flagName + " = false") { writer(false) } {
       includeExamples(flagName, List[Any](reader, flagValue))
     }
@@ -48,7 +48,7 @@ class ImpliedSpec extends FunOperationsSpec {
     }
   }
 
-  private def includeSharedExamples(opCode: OpCode, flagValue: => Boolean) {
+  private def includeSharedExamples(opCode: OpCode, flagValue: => Boolean): Unit = {
     testOpCode(opCode, memSize = 1, cycles = 2) {
       val flagName = opCode match {
         case OpCode_CLC =>

@@ -11,7 +11,7 @@ trait RotateSpec extends FunSharedExamples {
     case _: OpCode_ABSX => () => List[Any](CF, () => memoryRead(addr + xr)())
   }
 
-  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit = {
     context("with carry flag") { CF = true } {
       executeSharedExamplesWithFlags(target, initTestCase)
     }
@@ -21,7 +21,7 @@ trait RotateSpec extends FunSharedExamples {
     }
   }
 
-  private def executeSharedExamplesWithFlags(target: String, initTestCase: (Int) => Unit) {
+  private def executeSharedExamplesWithFlags(target: String, initTestCase: (Int) => Unit): Unit = {
     context(target + " = $00") { initTestCase(0x00) } { includeSharedExamples() }
     context(target + " = $01") { initTestCase(0x01) } { includeSharedExamples() }
     context(target + " = $02") { initTestCase(0x02) } { includeSharedExamples() }

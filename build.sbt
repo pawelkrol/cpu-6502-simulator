@@ -2,7 +2,8 @@ lazy val root = (project in file(".")).settings(
   javaOptions += "-Xmx1G",
   name := "cpu-6502-simulator",
   organization := "com.github.pawelkrol",
-  scalaVersion := "2.12.4",
+  scalaVersion := "2.13.0",
+  scalacOptions ++= Seq("-deprecation", "-feature"),
   version := "0.05-SNAPSHOT"
 )
 
@@ -12,10 +13,10 @@ scalacOptions += "-feature"
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.github.scopt" %% "scopt" % "3.7.0",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0",
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
-  "org.scalactic" %% "scalactic" % "3.0.5" % "test"
+  "com.github.scopt" %% "scopt" % "3.7.1",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
+  "org.scalactic" %% "scalactic" % "3.0.8" % "test"
 )
 
 // Disable using the Scala version in output paths and artifacts:
@@ -39,13 +40,13 @@ pomExtra := (
   <url>https://github.com/pawelkrol/cpu-6502-simulator</url>
   <licenses>
     <license>
-      <name>Scala License</name>
-      <url>http://www.scala-lang.org/node/146</url>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
   <scm>
-    <url>git://github.com/pawelkrol/cpu-6502-simulator.git</url>
+    <url>git://github.com/pawelkrol/cpu-6502-simulator</url>
     <connection>scm:git:git://github.com/pawelkrol/cpu-6502-simulator.git</connection>
   </scm>
   <developers>

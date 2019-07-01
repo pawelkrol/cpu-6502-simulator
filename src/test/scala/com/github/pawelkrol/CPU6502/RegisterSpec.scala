@@ -46,7 +46,7 @@ class RegisterSpec extends FunFunSpec {
 
   private var value: Short = _
 
-  private def testTestStatusFlag(flags: Tuple2[Flag, Boolean]*) {
+  private def testTestStatusFlag(flags: Tuple2[Flag, Boolean]*): Unit = {
     flags.foreach({ case (flag, expectation) =>
       it { expect { register.testStatusFlag(flag, value); register.getStatusFlag(flag) }.toEqual(expectation) }
     })

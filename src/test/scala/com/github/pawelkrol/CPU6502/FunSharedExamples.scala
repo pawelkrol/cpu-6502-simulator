@@ -21,7 +21,7 @@ trait FunSharedExamples extends FunOperationsSpec {
 
   protected def sharedExampleArguments(opCode: OpCode): () => List[Any]
 
-  def applySharedExamples(sym: String, op: OpCode) {
+  def applySharedExamples(sym: String, op: OpCode): Unit = {
     includeSharedExamples = () => includeExamples(sym, sharedExampleArguments(op)())
 
     op match {

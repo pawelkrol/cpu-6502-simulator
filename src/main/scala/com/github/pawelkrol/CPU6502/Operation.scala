@@ -2,7 +2,7 @@ package com.github.pawelkrol.CPU6502
 
 import com.typesafe.scalalogging.StrictLogging
 
-import Status._
+import Status.{Flag,CF,ZF,IF,DF,BF,OF,SF}
 
 abstract class Operation(memory: Memory, register: Register) {
 
@@ -52,7 +52,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$09] ORA #$FF */
   /** [$29] AND #$FF */
   /** [$49] EOR #$FF */
-  private def opImmediate(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opImmediate(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_IMM)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -61,7 +61,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$05] ORA $FF */
   /** [$25] AND $FF */
   /** [$45] EOR $FF */
-  private def opZeroPage(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opZeroPage(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_ZP)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -70,7 +70,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$15] ORA $FF */
   /** [$35] AND $FF */
   /** [$55] EOR $FF */
-  private def opZeroPageX(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opZeroPageX(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_ZPX)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -79,7 +79,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$0d] ORA $FFFF */
   /** [$2d] AND $FFFF */
   /** [$4d] EOR $FFFF */
-  private def opAbsolute(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opAbsolute(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_ABS)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -88,7 +88,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$1d] ORA $FFFF,X */
   /** [$3d] AND $FFFF,X */
   /** [$5d] EOR $FFFF,X */
-  private def opAbsoluteX(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opAbsoluteX(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_ABSX)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -98,7 +98,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$19] ORA $FFFF,Y */
   /** [$39] AND $FFFF,Y */
   /** [$59] EOR $FFFF,Y */
-  private def opAbsoluteY(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opAbsoluteY(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_ABSY)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -108,7 +108,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$01] ORA ($FF,X) */
   /** [$21] AND ($FF,X) */
   /** [$41] EOR ($FF,X) */
-  private def opIndirectX(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opIndirectX(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_INDX)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -117,7 +117,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$11] ORA ($FF),Y */
   /** [$31] AND ($FF),Y */
   /** [$51] EOR ($FF),Y */
-  private def opIndirectY(op: (ByteVal, ByteVal) => ByteVal) {
+  private def opIndirectY(op: (ByteVal, ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC, get_arg_INDY)
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
@@ -128,7 +128,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$69] ADC #$FF */
   /** [$6d] ADC $FFFF */
   /** [$75] ADC $FF,X */
-  private def opADC(term: ByteVal) {
+  private def opADC(term: ByteVal): Unit = {
     val carry = if (register.getStatusFlag(CF)) 0x01 else 0x00
     val old = register.AC()
     val rhs = term & 0xff
@@ -156,19 +156,19 @@ abstract class Operation(memory: Memory, register: Register) {
   }
 
   /** [$7d] ADC $FFFF,X */
-  private def opAbsoluteXADC {
+  private def opAbsoluteXADC: Unit = {
     opADC(get_arg_ABSX)
     addPageCrossPenalty(register.XR())
   }
 
   /** [$79] ADC $FFFF,Y */
-  private def opAbsoluteYADC {
+  private def opAbsoluteYADC: Unit = {
     opADC(get_arg_ABSY)
     addPageCrossPenalty(register.YR())
   }
 
   /** [$71] ADC ($FF),Y */
-  private def opIndirectYADC {
+  private def opIndirectYADC: Unit = {
     opADC(get_arg_INDY)
     addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
@@ -181,7 +181,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$b0] BCS *-1 */
   /** [$d0] BNE *-1 */
   /** [$f0] BEQ *-1 */
-  private def opRelative(expr: Boolean) {
+  private def opRelative(expr: Boolean): Unit = {
     if (expr) {
       cycleCount += 1
       val offset = get_arg_REL.value
@@ -193,7 +193,7 @@ abstract class Operation(memory: Memory, register: Register) {
     }
   }
 
-  private def opCompare(value: ByteVal, term: ByteVal) {
+  private def opCompare(value: ByteVal, term: ByteVal): Unit = {
     val result = value() - term()
     register.testStatusFlag(ZF, (result & 0xff).toShort)
     register.testStatusFlag(SF, result.toShort)
@@ -205,24 +205,24 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$c9] CMP #$FF */
   /** [$cd] CMP $FFFF */
   /** [$d5] CMP $FF,X */
-  private def opCMP(term: ByteVal) {
+  private def opCMP(term: ByteVal): Unit = {
     opCompare(register.AC, term)
   }
 
   /** [$dd] CMP $FFFF,X */
-  private def opAbsoluteXCMP {
+  private def opAbsoluteXCMP: Unit = {
     opCMP(get_arg_ABSX)
     addPageCrossPenalty(register.XR())
   }
 
   /** [$d9] CMP $FFFF,Y */
-  private def opAbsoluteYCMP {
+  private def opAbsoluteYCMP: Unit = {
     opCMP(get_arg_ABSY)
     addPageCrossPenalty(register.YR())
   }
 
   /** [$d1] CMP ($FF),Y */
-  private def opIndirectYCMP {
+  private def opIndirectYCMP: Unit = {
     opCMP(get_arg_INDY)
     addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
@@ -230,14 +230,14 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$e0] CPX #$FF */
   /** [$e4] CPX $FF */
   /** [$ec] CPX $FFFF */
-  private def opCPX(term: ByteVal) {
+  private def opCPX(term: ByteVal): Unit = {
     opCompare(register.XR, term)
   }
 
   /** [$c0] CPY #$FF */
   /** [$c4] CPY $FF */
   /** [$cc] CPY $FFFF */
-  private def opCPY(term: ByteVal) {
+  private def opCPY(term: ByteVal): Unit = {
     opCompare(register.YR, term)
   }
 
@@ -246,7 +246,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$e9] SBC #$FF */
   /** [$ed] SBC $FFFF */
   /** [$f5] SBC $FF,X */
-  private def opSBC(term: ByteVal) {
+  private def opSBC(term: ByteVal): Unit = {
     if (register.getStatusFlag(DF)) {
       val carry = if (register.getStatusFlag(CF)) 0x00 else 0x01
       val old = register.AC()
@@ -278,37 +278,37 @@ abstract class Operation(memory: Memory, register: Register) {
   }
 
   /** [$fd] SBC $FFFF,X */
-  private def opAbsoluteXSBC {
+  private def opAbsoluteXSBC: Unit = {
     opSBC(get_arg_ABSX)
     addPageCrossPenalty(register.XR())
   }
 
   /** [$f9] SBC $FFFF,Y */
-  private def opAbsoluteYSBC {
+  private def opAbsoluteYSBC: Unit = {
     opSBC(get_arg_ABSY)
     addPageCrossPenalty(register.YR())
   }
 
   /** [$f1] SBC ($FF),Y */
-  private def opIndirectYSBC {
+  private def opIndirectYSBC: Unit = {
     opSBC(get_arg_INDY)
     addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
 
-  private def pushWordToStack(word: Short) {
+  private def pushWordToStack(word: Short): Unit = {
     val (pcl, pch) = Util.word2Nibbles(word)
     register.push(memory, pch)
     register.push(memory, pcl)
   }
 
-  protected def interrupt(pc: Short) {
+  protected def interrupt(pc: Short): Unit = {
     pushWordToStack(pc)
     register.push(memory, register.status)
     register.setStatusFlag(IF, true)
   }
 
   /** [$00] BRK */
-  private def opBRK {
+  private def opBRK: Unit = {
     register.setStatusFlag(BF, true)
     interrupt((register.PC + 2).toShort)
     register.setPC(get_val_from_addr(0xfffe.toShort))
@@ -316,7 +316,7 @@ abstract class Operation(memory: Memory, register: Register) {
   }
 
   /** [$20] JSR $FFFF */
-  private def opJSR {
+  private def opJSR: Unit = {
     val address = get_addr_ABS
     pushWordToStack((register.PC + 2).toShort)
     register.setPC(address)
@@ -324,13 +324,13 @@ abstract class Operation(memory: Memory, register: Register) {
   }
 
   /** [$4c] JMP $FFFF */
-  private def opAbsoluteJMP {
+  private def opAbsoluteJMP: Unit = {
     register.setPC(get_addr_ABS)
     register.advancePC(-OpCode_JMP_ABS.memSize) // additionally compensate for an advancement in "eval"
   }
 
   /** [$6c] JMP ($FFFF) */
-  private def opIndirectJMP {
+  private def opIndirectJMP: Unit = {
     val pc = register.PC
     val lo = get_addr_ABS
     val hi = (lo & 0xff00) | ((lo + 1) & 0x00ff)
@@ -379,7 +379,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$26] ROL $FF */
   /** [$46] LSR $FF */
   /** [$66] ROR $FF */
-  private def opZeroPage(op: (ByteVal) => ByteVal) {
+  private def opZeroPage(op: (ByteVal) => ByteVal): Unit = {
     memory.write(get_addr_ZP, op(get_arg_ZP))
   }
 
@@ -387,7 +387,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$2a] ROL A */
   /** [$4a] LSR A */
   /** [$6a] ROR A */
-  private def opAccumulator(op: (ByteVal) => ByteVal) {
+  private def opAccumulator(op: (ByteVal) => ByteVal): Unit = {
     register.AC = op(register.AC)
   }
 
@@ -395,7 +395,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$2e] ROL $FFFF */
   /** [$4e] LSR $FFFF */
   /** [$6e] ROR $FFFF */
-  private def opAbsolute(op: (ByteVal) => ByteVal) {
+  private def opAbsolute(op: (ByteVal) => ByteVal): Unit = {
     memory.write(get_addr_ABS, op(get_arg_ABS))
   }
 
@@ -403,7 +403,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$36] ROL $FF,X */
   /** [$56] LSR $FF,X */
   /** [$76] ROR $FF,X */
-  private def opZeroPageX(op: (ByteVal) => ByteVal) {
+  private def opZeroPageX(op: (ByteVal) => ByteVal): Unit = {
     memory.write(get_addr_ZPX, op(get_arg_ZPX))
   }
 
@@ -411,27 +411,27 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$3e] ROL $FFFF,X */
   /** [$5e] LSR $FFFF,X */
   /** [$7e] ROR $FFFF,X */
-  private def opAbsoluteX(op: (ByteVal) => ByteVal) {
+  private def opAbsoluteX(op: (ByteVal) => ByteVal): Unit = {
     memory.write(get_addr_ABSX, op(get_arg_ABSX))
   }
 
   /** [$08] PHP */
-  private def opPHP {
+  private def opPHP: Unit = {
     register.push(memory, register.status & ~BF.srBits)
   }
 
   /** [$28] PLP */
-  private def opPLP {
+  private def opPLP: Unit = {
     register.status = register.pop(memory) & ~BF.srBits
   }
 
   /** [$48] PHA */
-  private def opPHA {
+  private def opPHA: Unit = {
     register.push(memory, register.AC)
   }
 
   /** [$68] PLA */
-  private def opPLA {
+  private def opPLA: Unit = {
     val valuePopped = register.pop(memory)
     register.AC = valuePopped
     register.testStatusFlag(ZF, valuePopped.toShort)
@@ -442,40 +442,40 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$58] CLI */
   /** [$b8] CLV */
   /** [$d8] CLD */
-  private def opClearFlag(flag: Flag) {
+  private def opClearFlag(flag: Flag): Unit = {
     register.setStatusFlag(flag, false)
   }
 
   /** [$38] SEC */
   /** [$78] SEI */
   /** [$f8] SED */
-  private def opSetFlag(flag: Flag) {
+  private def opSetFlag(flag: Flag): Unit = {
     register.setStatusFlag(flag, true)
   }
 
   /** [$24] BIT $FF */
   /** [$2c] BIT $FFFF */
-  private def opBIT(bits: ByteVal) {
+  private def opBIT(bits: ByteVal): Unit = {
     register.setStatusFlag(SF, (bits & 0x80) == 0x80)
     register.setStatusFlag(OF, (bits & 0x40) == 0x40)
     register.setStatusFlag(ZF, (bits & register.AC) == 0x00)
   }
 
-  private def pullProgramCounterFromStack {
+  private def pullProgramCounterFromStack: Unit = {
     val pcl = register.pop(memory)
     val pch = register.pop(memory)
     register.PC = Util.nibbles2Word(pcl, pch)
   }
 
   /** [$40] RTI */
-  private def opRTI {
+  private def opRTI: Unit = {
     register.status = register.pop(memory)
     pullProgramCounterFromStack
     register.advancePC(-OpCode_RTI.memSize) // additionally compensate for an advancement in "eval"
   }
 
   /** [$60] RTS */
-  private def opRTS {
+  private def opRTS: Unit = {
     pullProgramCounterFromStack
     register.advancePC(-OpCode_RTS.memSize + 0x01) // additionally compensate for an advancement in "eval"
   }
@@ -487,87 +487,87 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$95] STA $FF,X */
   /** [$99] STA $FFFF,Y */
   /** [$9d] STA $FFFF,X */
-  private def opSTA(address: => Short) {
+  private def opSTA(address: => Short): Unit = {
     memory.write(address, register.AC)
   }
 
   /** [$84] STY $FF */
   /** [$8c] STY $FFFF */
   /** [$94] STY $FF,X */
-  private def opSTY(address: => Short) {
+  private def opSTY(address: => Short): Unit = {
     memory.write(address, register.YR)
   }
 
   /** [$86] STX $FF */
   /** [$8e] STX $FFFF */
   /** [$96] STX $FF,Y */
-  private def opSTX(address: => Short) {
+  private def opSTX(address: => Short): Unit = {
     memory.write(address, register.XR)
   }
 
   /** [$88] DEY */
-  private def opDEY {
+  private def opDEY: Unit = {
     register.YR -= 1
     register.testStatusFlag(ZF, register.YR)
     register.testStatusFlag(SF, register.YR)
   }
 
   /** [$ca] DEX */
-  private def opDEX {
+  private def opDEX: Unit = {
     register.XR -= 1
     register.testStatusFlag(ZF, register.XR)
     register.testStatusFlag(SF, register.XR)
   }
 
   /** [$c8] INY */
-  private def opINY {
+  private def opINY: Unit = {
     register.YR += 1
     register.testStatusFlag(ZF, register.YR)
     register.testStatusFlag(SF, register.YR)
   }
 
   /** [$e8] INX */
-  private def opINX {
+  private def opINX: Unit = {
     register.XR += 1
     register.testStatusFlag(ZF, register.XR)
     register.testStatusFlag(SF, register.XR)
   }
 
   /** [$8a] TXA */
-  private def opTXA {
+  private def opTXA: Unit = {
     register.AC = register.XR
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
   }
 
   /** [$98] TYA */
-  private def opTYA {
+  private def opTYA: Unit = {
     register.AC = register.YR
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
   }
 
   /** [$9a] TXS */
-  private def opTXS {
+  private def opTXS: Unit = {
     register.SP = register.XR
   }
 
   /** [$a8] TAY */
-  private def opTAY {
+  private def opTAY: Unit = {
     register.YR = register.AC
     register.testStatusFlag(ZF, register.YR)
     register.testStatusFlag(SF, register.YR)
   }
 
   /** [$aa] TAX */
-  private def opTAX {
+  private def opTAX: Unit = {
     register.XR = register.AC
     register.testStatusFlag(ZF, register.XR)
     register.testStatusFlag(SF, register.XR)
   }
 
   /** [$ba] TSX */
-  private def opTSX {
+  private def opTSX: Unit = {
     register.XR = register.SP
     register.testStatusFlag(ZF, register.XR)
     register.testStatusFlag(SF, register.XR)
@@ -577,14 +577,14 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$a4] LDY $FF */
   /** [$ac] LDY $FFFF */
   /** [$b4] LDY $FF,X */
-  private def opLDY(value: ByteVal) {
+  private def opLDY(value: ByteVal): Unit = {
     register.YR = value
     register.testStatusFlag(ZF, register.YR)
     register.testStatusFlag(SF, register.YR)
   }
 
   /** [$bc] LDY $FFFF,X */
-  private def opAbsoluteXLDY {
+  private def opAbsoluteXLDY: Unit = {
     opLDY(get_arg_ABSX)
     addPageCrossPenalty(register.XR())
   }
@@ -593,14 +593,14 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$a6] LDX $FF */
   /** [$ae] LDX $FFFF */
   /** [$b6] LDX $FF,Y */
-  private def opLDX(value: ByteVal) {
+  private def opLDX(value: ByteVal): Unit = {
     register.XR = value
     register.testStatusFlag(ZF, register.XR)
     register.testStatusFlag(SF, register.XR)
   }
 
   /** [$be] LDX $FFFF,Y */
-  private def opAbsoluteYLDX {
+  private def opAbsoluteYLDX: Unit = {
     opLDX(get_arg_ABSY)
     addPageCrossPenalty(register.YR())
   }
@@ -610,26 +610,26 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$a9] LDA #$FF */
   /** [$ad] LDA $FFFF */
   /** [$b5] LDA $FF,Y */
-  private def opLDA(value: ByteVal) {
+  private def opLDA(value: ByteVal): Unit = {
     register.AC = value
     register.testStatusFlag(ZF, register.AC)
     register.testStatusFlag(SF, register.AC)
   }
 
   /** [$bd] LDA $FFFF,X */
-  private def opAbsoluteXLDA {
+  private def opAbsoluteXLDA: Unit = {
     opLDA(get_arg_ABSX)
     addPageCrossPenalty(register.XR())
   }
 
   /** [$b9] LDA $FFFF,Y */
-  private def opAbsoluteYLDA {
+  private def opAbsoluteYLDA: Unit = {
     opLDA(get_arg_ABSY)
     addPageCrossPenalty(register.YR())
   }
 
   /** [$b1] LDA ($FF),Y */
-  private def opIndirectYLDA {
+  private def opIndirectYLDA: Unit = {
     opLDA(get_arg_INDY)
     addPageCrossPenalty(get_val_from_zp(get_addr_ZP), register.YR())
   }
@@ -638,7 +638,7 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$ce] DEC $FFFF */
   /** [$d6] DEC $FF,X */
   /** [$de] DEC $FFFF,X */
-  private def opDEC(address: Short) {
+  private def opDEC(address: Short): Unit = {
     val decrementedValue: ByteVal = memory.read(address) - 1
     memory.write(address, decrementedValue)
     register.testStatusFlag(ZF, decrementedValue)
@@ -649,23 +649,23 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$ee] INC $FFFF */
   /** [$f6] INC $FF,X */
   /** [$fe] INC $FFFF,X */
-  private def opINC(address: Short) {
+  private def opINC(address: Short): Unit = {
     val incrementedValue: ByteVal = memory.read(address) + 1
     memory.write(address, incrementedValue)
     register.testStatusFlag(ZF, incrementedValue)
     register.testStatusFlag(SF, incrementedValue)
   }
 
-  private def addPageCrossPenalty(address: Short, offset: Int) {
+  private def addPageCrossPenalty(address: Short, offset: Int): Unit = {
     if (page_cross(address, offset))
       cycleCount += 1
   }
 
-  private def addPageCrossPenalty(offset: Int) {
+  private def addPageCrossPenalty(offset: Int): Unit = {
     addPageCrossPenalty(get_addr_ABS, offset)
   }
 
-  def eval(opCode: OpCode) {
+  def eval(opCode: OpCode): Unit = {
     cycleCount = 0
 
     opCode match {

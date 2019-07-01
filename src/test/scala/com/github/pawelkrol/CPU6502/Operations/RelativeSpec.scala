@@ -3,7 +3,7 @@ package Operations
 
 class RelativeSpec extends FunOperationsSpec {
 
-  def shared_examples(branch: Boolean) {
+  def shared_examples(branch: Boolean): Unit = {
     if (branch) {
       context("BRA *-$7E") { assignOpArg(0x80) } {
         it { expect { operation }.toAdvancePC(-0x7e) }

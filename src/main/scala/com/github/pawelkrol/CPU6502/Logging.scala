@@ -8,7 +8,7 @@ trait Logging extends StrictLogging {
 
   var verbose = false
 
-  def logInstruction(opCode: OpCode, core: Core) {
+  def logInstruction(opCode: OpCode, core: Core): Unit = {
     val register = core.register
 
     val bytes = opCode.bytes(core).map(byte => "%02X".format(byte())).mkString(" ")
@@ -30,7 +30,7 @@ trait Logging extends StrictLogging {
       println(instruction)
   }
 
-  def logRegisters(core: Core) {
+  def logRegisters(core: Core): Unit = {
     val memory = core.memory
     val register = core.register
 
@@ -48,14 +48,14 @@ trait Logging extends StrictLogging {
     log.debug(registers)
   }
 
-  def logInfo(message: String) {
+  def logInfo(message: String): Unit = {
     log.info(message)
 
     if (verbose)
       println(message)
   }
 
-  def logWarning(message: String) {
+  def logWarning(message: String): Unit = {
     log.warn(message)
 
     println(message)

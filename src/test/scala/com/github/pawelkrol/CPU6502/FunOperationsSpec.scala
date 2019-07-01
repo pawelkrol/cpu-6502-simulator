@@ -37,13 +37,13 @@ trait FunOperationsSpec extends FunFunSpec {
     core = Core(memory, register)
   }
 
-  def operation { core.eval(opCode) }
+  def operation: Unit = { core.eval(opCode) }
 
-  def testOpCode(op: OpCode)(test: => Any) {
+  def testOpCode(op: OpCode)(test: => Any): Unit = {
     context(op.toString) { opCode = op } { test }
   }
 
-  def testOpCode(op: OpCode, memSize: Short, cycles: Short)(test: => Any) {
+  def testOpCode(op: OpCode, memSize: Short, cycles: Short)(test: => Any): Unit = {
     testOpCode(op) {
       it("advances PC by " + memSize + " byte(s)") { expect { operation }.toAdvancePC(memSize) }
       it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles) }
@@ -53,21 +53,21 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def AC = register.AC
 
-  def AC_=(value: ByteVal) { register.AC = value }
+  def AC_=(value: ByteVal): Unit = { register.AC = value }
 
   def XR = register.XR
 
-  def XR_=(value: ByteVal) { register.XR = value }
+  def XR_=(value: ByteVal): Unit = { register.XR = value }
 
   def YR = register.YR
 
-  def YR_=(value: ByteVal) { register.YR = value }
+  def YR_=(value: ByteVal): Unit = { register.YR = value }
 
   def SR = register.status
 
   def SP = register.SP
 
-  def SP_=(value: ByteVal) { register.SP = value }
+  def SP_=(value: ByteVal): Unit = { register.SP = value }
 
   def PC = register.PC
 
@@ -75,31 +75,31 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def CF = getStatusFlag(Status.CF)
 
-  def CF_=(value: Boolean) { register.setStatusFlag(Status.CF, value) }
+  def CF_=(value: Boolean): Unit = { register.setStatusFlag(Status.CF, value) }
 
   def ZF = getStatusFlag(Status.ZF)
 
-  def ZF_=(value: Boolean) { register.setStatusFlag(Status.ZF, value) }
+  def ZF_=(value: Boolean): Unit = { register.setStatusFlag(Status.ZF, value) }
 
   def IF = getStatusFlag(Status.IF)
 
-  def IF_=(value: Boolean) { register.setStatusFlag(Status.IF, value) }
+  def IF_=(value: Boolean): Unit = { register.setStatusFlag(Status.IF, value) }
 
   def DF = getStatusFlag(Status.DF)
 
-  def DF_=(value: Boolean) { register.setStatusFlag(Status.DF, value) }
+  def DF_=(value: Boolean): Unit = { register.setStatusFlag(Status.DF, value) }
 
   def BF = getStatusFlag(Status.BF)
 
-  def BF_=(value: Boolean) { register.setStatusFlag(Status.BF, value) }
+  def BF_=(value: Boolean): Unit = { register.setStatusFlag(Status.BF, value) }
 
   def OF = getStatusFlag(Status.OF)
 
-  def OF_=(value: Boolean) { register.setStatusFlag(Status.OF, value) }
+  def OF_=(value: Boolean): Unit = { register.setStatusFlag(Status.OF, value) }
 
   def SF = getStatusFlag(Status.SF)
 
-  def SF_=(value: Boolean) { register.setStatusFlag(Status.SF, value) }
+  def SF_=(value: Boolean): Unit = { register.setStatusFlag(Status.SF, value) }
 
   class ExtendedExpectation[T](code: => T) extends Expectation[T](code) {
     def toAdvancePC(offset: Short) = {
@@ -127,21 +127,21 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def memoryRead(address: Short): ByteVal = memory.read(address)
 
-  def memoryWrite(address: Int, value: ByteVal) { memoryWrite(address.toShort, value) }
+  def memoryWrite(address: Int, value: ByteVal): Unit = { memoryWrite(address.toShort, value) }
 
-  def memoryWrite(address: Short, value: ByteVal) { memory.write(address, value) }
+  def memoryWrite(address: Short, value: ByteVal): Unit = { memory.write(address, value) }
 
-  protected def setupAbsOpArg(address: Short, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ value): _*) }
+  protected def setupAbsOpArg(address: Short, value: ByteVal): Unit = { assignOpArg((Util.addr2ByteVals(address) :+ value): _*) }
 
-  protected def setupAbsIndexedOpArg(address: Short, index: ByteVal, value: ByteVal) { assignOpArg((Util.addr2ByteVals(address) :+ index :+ value): _*) }
+  protected def setupAbsIndexedOpArg(address: Short, index: ByteVal, value: ByteVal): Unit = { assignOpArg((Util.addr2ByteVals(address) :+ index :+ value): _*) }
 
-  protected def setupIndirectOpArg(zp: ByteVal, index: ByteVal, zpAddr: Short, value: ByteVal) { assignOpArg((zp +: index +: Util.addr2ByteVals(zpAddr) :+ value): _*) }
+  protected def setupIndirectOpArg(zp: ByteVal, index: ByteVal, zpAddr: Short, value: ByteVal): Unit = { assignOpArg((zp +: index +: Util.addr2ByteVals(zpAddr) :+ value): _*) }
 
-  protected def assertCycleCount(cycles: Int) {
+  protected def assertCycleCount(cycles: Int): Unit = {
     it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles.toShort) }
   }
 
-  protected def pageBoundaryCrossCheck(opCode: OpCode, symName: String) {
+  protected def pageBoundaryCrossCheck(opCode: OpCode, symName: String): Unit = {
     opCode match {
       case _: OpCode_ABSX => {
         describe("absolute,x addressing mode") {
@@ -179,7 +179,7 @@ trait FunOperationsSpec extends FunFunSpec {
     }
   }
 
-  protected def assertPageBoundaryCycleCount(op: OpCode)(setupCallback: (Int, Int, () => Unit) => Unit) {
+  protected def assertPageBoundaryCycleCount(op: OpCode)(setupCallback: (Int, Int, () => Unit) => Unit): Unit = {
     describe("cycle count when page boundary is crossed") {
       val extraCycleCount = Map[Tuple2[Int, Int], Int](
         (0xc800, 0x00) -> 0,

@@ -18,10 +18,10 @@ class Register(var AC: ByteVal, var XR: ByteVal, var YR: ByteVal, SR: ByteVal, v
 
   def status = _SR
 
-  def status_=(value: ByteVal) { _SR = value }
+  def status_=(value: ByteVal): Unit = { _SR = value }
 
   /** Stack operations */
-  def push(memory: Memory, value: ByteVal) {
+  def push(memory: Memory, value: ByteVal): Unit = {
     memory.write((0x0100 + SP).toShort, value)
     SP -= 1
   }
@@ -34,9 +34,9 @@ class Register(var AC: ByteVal, var XR: ByteVal, var YR: ByteVal, SR: ByteVal, v
   /** Program counter halves */
   private def pcHalves = Util.word2Nibbles(PC)
 
-  def advancePC(offset: Int) { PC = (PC + offset).toShort }
+  def advancePC(offset: Int): Unit = { PC = (PC + offset).toShort }
 
-  def setPC(address: Int) { PC = address.toShort }
+  def setPC(address: Int): Unit = { PC = address.toShort }
 }
 
 /** Factory for [[com.github.pawelkrol.CPU6502.Register]] instances */

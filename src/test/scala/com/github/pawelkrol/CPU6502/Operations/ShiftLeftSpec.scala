@@ -11,7 +11,7 @@ class ShiftLeftSpec extends RotateSpec {
     OpCode_ASL_ABSX -> 7
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("ASL", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
       val fetchValue: () => Int = args(1).asInstanceOf[() => Int]

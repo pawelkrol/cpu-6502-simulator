@@ -14,7 +14,7 @@ class LoadAccumulatorSpec extends LoadSpec {
     OpCode_LDA_INDY -> 5
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("LDA", (args) => {
       val expectedValue: Int = args(0).asInstanceOf[Int]
 

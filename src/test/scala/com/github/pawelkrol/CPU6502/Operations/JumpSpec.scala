@@ -5,9 +5,9 @@ class JumpSpec extends FunOperationsSpec {
 
   private var addr: Short = _
 
-  private def setupIndOpArg(address: Short, target: Short) { assignOpArg((Util.addr2ByteVals(address) ++ Util.addr2ByteVals(target)): _*) }
+  private def setupIndOpArg(address: Short, target: Short): Unit = { assignOpArg((Util.addr2ByteVals(address) ++ Util.addr2ByteVals(target)): _*) }
 
-  private def assertSetPC(sym: String) {
+  private def assertSetPC(sym: String): Unit = {
     context(sym + " $C800") { addr = 0xc800.toShort } {
       context("$C800 = {irrelevant}") { setupAbsOpArg(addr, 0x60) } {
         it("sets PC to $C800") { expect { operation }.toSetPC(addr) }

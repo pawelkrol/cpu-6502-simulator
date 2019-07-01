@@ -11,7 +11,7 @@ class ShiftRightSpec extends RotateSpec {
     OpCode_LSR_ABSX -> 7
   )
 
-  protected def setupSharedExamples {
+  protected def setupSharedExamples: Unit = {
     sharedExamples("LSR", (args) => {
       val carry: Boolean = args(0).asInstanceOf[Boolean]
       val fetchValue: () => Int = args(1).asInstanceOf[() => Int]

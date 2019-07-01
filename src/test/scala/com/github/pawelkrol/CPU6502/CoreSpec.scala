@@ -6,7 +6,7 @@ class CoreSpec extends FunFunSpec {
   private var register: Register = _
   private var core: Core = _
 
-  private def assertSetPC(handler: Int) {
+  private def assertSetPC(handler: Int): Unit = {
     context("$%04X = $00, $%04X = $C8".format(handler, handler + 1)) { memory.write(handler, 0x00).write(handler + 1, 0xc8) } {
       it("sets PC to $C800 (as read from $%04X)".format(handler)) { expect { subject }.toChange { register.PC }.to(0xc800.toShort) }
     }

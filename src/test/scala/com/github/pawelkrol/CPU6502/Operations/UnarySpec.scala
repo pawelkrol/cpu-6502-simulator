@@ -10,7 +10,7 @@ trait UnarySpec extends FunSharedExamples {
     case _: OpCode_ABSX => () => List[Any](() => memoryRead(addr + xr)())
   }
 
-  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit) {
+  protected def executeSharedExamples(target: String, initTestCase: (Int) => Unit): Unit = {
     context(target + " = $00") { initTestCase(0x00) } { includeSharedExamples() }
     context(target + " = $01") { initTestCase(0x01) } { includeSharedExamples() }
     context(target + " = $7F") { initTestCase(0x7f) } { includeSharedExamples() }
