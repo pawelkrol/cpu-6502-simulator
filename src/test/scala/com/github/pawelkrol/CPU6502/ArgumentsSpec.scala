@@ -1,10 +1,10 @@
 package com.github.pawelkrol.CPU6502
 
-import org.scalatest.FunSpec
+import org.scalatest.funspec.AnyFunSpec
 
 import java.io.File
 
-class ArgumentsSpec extends FunSpec {
+class ArgumentsSpec extends AnyFunSpec {
 
   describe("validate") {
     it("fails to validate missing file name") {

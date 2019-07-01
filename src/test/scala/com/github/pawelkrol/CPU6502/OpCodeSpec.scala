@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class OpCodeSpec extends FunFunSpec {
+class OpCodeSpec extends FunSpec {
 
   private var core: Core = _
 

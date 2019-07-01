@@ -5,7 +5,7 @@ import scopt.OptionParser
 
 object Application extends Logging {
 
-  private val appVersion = "0.05"
+  private val appVersion = "0.06-SNAPSHOT"
 
   private val core = Core()
 
@@ -19,11 +19,11 @@ object Application extends Logging {
     opt[Int]("cycle-count")
       .optional()
       .action((value: Int, option: Arguments) => option.copy(cycleCount = Some(value)))
-      .text("instructs program to exit simulator after a given number of cycles")
+      .text("instructs program to exit simulator after a given number of cycles, must be given as a decimal number (e.g. \"42\")")
     opt[String]("start-address")
       .optional()
       .action((value: String, option: Arguments) => option.copy(startAddress = Some(Integer.parseInt(value, 16))))
-      .text("overwrites the default (i.e., $0200) start address, must be given as a number consisting of 4 hexadecimal digits (e.g., \"c000\")")
+      .text("overwrites the default (i.e., $0200) start address, must be given as a number consisting of 4 hexadecimal digits (e.g. \"c000\")")
     arg[File]("<filename>")
       .unbounded()
       .required()
@@ -32,7 +32,7 @@ object Application extends Logging {
   }
 
   def main(args: Array[String]) = {
-    println("\nCPU 6502 Simulator %s (2019-07-01)\nCopyright (C) 2016-2019 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
+    println("\nCPU 6502 Simulator %s (2022-08-14)\nCopyright (C) 2016-2022 Pawel Krol (DJ Gruby/Protovision/TRIAD)\n".format(appVersion))
 
     parser.parse(args, Arguments()) match {
       case Some(arguments) => {

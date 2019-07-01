@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class ByteValSpec extends FunFunSpec {
+class ByteValSpec extends FunSpec {
 
   var byteVal: ByteVal = _
 
@@ -223,22 +223,22 @@ class ByteValSpec extends FunFunSpec {
       describe("byte value $00") {
         before { byteVal = 0x00 }
 
-        it { expect { byteVal == 0x00 }.toEqual(true) }
-        it { expect { byteVal == 0x01 }.toEqual(false) }
+        it { expect { byteVal() == 0x00 }.toEqual(true) }
+        it { expect { byteVal() == 0x01 }.toEqual(false) }
       }
 
       describe("byte value $01") {
         before { byteVal = 0x01 }
 
-        it { expect { byteVal == 0x00 }.toEqual(false) }
-        it { expect { byteVal == 0x01 }.toEqual(true) }
+        it { expect { byteVal() == 0x00 }.toEqual(false) }
+        it { expect { byteVal() == 0x01 }.toEqual(true) }
       }
 
       describe("byte value $80") {
         before { byteVal = 0x80 }
 
-        it { expect { byteVal == 0x00 }.toEqual(false) }
-        it { expect { byteVal == 0x80 }.toEqual(true) }
+        it { expect { byteVal() == 0x00 }.toEqual(false) }
+        it { expect { byteVal() == 0x80 }.toEqual(true) }
       }
     }
   }

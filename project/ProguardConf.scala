@@ -29,5 +29,9 @@ object ProguardConf {
 -keep public class org.slf4j.impl.StaticMDCBinder {
   *;
 }
+
+-keep public class scopt.OptionParser {
+  *;
+}
 """
 }

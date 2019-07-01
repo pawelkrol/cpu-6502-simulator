@@ -1,3 +1,3 @@
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
+addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.1.2")
 
-addSbtPlugin("com.lightbend.sbt" % "sbt-proguard" % "0.3.0")
+addSbtPlugin("com.github.sbt" % "sbt-proguard" % "0.5.0")

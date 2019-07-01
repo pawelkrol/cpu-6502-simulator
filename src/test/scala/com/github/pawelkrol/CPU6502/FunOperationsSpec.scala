@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-trait FunOperationsSpec extends FunFunSpec {
+trait FunOperationsSpec extends FunSpec {
 
   private var memory: Memory = _
   private var register: Register = _
@@ -45,8 +45,8 @@ trait FunOperationsSpec extends FunFunSpec {
 
   def testOpCode(op: OpCode, memSize: Short, cycles: Short)(test: => Any): Unit = {
     testOpCode(op) {
-      it("advances PC by " + memSize + " byte(s)") { expect { operation }.toAdvancePC(memSize) }
-      it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles) }
+      it("advances PC by " + memSize + " byte(s)") { expect2 { operation }.toAdvancePC(memSize) }
+      it("uses " + cycles + " CPU cycles") { expect2 { operation }.toUseCycles(cycles) }
       test
     }
   }
@@ -123,6 +123,8 @@ trait FunOperationsSpec extends FunFunSpec {
 
   override def expect[T](code: => T) = new ExtendedExpectation(code)
 
+  def expect2[T](code: => T) = new ExtendedExpectation(code)
+
   def memoryRead(address: Int): ByteVal = memoryRead(address.toShort)
 
   def memoryRead(address: Short): ByteVal = memory.read(address)
@@ -138,7 +140,7 @@ trait FunOperationsSpec extends FunFunSpec {
   protected def setupIndirectOpArg(zp: ByteVal, index: ByteVal, zpAddr: Short, value: ByteVal): Unit = { assignOpArg((zp +: index +: Util.addr2ByteVals(zpAddr) :+ value): _*) }
 
   protected def assertCycleCount(cycles: Int): Unit = {
-    it("uses " + cycles + " CPU cycles") { expect { operation }.toUseCycles(cycles.toShort) }
+    it("uses " + cycles + " CPU cycles") { expect2 { operation }.toUseCycles(cycles.toShort) }
   }
 
   protected def pageBoundaryCrossCheck(opCode: OpCode, symName: String): Unit = {
@@ -169,7 +171,7 @@ trait FunOperationsSpec extends FunFunSpec {
         describe("(indirect),y addressing mode") {
           assertPageBoundaryCycleCount(opCode) { (address, offset, assertionCallback) =>
             context("YR = $%02X".format(offset)) { YR = offset } {
-              context("%s ($%02X),Y".format(symName, address)) { setupIndirectOpArg(zp.toShort, offset, address.toShort, 0xff) } {
+              context("%s ($%02X),Y".format(symName, address)) { setupIndirectOpArg(zp, offset, address.toShort, 0xff) } {
                 assertionCallback()
               }
             }

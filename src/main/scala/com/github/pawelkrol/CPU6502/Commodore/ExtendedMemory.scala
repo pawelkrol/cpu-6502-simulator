@@ -39,7 +39,7 @@ class ExtendedMemory(
     writeTo(offset(address), value, selectMemory(address))
 
     if (address == plus60kBaseAddress)
-      plus60kEnabled = (io(plus60kBaseAddress - 0xd000.toShort) & 0x80) != 0x00
+      plus60kEnabled = (io(plus60kBaseAddress - 0xd000.toShort) & 0x80)() != 0x00
 
     this
   }

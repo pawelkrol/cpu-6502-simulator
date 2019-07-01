@@ -6,43 +6,43 @@ class RelativeSpec extends FunOperationsSpec {
   def shared_examples(branch: Boolean): Unit = {
     if (branch) {
       context("BRA *-$7E") { assignOpArg(0x80) } {
-        it { expect { operation }.toAdvancePC(-0x7e) }
-        it { expect { operation }.toUseCycles(0x04) }
+        it { expect2 { operation }.toAdvancePC(-0x7e) }
+        it { expect2 { operation }.toUseCycles(0x04) }
       }
 
       context("BRA *-$01") { assignOpArg(0xfd) } {
-        it { expect { operation }.toAdvancePC(-0x01) }
-        it { expect { operation }.toUseCycles(0x04) }
+        it { expect2 { operation }.toAdvancePC(-0x01) }
+        it { expect2 { operation }.toUseCycles(0x04) }
       }
 
       context("BRA *+$00") { assignOpArg(0xfe) } {
-        it { expect { operation }.toAdvancePC(0x00) }
-        it { expect { operation }.toUseCycles(0x03) }
+        it { expect2 { operation }.toAdvancePC(0x00) }
+        it { expect2 { operation }.toUseCycles(0x03) }
       }
 
       context("BRA *+$01") { assignOpArg(0xff) } {
-        it { expect { operation }.toAdvancePC(0x01) }
-        it { expect { operation }.toUseCycles(0x03) }
+        it { expect2 { operation }.toAdvancePC(0x01) }
+        it { expect2 { operation }.toUseCycles(0x03) }
       }
 
       context("BRA *+$02") { assignOpArg(0x00) } {
-        it { expect { operation }.toAdvancePC(0x02) }
-        it { expect { operation }.toUseCycles(0x03) }
+        it { expect2 { operation }.toAdvancePC(0x02) }
+        it { expect2 { operation }.toUseCycles(0x03) }
       }
 
       context("BRA *+$03") { assignOpArg(0x01) } {
-        it { expect { operation }.toAdvancePC(0x03) }
-        it { expect { operation }.toUseCycles(0x03) }
+        it { expect2 { operation }.toAdvancePC(0x03) }
+        it { expect2 { operation }.toUseCycles(0x03) }
       }
 
       context("BRA *+$81") { assignOpArg(0x7f) } {
-        it { expect { operation }.toAdvancePC(0x81) }
-        it { expect { operation }.toUseCycles(0x03) }
+        it { expect2 { operation }.toAdvancePC(0x81) }
+        it { expect2 { operation }.toUseCycles(0x03) }
       }
     }
     else {
-      it { expect { operation }.toAdvancePC(0x02) }
-      it { expect { operation }.toUseCycles(0x02) }
+      it { expect2 { operation }.toAdvancePC(0x02) }
+      it { expect2 { operation }.toUseCycles(0x02) }
     }
   }
 

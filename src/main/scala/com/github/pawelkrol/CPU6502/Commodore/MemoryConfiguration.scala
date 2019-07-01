@@ -3,11 +3,11 @@ package Commodore
 
 class MemoryConfiguration(ioRegister: ByteVal) {
 
-  private val charEnSignal = (ioRegister & 0x04) != 0x00
+  private val charEnSignal = (ioRegister & 0x04)() != 0x00
 
-  private val hiRamSignal = (ioRegister & 0x02) != 0x00
+  private val hiRamSignal = (ioRegister & 0x02)() != 0x00
 
-  private val loRamSignal = (ioRegister & 0x01) != 0x00
+  private val loRamSignal = (ioRegister & 0x01)() != 0x00
 
   val hasBasic = hiRamSignal && loRamSignal
 

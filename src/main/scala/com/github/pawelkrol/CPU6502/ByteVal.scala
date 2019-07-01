@@ -26,7 +26,7 @@ class ByteVal(val value: Byte) {
 
   def >>(move: Int): ByteVal = value >> move
 
-  def >>>(move: Int): ByteVal = (0x00 until move).foldLeft[ByteVal](value)((result, bit) => { (result >> 1) & 0x7f })
+  def >>>(move: Int): ByteVal = (0x00 until move).foldLeft[ByteVal](this.apply())((result, bit) => { (result >> 1) & 0x7f })
 
   def canEqual(that: Any) = that.isInstanceOf[ByteVal] || that.isInstanceOf[Int]
 

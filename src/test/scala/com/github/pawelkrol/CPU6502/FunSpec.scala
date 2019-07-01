@@ -1,10 +1,11 @@
 package com.github.pawelkrol.CPU6502
 
-import org.scalatest.{ FunSpec, Tag }
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.Tag
 
 import scala.collection.mutable.Stack
 
-trait FunFunSpec extends FunSpec {
+trait FunSpec extends AnyFunSpec {
 
   private var beforeEach: () => Any = _
 
@@ -47,7 +48,7 @@ trait FunFunSpec extends FunSpec {
 
   def expect[T](code: => T) = new Expectation(code)
 
-  val internalIt: FunFunSpec.this.ItWord = it
+  val internalIt: FunSpec.this.ItWord = it
 
   def it(message: String)(test: => Any): Unit = {
     val beforeIt = applyContext
@@ -85,7 +86,7 @@ trait FunFunSpec extends FunSpec {
   def context(description: String)(init: => Any)(tests: => Any): Unit = {
     beforeStack.push(() => init)
     describe(description) { tests }
-    beforeStack.pop
+    beforeStack.pop()
   }
 
   private var examples = scala.collection.mutable.HashMap[String, (List[Any]) => Unit]()

@@ -28,7 +28,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_AC => {
         describe("accumulator addressing mode") {
           testOpCode(op) {
-            it("advances PC by 1 byte") { expect { operation }.toAdvancePC(0x01) }
+            it("advances PC by 1 byte") { expect2 { operation }.toAdvancePC(0x01) }
             assertCycleCount(cycleCount(op))
 
             context(sym + " A") { assignOpArg() } {
@@ -41,7 +41,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_IMM => {
         describe("immediate addressing mode") {
           testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            it("advances PC by 2 bytes") { expect2 { operation }.toAdvancePC(0x02) }
             assertCycleCount(cycleCount(op))
 
             context(sym + " #$XX") {} {
@@ -54,7 +54,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_ZP => {
         describe("zeropage addressing mode") {
           testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            it("advances PC by 2 bytes") { expect2 { operation }.toAdvancePC(0x02) }
             assertCycleCount(cycleCount(op))
 
             context(sym + " $02") { zp = 0x02 } {
@@ -67,7 +67,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_ZPX => {
         describe("zeropage,x addressing mode") {
           testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            it("advances PC by 2 bytes") { expect2 { operation }.toAdvancePC(0x02) }
             assertCycleCount(cycleCount(op))
 
             context("XR = $02") { XR = 0x02 } {
@@ -82,7 +82,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_ZPY => {
         describe("zeropage,y addressing mode") {
           testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            it("advances PC by 2 bytes") { expect2 { operation }.toAdvancePC(0x02) }
             assertCycleCount(cycleCount(op))
 
             context("YR = $02") { YR = 0x02 } {
@@ -97,7 +97,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_ABS => {
         describe("absolute addressing mode") {
           testOpCode(op) {
-            it("advances PC by 3 bytes") { expect { operation }.toAdvancePC(0x03) }
+            it("advances PC by 3 bytes") { expect2 { operation }.toAdvancePC(0x03) }
             assertCycleCount(cycleCount(op))
 
             context(sym + " $C800") { addr = 0xc800.toShort } {
@@ -110,7 +110,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_ABSX => {
         describe("absolute,x addressing mode") {
           testOpCode(op) {
-            it("advances PC by 3 bytes") { expect { operation }.toAdvancePC(0x03) }
+            it("advances PC by 3 bytes") { expect2 { operation }.toAdvancePC(0x03) }
             assertCycleCount(cycleCount(op))
 
             context("XR = $02") { XR = 0x02 } {
@@ -125,7 +125,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_ABSY => {
         describe("absolute,y addressing mode") {
           testOpCode(op) {
-            it("advances PC by 3 bytes") { expect { operation }.toAdvancePC(0x03) }
+            it("advances PC by 3 bytes") { expect2 { operation }.toAdvancePC(0x03) }
             assertCycleCount(cycleCount(op))
 
             context("YR = $02") { YR = 0x02 } {
@@ -140,7 +140,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_INDX => {
         describe("(indirect,x) addressing mode") {
           testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            it("advances PC by 2 bytes") { expect2 { operation }.toAdvancePC(0x02) }
             assertCycleCount(cycleCount(op))
 
             context("XR = $02") { XR = 0x02 } {
@@ -157,7 +157,7 @@ trait FunSharedExamples extends FunOperationsSpec {
       case _: OpCode_INDY => {
         describe("(indirect),y addressing mode") {
           testOpCode(op) {
-            it("advances PC by 2 bytes") { expect { operation }.toAdvancePC(0x02) }
+            it("advances PC by 2 bytes") { expect2 { operation }.toAdvancePC(0x02) }
             assertCycleCount(cycleCount(op))
 
             context("YR = $02") { YR = 0x02 } {

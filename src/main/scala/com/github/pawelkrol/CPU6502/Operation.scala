@@ -456,9 +456,9 @@ abstract class Operation(memory: Memory, register: Register) {
   /** [$24] BIT $FF */
   /** [$2c] BIT $FFFF */
   private def opBIT(bits: ByteVal): Unit = {
-    register.setStatusFlag(SF, (bits & 0x80) == 0x80)
-    register.setStatusFlag(OF, (bits & 0x40) == 0x40)
-    register.setStatusFlag(ZF, (bits & register.AC) == 0x00)
+    register.setStatusFlag(SF, (bits & 0x80)() == 0x80)
+    register.setStatusFlag(OF, (bits & 0x40)() == 0x40)
+    register.setStatusFlag(ZF, (bits & register.AC)() == 0x00)
   }
 
   private def pullProgramCounterFromStack: Unit = {
