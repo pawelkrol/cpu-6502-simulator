@@ -130,11 +130,11 @@ Simulate running a program using +60k RAM memory expansion:
     /** Use the following switches in a source code of a simulated program:
      *
      *  ; Switch $1000-$ffff address space to an additional memory bank:
-     *  LDY #$80
+     *  LDA #$80
      *  STA $D100
      *
      *  ; Switch $1000-$ffff address space to an onboard memory bank:
-     *  LDY #$00
+     *  LDA #$00
      *  STA $D100
      */
 
