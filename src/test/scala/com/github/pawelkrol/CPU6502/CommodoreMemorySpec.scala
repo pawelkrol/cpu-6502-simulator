@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class CommodoreMemorySpec extends FunFunSpec {
+class CommodoreMemorySpec extends FunSpec {
 
   private var memory: CommodoreMemory = _
 

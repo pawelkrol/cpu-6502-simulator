@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class ByteValSpec extends FunFunSpec {
+class ByteValSpec extends FunSpec {
 
   var byteVal: ByteVal = _
 

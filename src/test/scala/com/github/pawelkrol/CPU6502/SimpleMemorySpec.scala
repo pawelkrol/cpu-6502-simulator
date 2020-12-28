@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class SimpleMemorySpec extends FunFunSpec {
+class SimpleMemorySpec extends FunSpec {
 
   private var memory: SimpleMemory = _
 

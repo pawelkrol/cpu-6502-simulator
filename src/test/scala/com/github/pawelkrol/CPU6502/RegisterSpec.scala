@@ -2,7 +2,7 @@ package com.github.pawelkrol.CPU6502
 
 import Status._
 
-class RegisterSpec extends FunFunSpec {
+class RegisterSpec extends FunSpec {
 
   private var register: Register = _
 

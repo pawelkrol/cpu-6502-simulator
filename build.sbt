@@ -2,21 +2,19 @@ lazy val root = (project in file(".")).settings(
   javaOptions += "-Xmx1G",
   name := "cpu-6502-simulator",
   organization := "com.github.pawelkrol",
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.13.4",
   scalacOptions ++= Seq("-deprecation", "-feature"),
   version := "0.06-SNAPSHOT"
 )
 
 maxErrors := 1
 
-scalacOptions += "-feature"
-
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.github.scopt" %% "scopt" % "3.7.1",
+  "com.github.scopt" %% "scopt" % "4.0.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
-  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
-  "org.scalactic" %% "scalactic" % "3.0.8" % "test"
+  "org.scalatest" %% "scalatest" % "3.2.3" % "test",
+  "org.scalactic" %% "scalactic" % "3.2.3" % "test"
 )
 
 // Disable using the Scala version in output paths and artifacts:
@@ -68,4 +66,4 @@ proguardOptions in Proguard += ProguardOptions.keepMain("com.github.pawelkrol.CP
 
 proguardOptions in Proguard += ProguardConf.cpu6502Simulator
 
-proguardVersion in Proguard := "5.3.3"
+proguardVersion in Proguard := "7.0.1"

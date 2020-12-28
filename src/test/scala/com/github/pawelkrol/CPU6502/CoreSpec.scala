@@ -1,6 +1,6 @@
 package com.github.pawelkrol.CPU6502
 
-class CoreSpec extends FunFunSpec {
+class CoreSpec extends FunSpec {
 
   private var memory: Memory = _
   private var register: Register = _
