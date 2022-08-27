@@ -14,7 +14,7 @@ CPU 6502 Simulator
 PREREQUISITES
 -------------
 
-This `cpu-6502-simulator` application is setup with [sbt 1.3.13] as a build tool, [sbt-proguard 0.4.0] as an sbt [plugin] for running [ProGuard 7.0.1], [ScalaTest 3.2.3] as a unit-testing framework, [Scalactic 3.2.3] as a small library of utilities, [scopt 4.0.0] as a command line options parsing library, [Scala Logging 3.9.2] as a logging library wrapping [SLF4J], and [Logback 1.2.3] as a backend logging framework.
+This `cpu-6502-simulator` application is setup with [sbt 1.7.1] as a build tool, [sbt-proguard 0.5.0] as an sbt [plugin] for running [ProGuard 7.2.2], [ScalaTest 3.2.13] as a unit-testing framework, [Scalactic 3.2.13] as a small library of utilities, [scopt 4.1.0] as a command line options parsing library, [Scala Logging 3.9.5] as a logging library wrapping [SLF4J], and [Logback 1.2.11] as a backend logging framework.
 
 Dependency management is normally handled automatically by your build tool.
 
@@ -23,7 +23,7 @@ Dependency management is normally handled automatically by your build tool.
 VERSION
 -------
 
-Version 0.06-SNAPSHOT (2022-08-14)
+Version 1.0.0 (2022-08-27)
 
 INSTALLATION
 ------------
@@ -32,7 +32,7 @@ You can automatically download and install this library by adding the following 
 
     resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "0.06-SNAPSHOT"
+    libraryDependencies += "com.github.pawelkrol" % "cpu-6502-simulator" % "1.0.0"
 
 In order to build and run an executable application JAR type the following:
 
@@ -40,7 +40,7 @@ In order to build and run an executable application JAR type the following:
     $ cd cpu-6502-simulator/
     $ sbt clean update compile test package proguard:proguard
 
-    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-0.06-SNAPSHOT.jar --help
+    $ java -Dfile.encoding=UTF8 -jar target/proguard/cpu-6502-simulator-1.0.0.jar --help
 
 You may have to add the following automatic export to your `~/.bash_profile`:
 
@@ -151,15 +151,15 @@ This library is free open source software; you can redistribute it and/or modify
 [unit-testing framework]: https://github.com/pawelkrol/Scala-CommTest
 [Commodore 64]: https://en.wikipedia.org/wiki/Commodore_64
 [Scala 3]: http://www.scala-lang.org/
-[sbt 1.3.13]: http://www.scala-sbt.org/
-[sbt-proguard 0.4.0]: https://github.com/sbt/sbt-proguard
+[sbt 1.7.1]: http://www.scala-sbt.org/
+[sbt-proguard 0.5.0]: https://github.com/sbt/sbt-proguard
 [plugin]: http://www.scala-sbt.org/0.13/docs/Plugins.html
-[ProGuard 7.0.1]: http://proguard.sourceforge.net/
-[ScalaTest 3.2.3]: http://www.scalatest.org/
-[Scalactic 3.2.3]: http://www.scalactic.org/
-[scopt 4.0.0]: https://github.com/scopt/scopt
-[Scala Logging 3.9.2]: https://github.com/typesafehub/scala-logging
+[ProGuard 7.2.2]: http://proguard.sourceforge.net/
+[ScalaTest 3.2.13]: http://www.scalatest.org/
+[Scalactic 3.2.13]: http://www.scalactic.org/
+[scopt 4.1.0]: https://github.com/scopt/scopt
+[Scala Logging 3.9.5]: https://github.com/typesafehub/scala-logging
 [SLF4J]: http://www.slf4j.org/
-[Logback 1.2.3]: http://logback.qos.ch/
+[Logback 1.2.11]: http://logback.qos.ch/
 [Sonatype]: https://oss.sonatype.org/
 [the same terms]: https://github.com/pawelkrol/cpu-6502-simulator/blob/master/LICENSE.md

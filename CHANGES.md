@@ -3,8 +3,8 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
-0.06-SNAPSHOT (2022-08-14)
---------------------------
+1.0.0 (2022-08-27)
+------------------
 
 * `Scala` version upgraded to 3.1.3
 * `Scalactic` version upgraded to 3.2.13
