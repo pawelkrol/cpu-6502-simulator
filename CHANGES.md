@@ -3,6 +3,11 @@ CHANGES
 
 Revision history for `cpu-6502-simulator`, a complete MOS 6502 CPU simulator entirely written in [Scala](http://www.scala-lang.org/).
 
+1.0.1-SNAPSHOT (2022-08-27)
+---------------------------
+
+* TODO
+
 1.0.0 (2022-08-27)
 ------------------
 

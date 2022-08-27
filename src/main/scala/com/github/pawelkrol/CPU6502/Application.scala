@@ -5,7 +5,7 @@ import scopt.OptionParser
 
 object Application extends Logging {
 
-  private val appVersion = "1.0.0"
+  private val appVersion = "1.0.1-SNAPSHOT"
 
   private val core = Core()
 
